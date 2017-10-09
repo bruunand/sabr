@@ -1,5 +1,8 @@
+package Movement.Aiming;
+
 /**
  * Created by Anders Brams on 10/9/2017.
+ * Used for representing the targets in 2D.
  */
 public class Target {
     public float x;
