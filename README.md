@@ -15,6 +15,7 @@ Results in a Main.class file
 ### Link the class file to the NXT program
 > nxjlink -o Main.nxj Main
 
+Results in a Main.nxj file
 ### Upload to the NXT
 > nxjupload -r Main.nxj
 
