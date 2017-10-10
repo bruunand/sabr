@@ -8,12 +8,14 @@ public class Target {
     public float x;
     public float y;
 
-    public Target(float _x, float _y) {
+    public Target(float _x, float _y)
+    {
         x = _x;
         y = _y;
     }
 
-    public Target() {
+    public Target()
+    {
         x = 0;
         y = 0;
     }
