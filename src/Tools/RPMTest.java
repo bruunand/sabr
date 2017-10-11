@@ -55,8 +55,10 @@ public class RPMTest
             while (!Button.ESCAPE.isDown())
             {
                 float minutesPassed = (System.currentTimeMillis() - lastTime) / 60000F;
-                float rpm = motor.getTachoCount() / 360F / minutesPassed;
-                LCD.drawString("(" + power + "), (" + rpm + " RPM)", 0, 0);
+                float rpmA = motorA.getTachoCount() / 360F / minutesPassed;
+                float rpmB = motorB.getTachoCount() / 360F / minutesPassed;
+                LCD.drawString("A: " + power + ", " + rpmA, 0, 0);
+                LCD.drawString("B: " + power + ", " + rpmB, 0, 5);
                 Thread.sleep(50);
             }
         }
