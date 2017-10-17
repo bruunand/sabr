@@ -12,6 +12,7 @@ public class Shooter implements IShooter
 
     private double getInitialVelocity(Float distance)
     {
+        // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
         return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
     }
 
@@ -19,7 +20,9 @@ public class Shooter implements IShooter
     {
         float maxDistance = 4;
         double maxVelocity = getInitialVelocity(maxDistance);
-        int power = 100 * (int)(velocity / maxVelocity);
+
+        // Calculate power as a direct linear function.
+        int power = (velocity < maxVelocity)? 100 * (int)(velocity / maxVelocity): 100;
 
         return power;
     }
