@@ -52,15 +52,14 @@ public class Shooter implements IShooter
 
         // Debug.Log(This, factor, power);
 
-
         // ready motors
         motorA.setPower(power);
         motorB.setPower(power);
 
         int degrees = (int)(360 / getGearFactor());
 
-        // start motors
-        if (evenGears)
+        // start motors.
+        if (Gears % 2 == 0)
         {
             motorA.forward();
             motorA.forward();
@@ -70,7 +69,7 @@ public class Shooter implements IShooter
             motorA.backward();
             motorA.backward();
         }
-
+        // wait for motors to turn once
         while( Math.abs(motorA.getTachoCount()) < degrees ){}
 
         LCD.drawString("Power: " + power + ".", 0, 0);
