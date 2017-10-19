@@ -44,7 +44,7 @@ class ITargetInfo(metaclass = abc.ABCMeta):
 class IDistanceCalculatable(metaclass = abc.ABCMeta):
 	
 	@abc.abstractmethod
-	def calculate_distance(self, mean_height, mean_width):
+	def calculate_distance(self, box_sample_list):
 		""" asd
 
     	Args:
@@ -57,11 +57,12 @@ class IDistanceCalculatable(metaclass = abc.ABCMeta):
 class IDirectionCalculatable(metaclass = abc.ABCMeta):
 
 	@abc.abstractmethod
-	def calculate_direction(self, frame_shape):
+	def calculate_direction(self, bounding_box, frame_shape):
 		""" asd
 
     	Args:
-      		np.array containg the shape of the environment
+      		np.array containing the shape of the environment
+      		np.array containing the bounding box of the target object
     	Returns:
     		asd
     	"""
