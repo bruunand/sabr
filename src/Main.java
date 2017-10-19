@@ -1,4 +1,6 @@
 import lejos.nxt.Button;
+import lejos.nxt.Motor;
+
 public class Main {
 
     public static void main(String[] args) {

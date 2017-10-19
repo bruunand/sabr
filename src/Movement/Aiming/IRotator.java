@@ -7,5 +7,5 @@ package Movement.Aiming;
  */
 public interface IRotator 
 {
-    void turnTowards(Target target);
+    void turnDegrees(int degrees);
 }
