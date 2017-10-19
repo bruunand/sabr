@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<history>
+   <processor signature="gcc noversion nomachine-Wall -std=gnu99 -fPIC -c -fPIC -I. -I../../../../../../../usr/lib/jvm/java-8-openjdk-amd64/include -I../../../../../../../usr/lib/jvm/java-8-openjdk-amd64/include/linux">
+      <target file="main_jlibnxt.o" lastModified="15f2a66a960">
+         <source file="main_jlibnxt.c" lastModified="15f2a13e5e0"/>
+      </target>
+   </processor>
+   <processor signature="gcc -shared -L/home/theis/Projects/SW5-Project/leJOS-Linux/build/libnxt -lusb">
+      <target file="libjlibnxt.so" lastModified="15f2a66a960">
+         <source file="main_jlibnxt.o" lastModified="15f2a66a960"/>
+      </target>
+   </processor>
+</history>

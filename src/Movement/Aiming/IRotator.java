@@ -5,6 +5,7 @@ package Movement.Aiming;
  * Should be used as defined in the UML diagram
  * describing the design of the control module component.
  */
-public interface IRotator {
-    void TurnTowards(Target target);
+public interface IRotator 
+{
+    void turnTowards(Target target);
 }
