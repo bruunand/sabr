@@ -4,6 +4,14 @@ import lejos.nxt.*;
 
 public class Rotator implements IRotator
 {
+	/* gearRatio = from.numberOfGearTeeth / to.numberOfGearTeeth */
+	private final float gearRatio = 1.4f;
+
+	/* arctan(y-distance (cm) from camera to object / x-distance (cm) from camera to object )
+	*                                       divided by
+	*                        number of pixels from center of img to object                 */                                                                                      */
+	private final float pixelDegreeRatio = 0.1017f;
+
 	private static NXTRegulatedMotor _motor;
 	public static NXTRegulatedMotor getMotor()
 	{
@@ -21,8 +29,13 @@ public class Rotator implements IRotator
 	@Override
 	public void turnDegrees(int degrees)
 	{
-		int actualDegrees = (int)(degrees * 1.4);
+		int actualDegrees = (int)(degrees * gearRatio);
 		getMotor().rotate(actualDegrees);
+	}
+
+	private float convertPixelsToDegrees(int pixels)
+	{
+		return pixels * pixelDegreeRatio;
 	}
 
 	/* TODO: Get pixel distance from center of img to object, rotate pixels -> degrees */
