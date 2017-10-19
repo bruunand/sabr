@@ -7,5 +7,6 @@ package Movement.Aiming;
  */
 public interface IRotator 
 {
-    void turnDegrees(int degrees);
+    void turn(int pixels);
+    void resetHeading();
 }

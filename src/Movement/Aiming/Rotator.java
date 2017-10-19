@@ -9,7 +9,7 @@ public class Rotator implements IRotator
 
 	/* arctan(y-distance (cm) from camera to object / x-distance (cm) from camera to object )
 	*                                       divided by
-	*                        number of pixels from center of img to object                 */                                                                                      */
+	*                        number of pixels from center of img to object                 */
 	private final float pixelDegreeRatio = 0.1017f;
 
 	/* updates every time we turn so we can reset position */
@@ -26,11 +26,17 @@ public class Rotator implements IRotator
 		_motor = motor;
 	}
 
+    @Override
+    public void turn(int pixels)
+    {
+        float degrees = convertPixelsToDegrees(pixels);
+        turnDegrees(degrees);
+    }
+
 	/* Ratio between gears on turning module is
 	 * 56 : 40. Degrees requested must be scaled
-	 * by 1.4 and floored. */
-	@Override
-	public void turnDegrees(int degrees)
+	 * by 1.4 and floored to i. */
+	private void turnDegrees(float degrees)
 	{
 		int actualDegrees = (int)(degrees * gearRatio);
 		getMotor().rotate(actualDegrees);
