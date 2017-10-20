@@ -5,7 +5,10 @@ import java.util.Random;
 public class RPMTest
 {
     static int power = 10;
-    
+
+    static NXTMotor motorA = new NXTMotor(MotorPort.A);
+    static NXTMotor motorB = new NXTMotor(MotorPort.A);
+
     static NXTMotor motor = new NXTMotor(MotorPort.A);
     
     static long lastTime = 0;
