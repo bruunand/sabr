@@ -16,6 +16,7 @@ public class Rotator implements IRotator
 	private int currentHeading = 0;
 
 	private static NXTRegulatedMotor _motor;
+	
 	public static NXTRegulatedMotor getMotor()
 	{
 		return _motor;
@@ -26,16 +27,17 @@ public class Rotator implements IRotator
 		_motor = motor;
 	}
 
-    @Override
-    public void turn(int pixels)
-    {
-        float degrees = convertPixelsToDegrees(pixels);
-        turnDegrees(degrees);
-    }
+    //@Override
+    //public void turn(int pixels)
+    //{
+    //    float degrees = convertPixelsToDegrees(pixels);
+    //    turnDegrees(degrees);
+    //}
 
 	/* Ratio between gears on turning module is
 	 * 56 : 40. Degrees requested must be scaled
 	 * by 1.4 and floored to i. */
+	@override
 	private void turnDegrees(float degrees)
 	{
 		int actualDegrees = (int)(degrees * gearRatio);
@@ -48,8 +50,8 @@ public class Rotator implements IRotator
 		turnDegrees(-currentHeading);
 	}
 
-	private float convertPixelsToDegrees(int pixels)
-	{
-		return pixels * pixelDegreeRatio;
-	}
+	//private float convertPixelsToDegrees(int pixels)
+	//{
+	//	return pixels * pixelDegreeRatio;
+	//}
 }
