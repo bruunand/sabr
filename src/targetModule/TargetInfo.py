@@ -3,19 +3,11 @@ import cv2
 import numpy as np
 from Interfaces import ITargetInfo
 from ImageFeed import ImageFeedWebcamera
+from DistanceCalculation import DistanceCalculationPolynomialRegression
+from DirectionCalculation import DirectionCalculationVecLength
 
 class TargetInfo(ITargetInfo):
     def get_direction_info(self):
-        """ Calculates the pixel distance from the centre target object
-            to the centre line of the frame. 
-            Responabilities: Image processing
-            object detection and calling appropirate calculation algorithms.
-
-        Args:
-            
-        Returns:
-            a floating point pixel length from the target to the centre line
-        """
         return
 
     def image_processing(self, sample_data):
@@ -23,8 +15,8 @@ class TargetInfo(ITargetInfo):
         bounding_boxes = []
 
         # For help on colorspaces: https://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html
-        lower_hsv_colour = np.array([0,100,100])
-        upper_hsv_colour = np.array([10,255,255])
+        lower_hsv_colour = np.array([169,100,100])
+        upper_hsv_colour = np.array([189,255,255])
 
         for frame in sample_data:
             # Convert the current frame to HSV
@@ -68,11 +60,10 @@ class TargetInfo(ITargetInfo):
         sample_data = []
 
         for i in range(0,sample_size):
-            frame = self.webcam.capture_frame(self.capture_device)  
+            ret, frame = cam.read() 
             sample_data.append(frame)
         
         return sample_data
-
 
     def get_distance_info(self):
         bounding_boxes = []
@@ -86,7 +77,9 @@ class TargetInfo(ITargetInfo):
         return -1
 
     webcam = ImageFeedWebcamera()
-    capture_device = 0
+
+capture_device = 0
+cam = cv2.VideoCapture(capture_device)
 
 while True:
     asd = TargetInfo()

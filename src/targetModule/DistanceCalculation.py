@@ -1,6 +1,6 @@
 import abc
 import os
-from interfaces import IDistanceCalculatable
+from Interfaces import IDistanceCalculatable
 
 import cv2
 import pandas as pd

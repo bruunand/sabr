@@ -4,7 +4,7 @@ from Interfaces import IDirectionCalculatable
 from math import sqrt
 import numpy as np
 
-class DirectionCalculationVecLength(DirectionCalculatable):
+class DirectionCalculationVecLength(IDirectionCalculatable):
 	
 	def get_vec2line(frame_mid_x, bounding_box_centre_x):
 		return (frame_mid-bounding_box_centre_x, 0)
