@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="samples1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/leJOS-Windows/samples.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="pc">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/pccomm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/jtools.jar!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/pccomm-src.zip!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/pctools-src.zip!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/charting.jar!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/charting-src.zip!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/pctools.jar!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/lib/pc/jtools-src.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

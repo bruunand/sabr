@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="nxt1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/leJOS-Windows/lib/nxt/classes-src.zip!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Windows/lib/nxt/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

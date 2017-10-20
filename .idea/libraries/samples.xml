@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="classes">
+  <library name="samples">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/leJOS-NXT/lib/nxt/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/leJOS-Linux/samples.zip!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
