@@ -1,26 +1,41 @@
 package com.ballthrower.communication;
 
+import com.ballthrower.communication.packets.EnginePowerPacket;
 import com.ballthrower.communication.packets.Packet;
+import com.ballthrower.communication.packets.PingPacket;
+import com.ballthrower.exceptions.UnknownPacketException;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
+/* Due to limitations of the leJOS VM, it is not possible to use Java's reflection to instantiate packets */
 public class PacketHandler
 {
-    private static Dictionary<Byte, Packet> _registeredPackets = new Hashtable<>();
-
-    static
+    public static Packet instantiateFromId(PacketIds id) throws UnknownPacketException
     {
-        registerPacket(null);
+        switch (id)
+        {
+            case EnginePower:
+                return new EnginePowerPacket();
+            case Ping:
+                return new PingPacket();
+            default:
+                throw new UnknownPacketException("Packet Id " + id + " is unknown.");
+        }
     }
 
-    private static void registerPacket(Packet packet)
+    public enum PacketIds
     {
-        _registeredPackets.put(packet.getId(), packet);
-    }
+        EnginePower((byte) 0x00),
+        Ping((byte) 0x01);
 
-    public static void handlePacket(Packet packet)
-    {
+        private byte _id;
 
+        PacketIds(byte id)
+        {
+            _id = id;
+        }
+
+        public static PacketIds fromByte(byte value)
+        {
+            return PacketIds.values()[value];
+        }
     }
 }

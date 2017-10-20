@@ -1,4 +1,4 @@
-import type_converter
+import TypeConverter
 
 try:
     import bluetooth
@@ -27,7 +27,16 @@ class BluetoothConnection(object):
         new_connection = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
         new_connection.connect((self.remote_address, BluetoothConnection.BLUETOOTH_PORT))
         self.remote_connection = new_connection
-        print(self.remote_connection)
+    
+    def disconnect(self):
+        self.remote_connection.close()
 
-    def send(self, content):
-        self.remote_connection.send(type_converter.short_to_bytes(content))
+    def send_packet(self, packet):
+        self.send_byte(packet.get_id())
+        packet.send_to_connection(self)
+
+    def send_byte(self, content):
+        self.remote_connection.send(bytes([content]))
+
+    def send_short(self, content):
+        self.remote_connection.send(TypeConverter.short_to_bytes(content))

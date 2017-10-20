@@ -1,11 +1,10 @@
 package com.ballthrower.communication.packets;
 
-public class Packet
-{
-	private byte _id;
+import java.io.DataInputStream;
+import java.io.IOException;
 
-	public byte getId()
-	{
-		return _id;
-	}
+public abstract class Packet
+{
+	public abstract void constructFromStream(DataInputStream stream) throws IOException;
+	public abstract void writeToStream(DataInputStream stream) throws IOException;
 }

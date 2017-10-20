@@ -1,6 +1,8 @@
 package com.ballthrower.communication;
 
+import com.ballthrower.communication.PacketHandler.PacketIds;
 import com.ballthrower.communication.packets.Packet;
+import com.ballthrower.exceptions.UnknownPacketException;
 import lejos.nxt.*;
 import lejos.nxt.comm.*;
 
@@ -18,9 +20,9 @@ public class BluetoothCommunicator extends Communicator
 	{
 		_socket = Bluetooth.waitForConnection();
 		_socket.setIOMode(NXTConnection.RAW);
-		motor.forward();
+		_inputStream = _socket.openDataInputStream();
+		motor.forward(); // todo remove
 		Sound.beepSequence();
-		receivePacket();
 	}
 
     @Override
@@ -40,11 +42,25 @@ public class BluetoothCommunicator extends Communicator
 	{
 	    try
         {
-            byte packetHeader = _inputStream.readByte();
+            // The first element of each packet is the id of the packet type
+            byte packetId = _inputStream.readByte();
+
+            // Query the packet handler for the packet class associated with this id
+            // The packet handler also constructs the packet object
+            Packet instantiatedPacket = PacketHandler.instantiateFromId(PacketIds.fromByte(packetId));
+
+            // Finally we deserialize the object
+            instantiatedPacket.constructFromStream(_inputStream);
+
+            return instantiatedPacket;
         }
         catch (IOException exception)
         {
-            LCD.drawString("IO Exception", 0, 3);
+            LCD.drawString("IO Exception.", 0, 3);
+        }
+        catch (UnknownPacketException e)
+        {
+            LCD.drawString("Unknown packet type.", 0, 3);
         }
 
         return null;
