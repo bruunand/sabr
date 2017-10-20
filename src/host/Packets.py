@@ -29,7 +29,7 @@ class EnginePowerPacket(Packet):
     def get_id(self):
         return 0x00
 
-class PingPacket(Packet):
+class RequestTargetPacket(Packet):
 
     def __init__(self):
         pass
@@ -42,3 +42,17 @@ class PingPacket(Packet):
 
     def get_id(self):
         return 0x01
+
+class RotationRequestPacket(Packet):
+
+    def __init__(self, degrees_to_rotate):
+        self.degrees_to_rotate = degrees_to_rotate
+
+    def send_to_connection(self, connection):
+        connection.send_float(self.degrees_to_rotate)
+
+    def construct_from_connection(self):
+        pass
+
+    def get_id(self):
+        return 0x02

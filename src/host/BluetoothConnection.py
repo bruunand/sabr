@@ -28,6 +28,9 @@ class BluetoothConnection(object):
         new_connection.connect((self.remote_address, BluetoothConnection.BLUETOOTH_PORT))
         self.remote_connection = new_connection
     
+    def receive_packet(self):
+        
+
     def disconnect(self):
         self.remote_connection.close()
 

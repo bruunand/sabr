@@ -3,7 +3,7 @@ package com.ballthrower.communication.packets;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class PingPacket extends Packet
+public class RequestTargetPacket extends Packet
 {
     @Override
     public void constructFromStream(DataInputStream stream) throws IOException
