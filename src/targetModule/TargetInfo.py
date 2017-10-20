@@ -52,7 +52,7 @@ class TargetInfo(ITargetInfo):
             if best_contour is not None:
 
                 # Draw the smallest rectangle possible around the object
-                rect = cv2.minAreaRect(best_contour)
+                rect = cv2.boundingRect(best_contour)
 
                 # Get the four corners of rectangle x,y,w,h and contain the details in a box element
                 box = cv2.boxPoints(rect)
@@ -65,34 +65,30 @@ class TargetInfo(ITargetInfo):
         return bounding_boxes
 
     def get_sample_data(self, sample_size):
-        webcam = ImageFeedWebcamera()
         sample_data = []
 
         for i in range(0,sample_size):
-            frame = webcam.capture_frame(0)  
+            frame = self.webcam.capture_frame(self.capture_device)  
             sample_data.append(frame)
         
         return sample_data
 
 
     def get_distance_info(self):
-        self.image_processing(self.get_sample_data(10))
+        bounding_boxes = []
+        while not bounding_boxes:
+            print("No bounding boxes")
+            sample_data = self.get_sample_data(10)
+            bounding_boxes = self.image_processing(sample_data)
+        for box in bounding_boxes:
+            cv2.drawContours(frame, [box], -1, (0, 255, 0), 2)
+        cv2.imshow('TEST', frame)
+        cv2.waitKey(1)
+        return -1
 
-        """ Calculates the distance in cm from the camera to the target object
-            Responabilities: Image processing
-            object detection and calling appropirate calculation algorithms.
+    webcam = ImageFeedWebcamera()
+    capture_device = 1
 
-        Args:
-            
-        Returns:
-            a floating point distance to the target object
-        """
-        return
-
-
-
-
-
-
-target = TargetInfo()
-target.get_distance_info()
+while True:
+    asd = TargetInfo()
+    asd.get_distance_info()
