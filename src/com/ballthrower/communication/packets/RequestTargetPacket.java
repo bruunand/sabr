@@ -1,6 +1,7 @@
 package com.ballthrower.communication.packets;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class RequestTargetPacket extends Packet
@@ -11,7 +12,7 @@ public class RequestTargetPacket extends Packet
     }
 
     @Override
-    public void writeToStream(DataInputStream stream) throws IOException
+    public void writeToStream(DataOutputStream stream) throws IOException
     {
     }
 }

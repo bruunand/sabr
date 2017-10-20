@@ -29,7 +29,9 @@ class BluetoothConnection(object):
         self.remote_connection = new_connection
     
     def receive_packet(self):
-        
+        print("Prepping 2 receive")
+        packet_id = self.remote_connection.recv(1)
+        print("Received packet:", packet_id)
 
     def disconnect(self):
         self.remote_connection.close()

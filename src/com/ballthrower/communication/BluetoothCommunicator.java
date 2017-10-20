@@ -7,6 +7,7 @@ import lejos.nxt.*;
 import lejos.nxt.comm.*;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class BluetoothCommunicator extends Communicator
@@ -14,13 +15,19 @@ public class BluetoothCommunicator extends Communicator
     private NXTMotor motor = new NXTMotor(MotorPort.A);
     private NXTConnection _socket;
 	private DataInputStream _inputStream;
+	private DataOutputStream _outputStream;
 
 	@Override
 	public void awaitConnection()
 	{
+	    // Wait for connection and set mode to raw
 		_socket = Bluetooth.waitForConnection();
 		_socket.setIOMode(NXTConnection.RAW);
+
+		// Get streams
 		_inputStream = _socket.openDataInputStream();
+		_outputStream = _socket.openDataOutputStream();
+
 		motor.forward(); // todo remove
 		Sound.beepSequence();
 	}
@@ -69,6 +76,15 @@ public class BluetoothCommunicator extends Communicator
 	@Override
 	public void sendPacket(Packet packet)
 	{
-
+	    try
+        {
+            _outputStream.writeByte(PacketIds.RequestTarget.asByte()); // todo fixme
+            packet.writeToStream(_outputStream);
+            _outputStream.flush();
+        }
+        catch (IOException exception)
+        {
+            LCD.drawString("IO Exception.", 0, 3);
+        }
 	}
 }

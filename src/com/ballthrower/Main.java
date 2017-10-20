@@ -2,11 +2,11 @@ package com.ballthrower;
 
 import com.ballthrower.communication.BluetoothCommunicator;
 import com.ballthrower.communication.Communicator;
-import com.ballthrower.communication.packets.EnginePowerPacket;
 import com.ballthrower.communication.packets.Packet;
-import com.ballthrower.communication.packets.PingPacket;
 import com.ballthrower.communication.packets.RequestTargetPacket;
-import lejos.nxt.*;
+import lejos.nxt.Button;
+import lejos.nxt.LCD;
+import lejos.nxt.Sound;
 
 public class Main
 {
@@ -18,10 +18,12 @@ public class Main
 
 		while (true)
         {
+            LCD.clear();
             Sound.twoBeeps();
             Button.ENTER.waitForPressAndRelease();
 
             // Request target
+            Sound.buzz();
             communicator.sendPacket(new RequestTargetPacket());
 
             // Receive answer to request
