@@ -1,5 +1,7 @@
 package com.ballthrower.communication;
 
+import com.ballthrower.communication.packets.Packet;
+
 public abstract class Communicator
 {
 	public abstract void awaitConnection();

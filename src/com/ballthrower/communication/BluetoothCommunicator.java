@@ -1,5 +1,6 @@
 package com.ballthrower.communication;
 
+import com.ballthrower.communication.packets.Packet;
 import lejos.nxt.*;
 import lejos.nxt.comm.*;
 

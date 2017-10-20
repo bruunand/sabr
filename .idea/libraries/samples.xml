@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="samples">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/leJOS-Linux/samples.zip!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
