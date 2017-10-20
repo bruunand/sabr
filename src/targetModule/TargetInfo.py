@@ -52,7 +52,7 @@ class TargetInfo(ITargetInfo):
             if best_contour is not None:
 
                 # Draw the smallest rectangle possible around the object
-                rect = cv2.boundingRect(best_contour)
+                rect = cv2.minAreaRect(best_contour)
 
                 # Get the four corners of rectangle x,y,w,h and contain the details in a box element
                 box = cv2.boxPoints(rect)
@@ -77,17 +77,16 @@ class TargetInfo(ITargetInfo):
     def get_distance_info(self):
         bounding_boxes = []
         while not bounding_boxes:
-            print("No bounding boxes")
             sample_data = self.get_sample_data(10)
             bounding_boxes = self.image_processing(sample_data)
-        for box in bounding_boxes:
+        for (box, frame) in zip(bounding_boxes,sample_data):
             cv2.drawContours(frame, [box], -1, (0, 255, 0), 2)
         cv2.imshow('TEST', frame)
         cv2.waitKey(1)
         return -1
 
     webcam = ImageFeedWebcamera()
-    capture_device = 1
+    capture_device = 0
 
 while True:
     asd = TargetInfo()
