@@ -1,4 +1,4 @@
-import movement.shooting.*;
+import Movement.Shooting.*;
 import lejos.nxt.Button;
 public class Main {
 

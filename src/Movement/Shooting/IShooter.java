@@ -1,4 +1,4 @@
-package movement.shooting;
+package Movement.Shooting;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
