@@ -15,23 +15,13 @@ public class Shooter
     private static final byte Gears = 3;
     private static final int[] gearSizes = {40, 24};
 
-
-
-    private static void main(String[] options){
-
-
-        Shoot(2.0);
-        LCD.drawString("Shot completed.", 0, 10);
-        Button.waitForAnyPress();
-
-    }
-    private static double getInitialVelocity(Double distance)
+    private double getInitialVelocity(Double distance)
     {
         // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
         return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
     }
 
-    private static int getPower(double velocity)
+    private int getPower(double velocity)
     {
         double maxDistance = 4;
         double maxVelocity = getInitialVelocity(maxDistance);
@@ -42,14 +32,14 @@ public class Shooter
         return power;
     }
 
-    private static double getGearFactor()
+    private double getGearFactor()
     {
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
     }
 
 
 
-    public static void Shoot(Double distance)
+    public void Shoot(Double distance)
     {
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);
