@@ -4,13 +4,13 @@ import lejos.nxt.*;
 
 public class Rotator implements IRotator
 {
-	/* gearRatio = from.numberOfGearTeeth / to.numberOfGearTeeth */
-	private final float gearRatio = 1.4f;
+	/* gearRatio = robot.numberOfGearTeeth / motor.numberOfGearTeeth */
+	private final float gearRatio = 2.33f;
 
 	/* arctan(y-distance (cm) from camera to object / x-distance (cm) from camera to object )
 	*                                       divided by
 	*                        number of pixels from center of img to object                 */
-	private final float pixelDegreeRatio = 0.1017f;
+	//private final float pixelDegreeRatio = 0.1017f;
 
 	/* updates every time we turn so we can reset position */
 	private int currentHeading = 0;
@@ -25,20 +25,14 @@ public class Rotator implements IRotator
 	public Rotator(NXTRegulatedMotor motor)//Input some motor
 	{
 		_motor = motor;
+	    _motor.setSpeed(50);
 	}
-
-    //@Override
-    //public void turn(int pixels)
-    //{
-    //    float degrees = convertPixelsToDegrees(pixels);
-    //    turnDegrees(degrees);
-    //}
 
 	/* Ratio between gears on turning module is
 	 * 56 : 40. Degrees requested must be scaled
 	 * by 1.4 and floored to i. */
-	@override
-	private void turnDegrees(float degrees)
+	@Override
+	public void turnDegrees(float degrees)
 	{
 		int actualDegrees = (int)(degrees * gearRatio);
 		getMotor().rotate(actualDegrees);
