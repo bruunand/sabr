@@ -78,7 +78,7 @@ public class BluetoothCommunicator extends Communicator
 	{
 	    try
         {
-            _outputStream.writeByte(PacketIds.RequestTarget.asByte()); // todo fixme
+            _outputStream.writeByte(packet.getId());
             packet.writeToStream(_outputStream);
             _outputStream.flush();
         }

@@ -15,4 +15,10 @@ public class RequestTargetPacket extends Packet
     public void writeToStream(DataOutputStream stream) throws IOException
     {
     }
+
+    @Override
+    public byte getId()
+    {
+        return 1;
+    }
 }

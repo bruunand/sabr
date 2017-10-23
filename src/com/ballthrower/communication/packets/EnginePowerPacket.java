@@ -27,6 +27,11 @@ public class EnginePowerPacket extends Packet
     @Override
     public void writeToStream(DataOutputStream stream) throws IOException
     {
+    }
 
+    @Override
+    public byte getId()
+    {
+        return 0;
     }
 }

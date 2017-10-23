@@ -8,4 +8,6 @@ public abstract class Packet
 {
 	public abstract void constructFromStream(DataInputStream stream) throws IOException;
 	public abstract void writeToStream(DataOutputStream stream) throws IOException;
+
+	public abstract byte getId();
 }

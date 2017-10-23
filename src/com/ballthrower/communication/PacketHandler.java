@@ -3,6 +3,7 @@ package com.ballthrower.communication;
 import com.ballthrower.communication.packets.EnginePowerPacket;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.RequestTargetPacket;
+import com.ballthrower.communication.packets.RotateRequestPacket;
 import com.ballthrower.exceptions.UnknownPacketException;
 
 /* Due to limitations of the leJOS VM, it is not possible to use Java's reflection to instantiate packets */
@@ -17,7 +18,7 @@ public class PacketHandler
             case RequestTarget:
                 return new RequestTargetPacket();
             case RotateRequest:
-                return null; //todo
+                return new RotateRequestPacket();
             default:
                 throw new UnknownPacketException("Packet Id " + id + " is unknown.");
         }

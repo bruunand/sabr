@@ -1,5 +1,7 @@
 package com.ballthrower.communication.packets;
 
+import lejos.nxt.Sound;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
