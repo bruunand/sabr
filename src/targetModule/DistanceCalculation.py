@@ -14,14 +14,14 @@ class DistanceCalculationPolynomialRegression(IDistanceCalculatable):
 
     # Model name format (Tuple): Name, polynomial degree.
     def get_model(self, model_name = ('Ploynomial',5), data_file = 'red_cup_data.txt', retrain = False):
-        if retrain is False and os.path.isfile("{}-degree-{}.pickle".format(model_name[0],model_name[1])):
+        if retrain is True and os.path.isfile("{}-degree-{}.pickle".format(model_name[0],model_name[1])):
 
             # Load model if already existing
             pickle_in = open("{}-degree-{}.pickle".format(model_name[0],model_name[1]), 'rb')
             model = pickle.load(pickle_in)
             return model
 
-        df = pd.read_csv(data_file)
+        df = pd.read_csv(data_file, ' ')
         df.drop_duplicates(subset='distance_cm',keep='first',inplace=True)
         features = np.array(df.drop(['distance_cm'],1))
         labels = np.array(df['distance_cm'])
@@ -59,3 +59,6 @@ class DistanceCalculationPolynomialRegression(IDistanceCalculatable):
         mean_height,mean_width = self.get_means_of_samples(box_sample_list)
         distance_approximation = model.predict([[mean_height,mean_width]])
         return distance_approximation
+
+asd = DistanceCalculationPolynomialRegression()
+asd.get_model()
