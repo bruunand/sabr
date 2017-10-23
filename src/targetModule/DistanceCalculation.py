@@ -13,7 +13,7 @@ from sklearn.preprocessing import PolynomialFeatures
 class DistanceCalculationPolynomialRegression(IDistanceCalculatable):
 
     # Model name format (Tuple): Name, polynomial degree.
-    '''def get_model(self, model_name = ('Ploynomial',5), data_file = 'red_cup_data.txt', retrain = False):
+    def get_model(self, model_name = ('Ploynomial',5), data_file = 'red_cup_data.txt', retrain = False):
         if retrain is False and os.path.isfile("{}-degree-{}.pickle".format(model_name[0],model_name[1])):
 
             # Load model if already existing
@@ -32,7 +32,7 @@ class DistanceCalculationPolynomialRegression(IDistanceCalculatable):
         with open("{}-degree-{}.pickle".format(model_name[0],model_name[1]), 'wb') as f:
             pickle.dump(model,f)
         return model
-    '''
+    
     def get_means_of_samples(self,box_sample_list):
         # Calculate the mean width and height of the box samples
         if len(box_sample_list) == 0:
