@@ -1,3 +1,5 @@
+package Tools;
+
 import lejos.nxt.*;
 import java.io.File;
 import java.util.Random;
@@ -5,21 +7,22 @@ import java.util.Random;
 public class RPMTest
 {
     static int power = 10;
-    
-    static NXTMotor motor = new NXTMotor(MotorPort.A);
+
+    static NXTMotor motorA = new NXTMotor(MotorPort.A);
+    static NXTMotor motorB = new NXTMotor(MotorPort.B);
     
     static long lastTime = 0;
     
     private static void setPowerAndResetCounters()
     {
         lastTime = System.currentTimeMillis();
-        motor.resetTachoCount();
-        motor.setPower(power);
+        motorA.resetTachoCount();
+        motorA.setPower(power);
     }
     
     private static void main(String[] options)
     {
-        motor.forward();
+        motorA.forward();
         setPowerAndResetCounters();
 
         Button.RIGHT.addButtonListener(new ButtonListener()

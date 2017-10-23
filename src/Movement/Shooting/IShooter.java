@@ -1,4 +1,4 @@
-package Movement.Shooting;
+package movement.shooting;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
@@ -7,5 +7,5 @@ package Movement.Shooting;
  */
 public interface IShooter
 {
-    void Shoot(Float distance);
+    void Shoot(Double distance);
 }

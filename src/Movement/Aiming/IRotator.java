@@ -1,6 +1,6 @@
-package Movement.Aiming;
+package movement.Aiming;
 
-import Target;
+//import Target;
 
 /**
  * Created by Anders Brams on 10/9/2017.
@@ -8,5 +8,5 @@ import Target;
  * describing the design of the control module component.
  */
 public interface IRotator {
-    void TurnTowards(Target target);
+    void TurnTowards();
 }

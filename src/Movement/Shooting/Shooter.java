@@ -1,35 +1,39 @@
-package Movement.Shooting;
+package movement.shooting;
 import java.lang.Math;
-import lejos.nxt.
+import lejos.nxt.*;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
  */
-public class Shooter implements IShooter
+public class Shooter
 {
     private static final double g = 9.8;
     private static final int departureAngle = 45;
-    private double factor = 1;
+    private static final double factor = 1;
     private static NXTMotor motorA = new NXTMotor(MotorPort.A);
     private static NXTMotor motorB = new NXTMotor(MotorPort.B);
-    private byte Gears = 3;
-    private int[] gearSizes = {40, 24};
+    private static final byte Gears = 3;
+    private static final int[] gearSizes = {40, 24};
 
 
-    public Shooter()
-    {
+
+    private static void main(String[] options){
+
+
+        Shoot(2.0);
+        LCD.drawString("Shot completed.", 0, 10);
+        Button.waitForAnyPress();
 
     }
-
-    private double getInitialVelocity(Float distance)
+    private static double getInitialVelocity(Double distance)
     {
         // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
         return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
     }
 
-    private int getPower(double velocity)
+    private static int getPower(double velocity)
     {
-        float maxDistance = 4;
+        double maxDistance = 4;
         double maxVelocity = getInitialVelocity(maxDistance);
 
         // Calculate power as a direct linear function.
@@ -38,14 +42,14 @@ public class Shooter implements IShooter
         return power;
     }
 
-    private double getGearFactor()
+    private static double getGearFactor()
     {
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
     }
 
 
-    @Override
-    public void Shoot(Float distance)
+
+    public static void Shoot(Double distance)
     {
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);
