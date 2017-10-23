@@ -12,6 +12,7 @@ class BoxData(object):
         self.box_array = box_array
         self.width = width
         self.height = height
+
 class DistanceInfo(object):
     width = 0
     height = 0
@@ -81,8 +82,23 @@ class TargetInfo(ITargetInfo):
         return sample_data
 
     def get_direction_info(self):
-        return (dirction_info_list,frame_x_mid)
+        box_data = self.get_box_data()
+        direction_info_list = []
+
+        for box in box_data[0]:
+            direciton_info = DirectionInfo(box.box_array)
+            direction_info_list.append(direciton_info)
+
+        return (direction_info_list, box_data[1])
+
     def get_distance_info(self):
+        box_data = self.get_box_data()
+        distance_info_list = []
+
+        for box in box_data[0]:
+            distance_info = DistanceInfo(box.width, box.height)
+            distance_info_list.append(distance_info)
+
         return (distance_info_list)
 
     def get_box_data(self):
@@ -94,8 +110,7 @@ class TargetInfo(ITargetInfo):
         frame_mid = frame_x/2
         for (box_data, frame) in zip(bounding_boxes,sample_data):
             cv2.drawContours(frame, [box_data.box_array], -1, (0, 255, 0), 2)
-        cv2.imshow('TEST', frame)
-        cv2.waitKey(1)
+
         return (bounding_boxes,frame_mid)
 
     webcam = ImageFeedWebcamera()
@@ -103,6 +118,7 @@ class TargetInfo(ITargetInfo):
 capture_device = 1
 cam = cv2.VideoCapture(capture_device)
 
-while True:
-    asd = TargetInfo()
-    asd.get_box_data()
+asd = TargetInfo()
+asd.get_direction_info()
+asd.get_distance_info()
+
