@@ -55,8 +55,7 @@ class DistanceCalculationPolynomialRegression(IDistanceCalculatable):
         return (mean_height,mean_width)
     
     def calculate_distance(self, box_sample_list):
-        #model = self.get_model()
+        model = self.get_model()
         mean_height,mean_width = self.get_means_of_samples(box_sample_list)
-        #distance_approximation = model.predict([[mean_height,mean_width]])
-        #return distance_approximation
-        return 0
+        distance_approximation = model.predict([[mean_height,mean_width]])
+        return distance_approximation

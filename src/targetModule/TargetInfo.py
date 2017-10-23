@@ -3,22 +3,17 @@ import cv2
 import numpy as np
 from Interfaces import ITargetInfo
 from ImageFeed import ImageFeedWebcamera
-from DistanceCalculation import DistanceCalculationPolynomialRegression
-from DirectionCalculation import DirectionCalculationVecLength
 
-class BoundingBox(object):
-    box = None
+class BoxData(object):
+    box_array = None
     width = 0
     height = 0
-    def __init__(self,box,width,height):
-        self.box = box
+    def __init__(self,box_array,width,height):
+        self.box_array = box_array
         self.width = width
         self.height = height
 
-
 class TargetInfo(ITargetInfo):
-    def get_direction_info(self):
-        return
 
     def image_processing(self, sample_data):
 
@@ -60,9 +55,8 @@ class TargetInfo(ITargetInfo):
                 box = np.int0(box)
                 
                 # Append to the list of coordinate sets for the obtained bounding boxes
-                box_data = BoundingBox(box,rect[1][0],rect[1][1])
+                box_data = BoxData(box,rect[1][0],rect[1][1])
                 bounding_boxes.append(box_data)
-
         # Return the coordinate sets
         return bounding_boxes
 
@@ -75,24 +69,24 @@ class TargetInfo(ITargetInfo):
         
         return sample_data
 
-    def get_distance_info(self):
+    def get_box_data(self):
         bounding_boxes = []
         while not bounding_boxes:
             sample_data = self.get_sample_data(10)
             bounding_boxes = self.image_processing(sample_data)
-        for (box_data, frame) in zip(bounding_boxes,sample_data):
-            cv2.drawContours(frame, [box_data.box], -1, (0, 255, 0), 2)
-        self.distance_approximator.calculate_distance(bounding_boxes)
-        cv2.imshow('TEST', frame)
-        cv2.waitKey(1)
-        return -1
+        frame_x = np.shape(sample_data[0])[1]
+        frame_mid = frame_x/2
+        #for (box_data, frame) in zip(bounding_boxes,sample_data):
+        #    cv2.drawContours(frame, [box_data.box_array], -1, (0, 255, 0), 2)
+        #cv2.imshow('TEST', frame)
+        #cv2.waitKey(1)
+        return (bounding_boxes,frame_mid)
 
     webcam = ImageFeedWebcamera()
-    distance_approximator = DistanceCalculationPolynomialRegression()
 
 capture_device = 1
 cam = cv2.VideoCapture(capture_device)
 
 while True:
     asd = TargetInfo()
-    asd.get_distance_info()
+    asd.get_box_data()
