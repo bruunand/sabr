@@ -1,6 +1,7 @@
 package com.ballthrower.communication;
 
 import com.ballthrower.communication.PacketHandler.PacketIds;
+import com.ballthrower.communication.packets.HandshakePacket;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.exceptions.UnknownPacketException;
 import lejos.nxt.*;
@@ -28,8 +29,20 @@ public class BluetoothCommunicator extends Communicator
 		_inputStream = _socket.openDataInputStream();
 		_outputStream = _socket.openDataOutputStream();
 
-		motor.forward(); // todo remove
-		Sound.beepSequence();
+		// Send handshake
+        HandshakePacket handshake = new HandshakePacket();
+        sendPacket(new HandshakePacket());
+
+        // Receive handshake and validate token
+        Packet receivedPacket = receivePacket();
+        if (receivedPacket.getId() == PacketHandler.PacketIds.Handshake.asByte() &&
+                handshake.getValidationToken() == ((HandshakePacket) receivedPacket).getValidationToken())
+        {
+            LCD.clear();
+            LCD.drawString("Connected", 0, 0);
+            Sound.beep();
+        }
+        // Todo: Error handling if not handshake
 	}
 
     @Override

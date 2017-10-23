@@ -46,12 +46,21 @@ class BluetoothConnection(object):
         else:
             raise(Errors.CandidateNotFoundError(self.host_name))
 
+    def perform_handshake(self):
+        # The NXT sends a handshake first, followed by a response from the host
+        handshake_packet = self.receive_packet()
+
+        if handshake_packet.get_id() == 0x0:
+            self.send_packet(handshake_packet)
+        # TODO: Error handling for faulty handshakes
+
     def connect(self):
         for attempt in range(BluetoothConnection.NUM_CONNECTION_ATTEMPTS):
             try:
                 new_connection = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
                 new_connection.connect((self.remote_address, BluetoothConnection.BLUETOOTH_PORT))
                 self.remote_connection = new_connection
+                self.perform_handshake()
                 break
             except bluetooth.btcommon.BluetoothError as error:
                 print("Failed to connect to device, retrying...")

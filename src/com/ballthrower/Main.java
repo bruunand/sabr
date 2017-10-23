@@ -2,11 +2,8 @@ package com.ballthrower;
 
 import com.ballthrower.communication.BluetoothCommunicator;
 import com.ballthrower.communication.Communicator;
-import com.ballthrower.communication.PacketHandler;
-import com.ballthrower.communication.packets.Packet;
-import com.ballthrower.communication.packets.RequestTargetPacket;
-import com.ballthrower.communication.packets.RotateRequestPacket;
-import lejos.nxt.*;
+import lejos.nxt.Button;
+import lejos.nxt.LCD;
 
 public class Main
 {
@@ -19,22 +16,6 @@ public class Main
 		while (true)
         {
             Button.ENTER.waitForPressAndRelease();
-
-            // Request target
-            communicator.sendPacket(new RequestTargetPacket());
-
-            // Receive answer to request
-            Packet requestAnswer = communicator.receivePacket();
-            if (requestAnswer.getId() == PacketHandler.PacketIds.RotateRequest.asByte())
-            {
-                LCD.drawString("Float: " + ((RotateRequestPacket)requestAnswer).getDegreesToRotate(), 0, 3);
-                NXTMotor motor = new NXTMotor(MotorPort.C);
-                motor.resetTachoCount();
-                motor.setPower(30);
-                motor.forward();
-                while (motor.getTachoCount() < ((RotateRequestPacket) requestAnswer).getDegreesToRotate());
-                motor.stop();
-            }
         }
     }
 }

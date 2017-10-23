@@ -1,9 +1,7 @@
 package com.ballthrower.communication;
 
-import com.ballthrower.communication.packets.EnginePowerPacket;
+import com.ballthrower.communication.packets.HandshakePacket;
 import com.ballthrower.communication.packets.Packet;
-import com.ballthrower.communication.packets.RequestTargetPacket;
-import com.ballthrower.communication.packets.RotateRequestPacket;
 import com.ballthrower.exceptions.UnknownPacketException;
 
 /* Due to limitations of the leJOS VM, it is not possible to use Java's reflection to instantiate packets */
@@ -13,12 +11,8 @@ public class PacketHandler
     {
         switch (id)
         {
-            case EnginePower:
-                return new EnginePowerPacket();
-            case RequestTarget:
-                return new RequestTargetPacket();
-            case RotateRequest:
-                return new RotateRequestPacket();
+            case Handshake:
+                return new HandshakePacket();
             default:
                 throw new UnknownPacketException("Packet Id " + id + " is unknown.");
         }
@@ -26,9 +20,7 @@ public class PacketHandler
 
     public enum PacketIds
     {
-        EnginePower((byte) 0x00),
-        RequestTarget((byte) 0x01),
-        RotateRequest((byte) 0x02);
+        Handshake((byte) 0x00);
 
         private byte _id;
 

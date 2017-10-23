@@ -1,39 +1,39 @@
 package com.ballthrower.communication.packets;
 
-import lejos.nxt.Sound;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.Random;
 
-public class RotateRequestPacket extends Packet
+public class HandshakePacket extends Packet
 {
-    private float _degreesToRotate = 0;
+    private short _validationToken;
 
-    public float getDegreesToRotate()
+    public HandshakePacket()
     {
-        return this._degreesToRotate;
+        _validationToken = (short) new Random().nextInt(Short.MAX_VALUE);
     }
 
-    public void setDegreesToRotate(float degrees)
+    public short getValidationToken()
     {
-        this._degreesToRotate = degrees;
+        return this._validationToken;
     }
 
     @Override
     public void constructFromStream(DataInputStream stream) throws IOException
     {
-        this.setDegreesToRotate(stream.readFloat());
+        this._validationToken = stream.readShort();
     }
 
     @Override
     public void writeToStream(DataOutputStream stream) throws IOException
     {
+        stream.writeShort(_validationToken);
     }
 
     @Override
     public byte getId()
     {
-        return 0x2;
+        return 0x0;
     }
 }
