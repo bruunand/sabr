@@ -6,6 +6,16 @@ from ImageFeed import ImageFeedWebcamera
 from DistanceCalculation import DistanceCalculationPolynomialRegression
 from DirectionCalculation import DirectionCalculationVecLength
 
+class BoundingBox(object):
+    box = None
+    width = 0
+    height = 0
+    def __init__(self,box,width,height):
+        self.box = box
+        self.width = width
+        self.height = height
+
+
 class TargetInfo(ITargetInfo):
     def get_direction_info(self):
         return
@@ -45,13 +55,13 @@ class TargetInfo(ITargetInfo):
 
                 # Draw the smallest rectangle possible around the object
                 rect = cv2.minAreaRect(best_contour)
-
                 # Get the four corners of rectangle x,y,w,h and contain the details in a box element
                 box = cv2.boxPoints(rect)
                 box = np.int0(box)
-
+                
                 # Append to the list of coordinate sets for the obtained bounding boxes
-                bounding_boxes.append(box)
+                box_data = BoundingBox(box,rect[1][0],rect[1][1])
+                bounding_boxes.append(box_data)
 
         # Return the coordinate sets
         return bounding_boxes
@@ -70,15 +80,17 @@ class TargetInfo(ITargetInfo):
         while not bounding_boxes:
             sample_data = self.get_sample_data(10)
             bounding_boxes = self.image_processing(sample_data)
-        for (box, frame) in zip(bounding_boxes,sample_data):
-            cv2.drawContours(frame, [box], -1, (0, 255, 0), 2)
+        for (box_data, frame) in zip(bounding_boxes,sample_data):
+            cv2.drawContours(frame, [box_data.box], -1, (0, 255, 0), 2)
+        self.distance_approximator.calculate_distance(bounding_boxes)
         cv2.imshow('TEST', frame)
         cv2.waitKey(1)
         return -1
 
     webcam = ImageFeedWebcamera()
+    distance_approximator = DistanceCalculationPolynomialRegression()
 
-capture_device = 0
+capture_device = 1
 cam = cv2.VideoCapture(capture_device)
 
 while True:
