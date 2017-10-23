@@ -12,6 +12,17 @@ class BoxData(object):
         self.box_array = box_array
         self.width = width
         self.height = height
+class DistanceInfo(object):
+    width = 0
+    height = 0
+    def __init__(self,width,height):
+        self.width = width
+        self.height = height
+
+class DirectionInfo(object):
+    box_array = None
+    def __init__(self,box_array):
+        self.box_array = box_array
 
 class TargetInfo(ITargetInfo):
 
@@ -70,9 +81,9 @@ class TargetInfo(ITargetInfo):
         return sample_data
 
     def get_direction_info(self):
-        return
+        return (dirction_info_list,frame_x_mid)
     def get_distance_info(self):
-        return
+        return (distance_info_list)
 
     def get_box_data(self):
         bounding_boxes = []
