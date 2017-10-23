@@ -1,5 +1,7 @@
 package com.ballthrower.communication.packets;
 
+import com.ballthrower.communication.PacketHandler;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -31,9 +33,16 @@ public class HandshakePacket extends Packet
         stream.writeShort(_validationToken);
     }
 
-    @Override
-    public byte getId()
+    public boolean isValidReply(Packet other)
     {
-        return 0x0;
+        return other.getId() == PacketHandler.PacketIds.Handshake &&
+                ((HandshakePacket) other).getValidationToken() == this.getValidationToken();
+
+    }
+
+    @Override
+    public PacketHandler.PacketIds getId()
+    {
+        return PacketHandler.PacketIds.Handshake;
     }
 }

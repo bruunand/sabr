@@ -19,15 +19,3 @@ public class Main
         }
     }
 }
-
-
-/*            Packet packet = communicator.receivePacket();
-
-            if (packet instanceof EnginePowerPacket)
-                new NXTMotor(MotorPort.A).setPower(((EnginePowerPacket) packet).getEnginePower());
-            else if (packet instanceof PingPacket)
-            {
-                // In case of the ping packet, we simply return the same packet
-                Sound.buzz();
-                communicator.sendPacket(packet);
-            }*/

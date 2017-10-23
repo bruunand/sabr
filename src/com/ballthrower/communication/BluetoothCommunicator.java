@@ -34,9 +34,7 @@ public class BluetoothCommunicator extends Communicator
         sendPacket(new HandshakePacket());
 
         // Receive handshake and validate token
-        Packet receivedPacket = receivePacket();
-        if (receivedPacket.getId() == PacketHandler.PacketIds.Handshake.asByte() &&
-                handshake.getValidationToken() == ((HandshakePacket) receivedPacket).getValidationToken())
+        if (handshake.isValidReply(receivePacket()))
         {
             LCD.clear();
             LCD.drawString("Connected", 0, 0);
@@ -49,12 +47,6 @@ public class BluetoothCommunicator extends Communicator
     public void closeConnection()
     {
         _socket.close();
-    }
-
-    @Override
-    public boolean isAlive()
-    {
-        return false;
     }
 
     @Override
@@ -91,7 +83,7 @@ public class BluetoothCommunicator extends Communicator
 	{
 	    try
         {
-            _outputStream.writeByte(packet.getId());
+            _outputStream.writeByte(packet.getId().asByte());
             packet.writeToStream(_outputStream);
             _outputStream.flush();
         }

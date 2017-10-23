@@ -20,7 +20,8 @@ public class PacketHandler
 
     public enum PacketIds
     {
-        Handshake((byte) 0x00);
+        Handshake((byte) 0x0),
+        TargetDirectionRequest((byte) 0x1);
 
         private byte _id;
 
