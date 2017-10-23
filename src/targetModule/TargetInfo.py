@@ -69,6 +69,11 @@ class TargetInfo(ITargetInfo):
         
         return sample_data
 
+    def get_direction_info(self):
+        return
+    def get_distance_info(self):
+        return
+
     def get_box_data(self):
         bounding_boxes = []
         while not bounding_boxes:
@@ -76,10 +81,10 @@ class TargetInfo(ITargetInfo):
             bounding_boxes = self.image_processing(sample_data)
         frame_x = np.shape(sample_data[0])[1]
         frame_mid = frame_x/2
-        #for (box_data, frame) in zip(bounding_boxes,sample_data):
-        #    cv2.drawContours(frame, [box_data.box_array], -1, (0, 255, 0), 2)
-        #cv2.imshow('TEST', frame)
-        #cv2.waitKey(1)
+        for (box_data, frame) in zip(bounding_boxes,sample_data):
+            cv2.drawContours(frame, [box_data.box_array], -1, (0, 255, 0), 2)
+        cv2.imshow('TEST', frame)
+        cv2.waitKey(1)
         return (bounding_boxes,frame_mid)
 
     webcam = ImageFeedWebcamera()
