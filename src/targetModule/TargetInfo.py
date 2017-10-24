@@ -4,28 +4,16 @@ import numpy as np
 from Interfaces import ITargetInfo
 from ImageFeed import ImageFeedWebcamera
 
-class BoxData(object):
-    box_array = None
-    width = 0
-    height = 0
-    def __init__(self,box_array,width,height):
-        self.box_array = box_array
-        self.width = width
-        self.height = height
-
-class DistanceInfo(object):
-    width = 0
-    height = 0
-    def __init__(self,width,height):
-        self.width = width
-        self.height = height
-
-class DirectionInfo(object):
-    box_array = None
-    def __init__(self,box_array):
-        self.box_array = box_array
 
 class TargetInfo(ITargetInfo):
+
+    _camera = None
+    _sample_size = None
+
+    def __init__(self, capture_device = 0, sample_size = 10):
+        self._camera = cv2.VideoCapture(capture_device)
+        self._sample_size = sample_size
+
 
     def image_processing(self, sample_data):
 
@@ -59,66 +47,31 @@ class TargetInfo(ITargetInfo):
 
             # Create a bounding box around the largest object
             if best_contour is not None:
+                bounding_boxes.append(cv2.boundingRect(best_contour))
 
-                # Draw the smallest rectangle possible around the object
-                rect = cv2.minAreaRect(best_contour)
-                # Get the four corners of rectangle x,y,w,h and contain the details in a box element
-                box = cv2.boxPoints(rect)
-                box = np.int0(box)
-                
-                # Append to the list of coordinate sets for the obtained bounding boxes
-                box_data = BoxData(box,rect[1][0],rect[1][1])
-                bounding_boxes.append(box_data)
         # Return the coordinate sets
         return bounding_boxes
 
-    def get_sample_data(self, sample_size):
+    def get_sample_data(self):
         sample_data = []
 
-        for i in range(0,sample_size):
-            ret, frame = cam.read() 
+        for i in range(0, self._sample_size):
+            ret, frame = self._camera.read() 
             sample_data.append(frame)
         
         return sample_data
 
-    def get_direction_info(self):
-        box_data = self.get_box_data()
-        direction_info_list = []
-
-        for box in box_data[0]:
-            direciton_info = DirectionInfo(box.box_array)
-            direction_info_list.append(direciton_info)
-
-        return (direction_info_list, box_data[1])
-
-    def get_distance_info(self):
-        box_data = self.get_box_data()
-        distance_info_list = []
-
-        for box in box_data[0]:
-            distance_info = DistanceInfo(box.width, box.height)
-            distance_info_list.append(distance_info)
-
-        return (distance_info_list)
-
     def get_box_data(self):
         bounding_boxes = []
+
         while not bounding_boxes:
-            sample_data = self.get_sample_data(10)
+            sample_data = self.get_sample_data()
             bounding_boxes = self.image_processing(sample_data)
+
         frame_x = np.shape(sample_data[0])[1]
         frame_mid = frame_x/2
-        for (box_data, frame) in zip(bounding_boxes,sample_data):
-            cv2.drawContours(frame, [box_data.box_array], -1, (0, 255, 0), 2)
 
-        return (bounding_boxes,frame_mid)
-
-    webcam = ImageFeedWebcamera()
-
-capture_device = 1
-cam = cv2.VideoCapture(capture_device)
+        return (bounding_boxes, frame_mid)
 
 asd = TargetInfo()
-asd.get_direction_info()
-asd.get_distance_info()
-
+asd.get_box_data()

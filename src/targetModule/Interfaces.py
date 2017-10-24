@@ -17,7 +17,21 @@ class IImageFeedable(metaclass = abc.ABCMeta):
 class ITargetInfo(metaclass = abc.ABCMeta):
 
   @abc.abstractmethod
-  def get_direction_info(self):
+  def image_processing(self, sample_data):
+    """
+      Description:
+        Processes a set of frames in the sample_data to construct bounding rectangles around the largets countours.
+
+      Args:
+        sample_data - a set of frames to be processed.
+
+      Returns:
+        A set of bounding rectangles.
+    """
+    return
+
+  @abc.abstractmethod
+  def get_box_data(self):
     """ Calculates the pixel distance from the centre target object
       to the centre line of the frame. 
       Responabilities: Image processing
@@ -29,18 +43,7 @@ class ITargetInfo(metaclass = abc.ABCMeta):
         a floating point pixel length from the target to the centre line
       """
     return
-  @abc.abstractmethod
-  def get_distance_info(self):
-    """ Calculates the distance in cm from the camera to the target object
-      Responabilities: Image processing
-      object detection and calling appropirate calculation algorithms.
 
-      Args:
-          
-      Returns:
-        a floating point distance to the target object
-      """
-    return
 
 class IDistanceCalculatable(metaclass = abc.ABCMeta):
   
