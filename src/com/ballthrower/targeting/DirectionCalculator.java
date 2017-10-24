@@ -1,20 +1,20 @@
+package com.ballthrower.targeting;
 
-import java.lang.Math.sqrt;
-import ITargetBoxInfo.ITargetBoxInfo;
 
 public class DirectionCalculator implements IDirectionCalculateable
 {
-    private float const _degreesPerPixel = 0.1017;
+    private static final float _degreesPerPixel = 0.1017F;
+
     public float CalculateDirection(ITargetBoxInfo target)
     {
-        int iterations = target.GetSamples();
+        int iterations = target.getSamples();
         float sumDistances = 0;
-        int frameMid = target.GetFrameMid();
+        float frameMid = target.getFrameMid();
         for(int i=0;i<iterations;++i)
         {
             int xTopLeft = target.GetXPostion(i);
-            int height = target.GetHeight(i);
-            int xCentre = xTopLeft + height/2;
+            float height = target.GetHeight(i);
+            float xCentre = xTopLeft + height/2;
             vec2lineX = (frameMid-xCentre);
             sumDistances += (float)sqrt(vec2lineX*vec2lineX)
         }

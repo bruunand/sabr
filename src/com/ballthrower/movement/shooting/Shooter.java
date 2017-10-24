@@ -1,4 +1,5 @@
-package Movement.Shooting;
+package com.ballthrower.movement.shooting;
+
 import java.lang.Math;
 import lejos.nxt.*;
 
@@ -27,7 +28,7 @@ public class Shooter implements IShooter
         double maxVelocity = getInitialVelocity(maxDistance);
 
         // Calculate power as a direct linear function.
-        int power = (velocity < maxVelocity)? 100 * (int)(velocity / maxVelocity): 100;
+        int power = (velocity < maxVelocity) ? 100 * (int)(velocity / maxVelocity): 100;
 
         return power;
     }
@@ -36,8 +37,6 @@ public class Shooter implements IShooter
     {
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
     }
-
-
 
     public void Shoot(Double distance)
     {
