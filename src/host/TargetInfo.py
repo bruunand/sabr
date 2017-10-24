@@ -4,7 +4,6 @@ import numpy as np
 from Interfaces import ITargetInfo
 from ImageFeed import ImageFeedWebcamera
 
-
 class TargetInfo(ITargetInfo):
 
     _camera = None
@@ -50,9 +49,9 @@ class TargetInfo(ITargetInfo):
 
             # Get rid of background noise using erosion
             element = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
-            mask = cv2.erode(mask,element, iterations=2)
-            mask = cv2.dilate(mask,element,iterations=2)
-            mask = cv2.erode(mask,element)
+            mask = cv2.erode(mask, element, iterations=2)
+            mask = cv2.dilate(mask, element, iterations=2)
+            mask = cv2.erode(mask, element)
 
             # Create Contours for all objects in the defined colorspace
             _, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
