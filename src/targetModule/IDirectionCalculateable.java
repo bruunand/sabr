@@ -1,6 +1,6 @@
-
+import ITargetBoxInfo.ITargetBoxInfo;
 
 public interface IDirectionCalculateable
 {
-    float CalculateDirection();
+    float CalculateDirection(ITargetBoxInfo target);
 }

@@ -1,8 +1,9 @@
-import java.util.ArrayList;
+
+import ITargetBoxInfo.ITargetBoxInfo;
 
 public class DistanceCalculator implements IDistanceCalculateable
 {
-    int CalculateDistance(ArrayList<ArrayList<integer>> boxInfo)
+    float CalculateDistance(import ITargetBoxInfo.ITargetBoxInfo)
     {
         return -1;
     }

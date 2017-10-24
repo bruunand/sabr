@@ -1,5 +1,7 @@
 
+import ITargetBoxInfo.ITargetBoxInfo;
+
 public interface IDistanceCalculateable
 {
-    int CalculateDistance();
+    float CalculateDistance(ITargetBoxInfo target);
 }

@@ -1,10 +1,11 @@
 
 import java.lang.Math.sqrt;
+import ITargetBoxInfo.ITargetBoxInfo;
 
 public class DirectionCalculator implements IDirectionCalculateable
 {
     private float const _degreesPerPixel = 0.1017;
-    public float CalculateDirection(TargetBoxInfo target)
+    public float CalculateDirection(ITargetBoxInfo target)
     {
         int iterations = target.GetSamples();
         float sumDistances = 0;
