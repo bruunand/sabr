@@ -15,6 +15,7 @@ def handle_target_request(packet):
 id_handler_map = {Packets.PacketIds.TARGET_INFO_REQUEST : handle_target_request}
 
 def handle_packet(packet):
+	# Todo: Check if handler exists
 	id_handler_map[packet.get_id()](packet)
 
 connection = BluetoothConnection("YAYER")
