@@ -2,6 +2,7 @@ package com.ballthrower.communication;
 
 import com.ballthrower.communication.packets.HandshakePacket;
 import com.ballthrower.communication.packets.Packet;
+import com.ballthrower.communication.packets.TargetInfoRequestPacket;
 import com.ballthrower.exceptions.UnknownPacketException;
 
 /* Due to limitations of the leJOS VM, it is not possible to use Java's reflection to instantiate packets */
@@ -13,6 +14,8 @@ public class PacketHandler
         {
             case Handshake:
                 return new HandshakePacket();
+            case TargetDirectionRequest:
+                return new TargetInfoRequestPacket();
             default:
                 throw new UnknownPacketException("Packet Id " + id + " is unknown.");
         }
