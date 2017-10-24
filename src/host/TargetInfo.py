@@ -14,8 +14,10 @@ class TargetInfo(ITargetInfo):
         self._camera = cv2.VideoCapture(capture_device)
         self._sample_size = sample_size
 
+    def image_processing(self):
+        sample_data = self.get_sample_data()
 
-    def image_processing(self, sample_data):
+        frame_width = np.shape(sample_data[0])[1]
 
         bounding_boxes = []
 
@@ -50,7 +52,7 @@ class TargetInfo(ITargetInfo):
                 bounding_boxes.append(cv2.boundingRect(best_contour))
 
         # Return the coordinate sets
-        return bounding_boxes
+        return (bounding_boxes, frame_width)
 
     def get_sample_data(self):
         sample_data = []
@@ -60,18 +62,3 @@ class TargetInfo(ITargetInfo):
             sample_data.append(frame)
         
         return sample_data
-
-    def get_box_data(self):
-        bounding_boxes = []
-
-        while not bounding_boxes:
-            sample_data = self.get_sample_data()
-            bounding_boxes = self.image_processing(sample_data)
-
-        frame_x = np.shape(sample_data[0])[1]
-        frame_mid = frame_x/2
-
-        return (bounding_boxes, frame_mid)
-
-asd = TargetInfo()
-asd.get_box_data()
