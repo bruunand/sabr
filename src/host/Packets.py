@@ -42,13 +42,11 @@ class HandshakePacket(Packet):
         return PacketIds.HANDSHAKE
 
 class TargetInfoRequestPacket(Packet):
-    self.x_values = []
-    self.width_values = []
-    self.height_values = []
-    self.frame_width = -1
-
     def __init__(self):
-        pass
+        self.x_values = []
+        self.width_values = []
+        self.height_values = []
+        self.frame_width = -1
 
     def set_frame_width(self, width):
         self.frame_width = width
