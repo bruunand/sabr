@@ -1,5 +1,5 @@
 
-java.lang.Math.sqrt;
+import java.lang.Math.sqrt;
 
 public class DirectionCalculator implements IDirectionCalculateable
 {
