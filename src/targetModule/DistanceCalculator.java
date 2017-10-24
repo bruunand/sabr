@@ -1,7 +1,8 @@
+import java.util.ArrayList;
 
 public class DistanceCalculator implements IDistanceCalculateable
 {
-    int CalculateDistance(int boxWidth, int boxHeight)
+    int CalculateDistance(ArrayList<ArrayList<integer>> boxInfo)
     {
         return -1;
     }
