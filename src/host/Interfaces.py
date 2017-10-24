@@ -17,18 +17,43 @@ class IImageFeedable(metaclass = abc.ABCMeta):
 class ITargetInfo(metaclass = abc.ABCMeta):
 
   @abc.abstractmethod
-  def image_processing(self):
+  def get_target_info(self):
     """
       Description:
-        Processes a set of frames from the sample data collected to construct bounding rectangles around the largets countours.
+        Calls the get_sample_data() method and passes the return value to the image_processing() method.
 
       Args:
 
       Returns:
+        A touple consisting of a set of bounding rectangles and the frame width of one of the frames in the sample data
+    """
+
+
+  @abc.abstractmethod
+  def image_processing(self, sample_data):
+    """
+      Description:
+        Processes a set of frames from the passed sample data to construct bounding rectangles around the largets countours.
+
+      Args:
+        sample_data - a list of frames
+
+      Returns:
         A set of bounding rectangles.
     """
-    return
 
+
+  @abc.abstractmethod
+  def get_sample_data(self):
+    """
+      Description:
+        Queries the camera to take x amount of pictures.
+
+      Args:
+
+      Returns:
+        A set of frames / pictures.
+    """
 
 class IDistanceCalculatable(metaclass = abc.ABCMeta):
   
