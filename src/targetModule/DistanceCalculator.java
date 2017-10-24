@@ -1,7 +1,9 @@
 
+import ITargetBoxInfo.ITargetBoxInfo;
+
 public class DistanceCalculator implements IDistanceCalculateable
 {
-    int CalculateDistance(int boxWidth, int boxHeight)
+    float CalculateDistance(import ITargetBoxInfo.ITargetBoxInfo)
     {
         return -1;
     }
