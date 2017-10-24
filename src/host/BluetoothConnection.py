@@ -26,16 +26,14 @@ def find_device(target_name):
 # TODO: Error handling everywhere
 class BluetoothConnection(object):
     BLUETOOTH_PORT = 1
-    NUM_SEARCH_ATTEMPTS = 5
-    NUM_CONNECTION_ATTEMPTS = 20
-    SLEEP_BETWEEN_RETRIES = 1.0 # Measured in seconds
+    SLEEP_BETWEEN_RETRIES = 0.1
 
     def __init__(self, host_name):
         self.host_name = host_name
         self.remote_connection = None
 
-        # Search for a candidate. If no candidate is found, throw an error
-        for attempt in range(BluetoothConnection.NUM_SEARCH_ATTEMPTS):
+        # Search for a candidate. Keep searching until a candidate is found
+        while True:
             self.remote_address = find_device(host_name)
 
             if self.remote_address != None:
@@ -43,19 +41,19 @@ class BluetoothConnection(object):
             else:
                 print("Failed to find device, retrying...")
                 time.sleep(BluetoothConnection.SLEEP_BETWEEN_RETRIES)
-        else:
-            raise(Errors.CandidateNotFoundError(self.host_name))
 
     def perform_handshake(self):
         # The NXT sends a handshake first, followed by a response from the host
-        handshake_packet = self.receive_packet()
+        packet = self.receive_packet()
 
-        if handshake_packet.get_id() == 0x0:
-            self.send_packet(handshake_packet)
-        # TODO: Error handling for faulty handshakes
+        if packet.get_id() == Packets.PacketIds.HANDSHAKE:
+            print("Received handshake with token %d" % packet.get_validation_token())
+            self.send_packet(packet)
+        else:
+            raise(Errors.FaultyHandshakeError(packet.get_id()))
 
     def connect(self):
-        for attempt in range(BluetoothConnection.NUM_CONNECTION_ATTEMPTS):
+        while True:
             try:
                 new_connection = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
                 new_connection.connect((self.remote_address, BluetoothConnection.BLUETOOTH_PORT))
@@ -65,14 +63,12 @@ class BluetoothConnection(object):
             except bluetooth.btcommon.BluetoothError as error:
                 print("Failed to connect to device, retrying...")
                 time.sleep(BluetoothConnection.SLEEP_BETWEEN_RETRIES)
-        else:
-            raise(Errors.FailedToConnectError(self.host_name))
     
     def receive_packet(self):
         # Todo: Error handling
         packet_id = self.remote_connection.recv(1)[0]
 
-        # Instantiate from id using Packet's factory
+        # Instantiate from id using Packet's factory function
         packet = Packets.Packet.factory(packet_id)
         packet.construct_from_connection(self)
 

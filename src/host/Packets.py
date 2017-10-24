@@ -1,8 +1,12 @@
 from abc import ABC, abstractmethod
+from enum import IntEnum
+
+class PacketIds(IntEnum):
+    HANDSHAKE = 0x0
+    TARGET_DIRECTION_REQUEST = 0x1
 
 # Packet class - abstract, as only concrete packets can be sent
 class Packet(ABC):
-
     @abstractmethod
     def send_to_connection(self, connection):
         pass
@@ -16,12 +20,11 @@ class Packet(ABC):
         pass
 
     def factory(id):
-        if id == 0x0: return HandshakePacket()
+        if id == PacketIds.HANDSHAKE: return HandshakePacket()
 
         return None
 
 class HandshakePacket(Packet):
-
     def __init__(self):
         pass
 
@@ -31,5 +34,8 @@ class HandshakePacket(Packet):
     def construct_from_connection(self, connection):
         self.validation_token = connection.receive_short()
 
+    def get_validation_token(self):
+        return self.validation_token
+
     def get_id(self):
-        return 0x0
+        return PacketIds.HANDSHAKE
