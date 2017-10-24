@@ -8,7 +8,7 @@ def handle_target_request(packet):
 	print("Target information requested")	
 
 	# Request target information from vision module
-	bounding_boxes, frame_width = target_info.image_processing()
+	bounding_boxes, frame_width = target_info.get_target_info()
 
 	# Construct and send packet
 	packet = Packets.Packet.factory(Packets.PacketIds.TARGET_INFO_REQUEST)
