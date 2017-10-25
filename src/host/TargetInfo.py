@@ -2,7 +2,6 @@ import abc
 import cv2
 import numpy as np
 from Interfaces import ITargetInfo
-from ImageFeed import ImageFeedWebcamera
 
 class TargetInfo(ITargetInfo):
 
@@ -24,9 +23,6 @@ class TargetInfo(ITargetInfo):
 
     	# Process the sample data to a list of bounding boxes (a bounding box / rectangle consists of four integers: x-coordinate, y-coordinate, width and height)
     	bounding_boxes = self.image_processing(sample_data)
-
-    	for item in bounding_boxes:
-    		print(item)
 
     	# Return the bounding boxes and frame width as a touple
     	return (bounding_boxes, frame_width)
