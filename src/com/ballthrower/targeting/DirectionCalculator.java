@@ -9,7 +9,7 @@ public class DirectionCalculator implements IDirectionCalculateable
 
     public float CalculateDirection(ITargetBoxInfo target)
     {
-        int iterations = target.getSamples();
+        /*int iterations = target.getSamples();
         float sumDistances = 0;
         float frameMid = target.getFrameMid();
         for(int i=0;i<iterations;++i)
@@ -22,6 +22,7 @@ public class DirectionCalculator implements IDirectionCalculateable
         }
         float meanDistance = sumDistances/iterations;
         float angle2Rotate =  meanDistance * _degreesPerPixel;
-        return angle2Rotate;
+        return angle2Rotate;*/
+        return 0;
     }
 }

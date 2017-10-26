@@ -2,47 +2,52 @@ package com.ballthrower.targeting;
 
 public class TargetBoxInfo implements ITargetBoxInfo
 {
-    TargetBoxInfo(int samples)
-    {
-        this._samples = samples;
-        _boxHeights = new float[samples];
-        _xPositions = new int[samples];
-    }
-
-    private int _samples;
+    private byte _sampleCount;
     private float[] _boxHeights;
-    private int[] _xPositions;
-    private float _frameMid;
+    private short[] _xPositions;
+    private short _frameWidth;
 
-    // Todo: Fix naming conventions
-    public void SetHeight(int index, float val)
+    public TargetBoxInfo(byte sampleCount)
     {
-        _boxHeights[index] = val;
-    }
-    public void SetXTopPos(int index, int val)
-    {
-        _xPositions[index] = val;
-    }
-    public void SetFrameMid(int val)
-    {
-        _frameMid = val;
+        this._sampleCount = sampleCount;
+        this._xPositions = new short[sampleCount];
+        this._boxHeights = new float[sampleCount];
     }
 
-    public float[] GetHeightList() { return _boxHeights; }
-    public float GetHeight(int index)
+    public void setHeight(byte index, float val)
     {
-        return _boxHeights[index];
+        this._boxHeights[index] = val;
     }
-    public int GetXTopPos(int index)
+
+    public void setXTopPos(byte index, short val)
     {
-        return _xPositions[index];
+        this._xPositions[index] = val;
     }
-    public float getFrameMid()
+
+    public void setFrameWidth(short val)
     {
-        return _frameMid;
+        this._frameWidth = val;
     }
-    public int getSamples()
+
+    public float[] getHeightList() { return this._boxHeights; }
+
+    public float getHeight(byte index)
     {
-        return _samples;
+        return this._boxHeights[index];
+    }
+
+    public int getXTopPos(byte index)
+    {
+        return this._xPositions[index];
+    }
+
+    public short getFrameWidth()
+    {
+        return this._frameWidth;
+    }
+
+    public byte getSampleCount()
+    {
+        return this._sampleCount;
     }
 }

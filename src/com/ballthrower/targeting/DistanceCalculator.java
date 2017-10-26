@@ -1,5 +1,7 @@
 package com.ballthrower.targeting;
 
+import lejos.nxt.Sound;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -7,14 +9,14 @@ import static java.lang.Math.abs;
 
 public class DistanceCalculator implements IDistanceCalculateable
 {
-    private static final float _targetHeight = 9;
+    private static final float _targetHeight = 10.5f;
 
-    private static final float _focalLengthHeight = 142.5f *29.5f / _targetHeight;
+    private static final float _focalLengthHeight = 142.5f * 29.5f / _targetHeight;
 
     @Override
     public float calculateDistance(ITargetBoxInfo target)
     {
-        float[] heightList = target.GetHeightList();
+        float[] heightList = target.getHeightList();
 
         float median = getMedian(heightList);
 
@@ -22,12 +24,12 @@ public class DistanceCalculator implements IDistanceCalculateable
         float deviance = 0;
         ArrayList<Float> tmp = new ArrayList<>();
 
-        for(int i = 0; i < heightList.length; i++)
+        for (float aHeightList : heightList)
         {
-            deviance = abs(median - heightList[i]);
+            deviance = abs(median - aHeightList);
 
-            if(deviance <= maxDeviance)
-                tmp.add(heightList[i]);
+            if (deviance <= maxDeviance)
+                tmp.add(aHeightList);
         }
 
         float[] refinedHeightList = new float[tmp.size()];
@@ -45,13 +47,14 @@ public class DistanceCalculator implements IDistanceCalculateable
         return _focalLengthHeight * _targetHeight / median;
     }
 
-    private float getMedian(float[] arr) {
+    private float getMedian(float[] arr)
+    {
         float median;
         Arrays.sort(arr);
         if (arr.length % 2 == 0)
-            median = (arr[arr.length/2] + arr[arr.length/2 - 1])/2;
+            median = (arr[arr.length / 2] + arr[arr.length / 2 - 1]) / 2;
         else
-            median = arr[arr.length/2];
+            median = arr[arr.length / 2];
 
         return median;
     }
