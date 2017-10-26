@@ -74,4 +74,4 @@ fabric.properties
 hs_err_pid*
 
 # Byte-compiled / optimized / DLL files
-src/targetModule/__pycache__/
+**/__pycache__/
