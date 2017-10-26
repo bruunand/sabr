@@ -1,8 +1,6 @@
 package com.ballthrower.communication.packets;
 
 import com.ballthrower.communication.PacketHandler;
-import lejos.nxt.LCD;
-import lejos.nxt.Sound;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
