@@ -4,15 +4,32 @@ import numpy as np
 from Interfaces import ITargetInfo
 from ImageFeed import ImageFeedWebcamera
 
-
 class TargetInfo(ITargetInfo):
 
     _camera = None
     _sample_size = None
 
+    # Initialize TargetInfo with default capture device set to 0 and sample size set to 10
     def __init__(self, capture_device = 0, sample_size = 10):
         self._camera = cv2.VideoCapture(capture_device)
         self._sample_size = sample_size
+
+    def get_target_info(self):
+    	
+    	# Retrieve a list of sample data to be processed
+    	sample_data = self.get_sample_data()
+
+    	# Get the frame width of each frame in the sample list
+    	frame_width = np.shape(sample_data[0])[1]
+
+    	# Process the sample data to a list of bounding boxes (a bounding box / rectangle consists of four integers: x-coordinate, y-coordinate, width and height)
+    	bounding_boxes = self.image_processing(sample_data)
+
+    	for item in bounding_boxes:
+    		print(item)
+
+    	# Return the bounding boxes and frame width as a touple
+    	return (bounding_boxes, frame_width)
 
 
     def image_processing(self, sample_data):
@@ -32,9 +49,9 @@ class TargetInfo(ITargetInfo):
 
             # Get rid of background noise using erosion
             element = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
-            mask = cv2.erode(mask,element, iterations=2)
-            mask = cv2.dilate(mask,element,iterations=2)
-            mask = cv2.erode(mask,element)
+            mask = cv2.erode(mask, element, iterations=2)
+            mask = cv2.dilate(mask, element, iterations=2)
+            mask = cv2.erode(mask, element)
 
             # Create Contours for all objects in the defined colorspace
             _, contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -60,18 +77,3 @@ class TargetInfo(ITargetInfo):
             sample_data.append(frame)
         
         return sample_data
-
-    def get_box_data(self):
-        bounding_boxes = []
-
-        while not bounding_boxes:
-            sample_data = self.get_sample_data()
-            bounding_boxes = self.image_processing(sample_data)
-
-        frame_x = np.shape(sample_data[0])[1]
-        frame_mid = frame_x/2
-
-        return (bounding_boxes, frame_mid)
-
-asd = TargetInfo()
-asd.get_box_data()

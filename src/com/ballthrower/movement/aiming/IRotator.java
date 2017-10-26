@@ -1,4 +1,4 @@
-package movement.Aiming;
+package com.ballthrower.movement.aiming;
 
 //import Target;
 
@@ -7,6 +7,7 @@ package movement.Aiming;
  * Should be used as defined in the UML diagram
  * describing the design of the control module component.
  */
-public interface IRotator {
+public interface IRotator
+{
     void TurnTowards();
 }

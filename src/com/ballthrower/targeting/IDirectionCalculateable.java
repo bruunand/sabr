@@ -1,4 +1,4 @@
-import ITargetBoxInfo.ITargetBoxInfo;
+package com.ballthrower.targeting;
 
 public interface IDirectionCalculateable
 {

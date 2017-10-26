@@ -2,13 +2,25 @@ from BluetoothConnection import BluetoothConnection
 import TypeConverter
 import Packets
 import random
+from TargetInfo import TargetInfo
 
 def handle_target_request(packet):
-	print("Sending target information")	
+	print("Target information requested")	
+
+	# Request target information from vision module
+	bounding_boxes, frame_width = target_info.get_target_info()
+
+	# Construct and send packet
 	packet = Packets.Packet.factory(Packets.PacketIds.TARGET_INFO_REQUEST)
-	packet.set_frame_width(1000)
-	packet.append_box(500, 100.2, 133.7)
+
+	packet.set_frame_width(int(frame_width))
+	for box in bounding_boxes:
+		print(box)
+		packet.append_box(int(box[0]), box[3])
+
 	connection.send_packet(packet)
+
+	print("Done")
 
 # Mapping from ids to handlers
 # Handshake has no handler as it is handled by connector
@@ -20,6 +32,9 @@ def handle_packet(packet):
 
 connection = BluetoothConnection("YAYER")
 connection.connect()
+
+# When connected, initialize targetinfo
+target_info = TargetInfo(capture_device = 1)
 
 # Receive packets in a loop
 while True:

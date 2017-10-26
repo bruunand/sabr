@@ -1,4 +1,6 @@
+package com.ballthrower.targeting;
 
+import com.ballthrower.targeting.ITargetBoxInfo;
 
 public class TargetBoxInfo implements ITargetBoxInfo
 {
@@ -9,12 +11,14 @@ public class TargetBoxInfo implements ITargetBoxInfo
         _boxHeights = new float[samples];
         _xPositions = new int[samples];
     }
+
     private int _samples;
     private float[] _boxWidths;
     private float[] _boxHeights;
     private int[] _xPositions;
     private float _frameMid;
 
+    // Todo: Fix naming conventions
     public void SetWidth(int index, float val)
     {
         _boxWidths[index] = val;
@@ -43,11 +47,11 @@ public class TargetBoxInfo implements ITargetBoxInfo
     {
         return _xPositions[index];
     }
-    public float GetFrameMid()
+    public float getFrameMid()
     {
         return _frameMid;
     }
-    public int GetSamples()
+    public int getSamples()
     {
         return _samples;
     }

@@ -1,2 +1,0 @@
-distance_cm width height
-10 100 100

@@ -1,4 +1,4 @@
-package Movement.Shooting;
+package com.ballthrower.movement.shooting;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
