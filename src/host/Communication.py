@@ -15,9 +15,12 @@ def handle_target_request(packet):
 
 	packet.set_frame_width(int(frame_width))
 	for box in bounding_boxes:
-		packet.append_box(int(box[0]), box[2], box[3])
+		print(box)
+		packet.append_box(int(box[0]), box[3])
 
 	connection.send_packet(packet)
+
+	print("Done")
 
 # Mapping from ids to handlers
 # Handshake has no handler as it is handled by connector

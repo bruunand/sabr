@@ -15,7 +15,7 @@ public class TargetInfoRequestPacket extends Packet
 
     /* Box information */
     private short[] _x;//, _y;
-    private float[] _width, _height;
+    private float[] _height;
 
     @Override
     public void constructFromStream(DataInputStream stream) throws IOException
@@ -28,7 +28,6 @@ public class TargetInfoRequestPacket extends Packet
 
         // Initialize arrays based on number of box instances
         this._x = new short[numBoxInstances];
-        this._width = new float[numBoxInstances];
         this._height = new float[numBoxInstances];
 
         // Read box instances
@@ -38,7 +37,6 @@ public class TargetInfoRequestPacket extends Packet
             this._x[i] = stream.readShort();
 
             // Read box size
-            this._width[i] = stream.readFloat();
             this._height[i] = stream.readFloat();
         }
     }
@@ -56,11 +54,6 @@ public class TargetInfoRequestPacket extends Packet
     public short getBoxX(byte index)
     {
         return this._x[index];
-    }
-
-    public float getBoxWidth(byte index)
-    {
-        return this._width[index];
     }
 
     public float getBoxHeight(byte index)
