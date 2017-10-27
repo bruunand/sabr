@@ -9,9 +9,9 @@ import static java.lang.Math.abs;
 
 public class DistanceCalculator implements IDistanceCalculateable
 {
-    private static final float _targetHeight = 10.5f;
+    private static final float _targetHeight = 10f;
 
-    private static final float _focalLengthHeight = 142.5f * 29.5f / _targetHeight;
+    private static final float _focalLengthHeight = 108f * 46f / _targetHeight;
 
     @Override
     public float calculateDistance(ITargetBoxInfo target)
