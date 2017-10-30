@@ -5,10 +5,11 @@ import com.ballthrower.communication.Connection;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
+import com.ballthrower.movement.MovementController;
+import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetBoxInfo;
-import lejos.nxt.Button;
-import lejos.nxt.LCD;
+import lejos.nxt.*;
 
 public class Main
 {
@@ -20,6 +21,7 @@ public class Main
 
         DistanceCalculator calc = new DistanceCalculator();
         DirectionCalculator direction = new DirectionCalculator();
+        MovementController controller = new MovementController(new NXTRegulatedMotor(MotorPort.C), null);
 
 		while (true)
         {
@@ -38,8 +40,10 @@ public class Main
             ITargetBoxInfo targetInformation = ((TargetInfoRequestPacket)receivedPacket).getTargetBoxInfo();
             LCD.clear();
             LCD.drawString("Distance:" + calc.calculateDistance(targetInformation), 0, 0);
-            LCD.drawString("Direction:" + direction.calculateDirection(targetInformation), 0, 1);
-            LCD.drawString("Middle:" + targetInformation.getFrameWidth(), 0, 2);
+            float degrees = direction.calculateDirection(targetInformation);
+            LCD.drawString("Direction:" + degrees, 0, 1);
+            controller.getRotator().turnDegrees(degrees);
+            Sound.buzz();
         }
     }
 }

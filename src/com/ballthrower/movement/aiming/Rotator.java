@@ -1,5 +1,6 @@
-package Movement.Aiming;
+package com.ballthrower.movement.aiming;
 
+import com.ballthrower.movement.aiming.IRotator;
 import lejos.nxt.*;
 
 public class Rotator implements IRotator

@@ -1,8 +1,19 @@
-package com.ballthrower.movement;
+package Movement;
 
-/**
- * Created by Anders Brams on 10/9/2017.
- */
+import Movement.Aiming.IRotator;
+import lejos.nxt.NXTRegulatedMotor;
+
 public class MovementController
 {
+    private IRotator _rotator;
+    public IRotator getRotator()
+    {
+        return _rotator;
+    }
+
+    public MovementController(NXTRegulatedMotor rotate, NXTRegulatedMotor shooter)
+    {
+        _rotator = new IRotator(rotate);
+        /* Init shooter */
+    }
 }
