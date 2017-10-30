@@ -1,6 +1,7 @@
-package Movement;
+package com.ballthrower.movement;
 
-import Movement.Aiming.IRotator;
+import com.ballthrower.movement.aiming.IRotator;
+import com.ballthrower.movement.aiming.Rotator;
 import lejos.nxt.NXTRegulatedMotor;
 
 public class MovementController
@@ -13,7 +14,7 @@ public class MovementController
 
     public MovementController(NXTRegulatedMotor rotate, NXTRegulatedMotor shooter)
     {
-        _rotator = new IRotator(rotate);
+        _rotator = new Rotator(rotate);
         /* Init shooter */
     }
 }
