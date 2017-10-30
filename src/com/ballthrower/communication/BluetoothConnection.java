@@ -1,19 +1,20 @@
 package com.ballthrower.communication;
 
-import com.ballthrower.communication.PacketHandler.PacketIds;
 import com.ballthrower.communication.packets.HandshakePacket;
 import com.ballthrower.communication.packets.Packet;
+import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.exceptions.UnknownPacketException;
-import lejos.nxt.*;
-import lejos.nxt.comm.*;
+import lejos.nxt.LCD;
+import lejos.nxt.Sound;
+import lejos.nxt.comm.Bluetooth;
+import lejos.nxt.comm.NXTConnection;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class BluetoothCommunicator extends Communicator
+public class BluetoothConnection extends Connection
 {
-    private NXTMotor motor = new NXTMotor(MotorPort.A);
     private NXTConnection _socket;
 	private DataInputStream _inputStream;
 	private DataOutputStream _outputStream;
@@ -44,6 +45,17 @@ public class BluetoothCommunicator extends Communicator
 	}
 
     @Override
+    public DataInputStream getInputStream()
+    {
+        return this._inputStream;
+    }
+
+    public DataOutputStream getOutputStream()
+    {
+        return this._outputStream;
+    }
+
+    @Override
     public void closeConnection()
     {
         _socket.close();
@@ -59,10 +71,10 @@ public class BluetoothCommunicator extends Communicator
 
             // Query the packet handler for the packet class associated with this id
             // The packet handler also constructs the packet object
-            Packet instantiatedPacket = PacketHandler.instantiateFromId(PacketIds.fromByte(packetId));
+            Packet instantiatedPacket = Packet.instantiateFromId(PacketIds.fromByte(packetId));
 
             // Finally we deserialize the object
-            instantiatedPacket.constructFromStream(_inputStream);
+            instantiatedPacket.constructFromConnection(this);
 
             return instantiatedPacket;
         }
@@ -84,7 +96,7 @@ public class BluetoothCommunicator extends Communicator
 	    try
         {
             _outputStream.writeByte(packet.getId().asByte());
-            packet.writeToStream(_outputStream);
+            packet.writeToConnection(this);
             _outputStream.flush();
         }
         catch (IOException exception)

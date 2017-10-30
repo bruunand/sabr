@@ -1,9 +1,7 @@
 package com.ballthrower.communication.packets;
 
-import com.ballthrower.communication.PacketHandler;
+import com.ballthrower.communication.Connection;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Random;
 
@@ -22,27 +20,27 @@ public class HandshakePacket extends Packet
     }
 
     @Override
-    public void constructFromStream(DataInputStream stream) throws IOException
+    public void constructFromConnection(Connection connection) throws IOException
     {
-        this._validationToken = stream.readShort();
+        this._validationToken = connection.getInputStream().readShort();
     }
 
     @Override
-    public void writeToStream(DataOutputStream stream) throws IOException
+    public void writeToConnection(Connection connection) throws IOException
     {
-        stream.writeShort(_validationToken);
+        connection.getOutputStream().writeShort(_validationToken);
     }
 
     public boolean isValidReply(Packet other)
     {
-        return other.getId() == PacketHandler.PacketIds.Handshake &&
+        return other.getId() == PacketIds.Handshake &&
                 ((HandshakePacket) other).getValidationToken() == this.getValidationToken();
 
     }
 
     @Override
-    public PacketHandler.PacketIds getId()
+    public PacketIds getId()
     {
-        return PacketHandler.PacketIds.Handshake;
+        return PacketIds.Handshake;
     }
 }
