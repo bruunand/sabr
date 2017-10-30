@@ -15,7 +15,6 @@ def handle_target_request(packet):
 
 	packet.set_frame_width(int(frame_width))
 	for box in bounding_boxes:
-		print(box)
 		packet.append_box(int(box[0]), box[3])
 
 	connection.send_packet(packet)

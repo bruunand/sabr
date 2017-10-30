@@ -1,11 +1,10 @@
 package com.ballthrower.communication.packets;
 
-import com.ballthrower.communication.PacketHandler;
+import com.ballthrower.communication.Connection;
 import com.ballthrower.targeting.ITargetBoxInfo;
 import com.ballthrower.targeting.TargetBoxInfo;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class TargetInfoRequestPacket extends Packet
@@ -13,8 +12,10 @@ public class TargetInfoRequestPacket extends Packet
     private TargetBoxInfo _boxInfo;
 
     @Override
-    public void constructFromStream(DataInputStream stream) throws IOException
+    public void constructFromConnection(Connection connection) throws IOException
     {
+        DataInputStream stream = connection.getInputStream();
+
         // Read the width of the frame, used to calculate the middle of the image
         short frameWidth = stream.readShort();
 
@@ -39,13 +40,13 @@ public class TargetInfoRequestPacket extends Packet
     }
 
     @Override
-    public void writeToStream(DataOutputStream stream) throws IOException
+    public void writeToConnection(Connection connection) throws IOException
     {
     }
 
     @Override
-    public PacketHandler.PacketIds getId()
+    public PacketIds getId()
     {
-        return PacketHandler.PacketIds.TargetDirectionRequest;
+        return PacketIds.TargetDirectionRequest;
     }
 }
