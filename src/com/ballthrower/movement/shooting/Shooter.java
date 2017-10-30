@@ -43,29 +43,61 @@ public class Shooter implements IShooter
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);
 
-        // Debug.Log(This, factor, power);
+        int degrees = (int)((2*360) / getGearFactor());
 
+        runMotors(power);
+
+        // wait for motors to turn once
+        while( Math.abs(motorA.getTachoCount()) < degrees){}
+
+        stopMotors();
+        waitMs(100);
+        resetMotors();
+    }
+    
+    private static void runMotors(int power)
+    {
         // ready motors
         motorA.setPower(power);
         motorB.setPower(power);
-
-        int degrees = (int)(360 / getGearFactor());
-
         // start motors.
         if (Gears % 2 == 0)
         {
             motorA.forward();
-            motorA.forward();
+            motorB.forward();
         }
         else
         {
             motorA.backward();
-            motorA.backward();
+            motorB.backward();
         }
-        // wait for motors to turn once
-        while( Math.abs(motorA.getTachoCount()) < degrees ){}
-
-        LCD.drawString("Power: " + power + ".", 0, 0);
-        LCD.drawString("InitialVel: " + initialVelocity + ", ", 0, 5);
     }
+
+    private static void stopMotors()
+    {
+        motorA.stop();
+        motorB.stop();
+    }
+
+    private static void resetMotors()
+    {
+        runMotors(20);
+        waitMs(1000);
+        stopMotors();
+
+        motorA.resetTachoCount();
+    }
+
+
+    static void waitMs(long time)
+    {
+        try
+        {
+            Thread.sleep(time);
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
 }
