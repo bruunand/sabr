@@ -38,6 +38,7 @@ public class Rotator implements IRotator
 		int actualDegrees = (int)(degrees * gearRatio);
 		getMotor().rotate(actualDegrees);
 		currentHeading += actualDegrees;
+		resetHeading();
 	}
 
 	public void resetHeading()

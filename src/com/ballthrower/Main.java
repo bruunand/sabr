@@ -25,10 +25,10 @@ public class Main
 
 		while (true)
         {
-            int result = Button.waitForAnyPress();
-            if (result != Button.ID_ENTER)
+            int pressedButton = Button.waitForAnyPress();
+            if (pressedButton != Button.ID_ENTER)
                 break;
-
+            
             // Request target information
             connection.sendPacket(new TargetInfoRequestPacket());
 
@@ -42,8 +42,8 @@ public class Main
             LCD.drawString("Distance:" + calc.calculateDistance(targetInformation), 0, 0);
             float degrees = direction.calculateDirection(targetInformation);
             LCD.drawString("Direction:" + degrees, 0, 1);
-            controller.getRotator().turnDegrees(degrees);
-            Sound.buzz();
+            if (Math.abs(degrees) > 1f)
+                controller.getRotator().turnDegrees(degrees);
         }
     }
 }

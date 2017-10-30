@@ -10,7 +10,7 @@ public class DirectionCalculator implements IDirectionCalculateable
     // plzz comment thiss
     public float calculateDirection(ITargetBoxInfo target)
     {
-        int iterations = target.getSampleCount();
+        byte iterations = target.getSampleCount();
         float sumDistances = 0;
         float frameMid = target.getFrameWidth() / 2;
         for (byte i = 0; i < iterations; i++)
@@ -19,7 +19,7 @@ public class DirectionCalculator implements IDirectionCalculateable
             float height = target.getHeight(i);
             float xCentre = xTopLeft + height / 2;
             float vec2lineX = (frameMid-xCentre);
-            sumDistances += (float)sqrt(vec2lineX*vec2lineX);
+            sumDistances += vec2lineX;
         }
         float meanDistance = sumDistances/iterations;
         float angle2Rotate =  meanDistance * _degreesPerPixel;
