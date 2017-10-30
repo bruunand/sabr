@@ -1,58 +1,53 @@
 package com.ballthrower.targeting;
 
-import com.ballthrower.targeting.ITargetBoxInfo;
-
 public class TargetBoxInfo implements ITargetBoxInfo
 {
-    TargetBoxInfo(int samples)
-    {
-        this.samples = samples;
-        _boxWidths = new float[samples];
-        _boxHeights = new float[samples];
-        _xPositions = new int[samples];
-    }
-
-    private int _samples;
-    private float[] _boxWidths;
+    private byte _sampleCount;
     private float[] _boxHeights;
-    private int[] _xPositions;
-    private float _frameMid;
+    private short[] _xPositions;
+    private short _frameWidth;
 
-    // Todo: Fix naming conventions
-    public void SetWidth(int index, float val)
+    public TargetBoxInfo(byte sampleCount)
     {
-        _boxWidths[index] = val;
+        this._sampleCount = sampleCount;
+        this._xPositions = new short[sampleCount];
+        this._boxHeights = new float[sampleCount];
     }
-    public float SetHeight(int index, float val)
+
+    public void setHeight(byte index, float val)
     {
-        _boxHeights[index] = val;
+        this._boxHeights[index] = val;
     }
-    public int SetXTopPos(int index, int val)
+
+    public void setXTopPos(byte index, short val)
     {
-        _xPositions[index] = val;
+        this._xPositions[index] = val;
     }
-    public float SetFrameMid(int val)
+
+    public void setFrameWidth(short val)
     {
-        _frameMid = val;
+        this._frameWidth = val;
     }
-    public float GetWidth(int index)
+
+    public float[] getHeightList() { return this._boxHeights; }
+
+    public float getHeight(byte index)
     {
-        return _boxWidths[index];
+        return this._boxHeights[index];
     }
-    public float GetHeight(int index)
+
+    public int getXTopPos(byte index)
     {
-        return _boxHeights[index];
+        return this._xPositions[index];
     }
-    public int GetXTopPos(int index)
+
+    public short getFrameWidth()
     {
-        return _xPositions[index];
+        return this._frameWidth;
     }
-    public float getFrameMid()
+
+    public byte getSampleCount()
     {
-        return _frameMid;
-    }
-    public int getSamples()
-    {
-        return _samples;
+        return this._sampleCount;
     }
 }

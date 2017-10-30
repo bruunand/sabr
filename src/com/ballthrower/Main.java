@@ -5,6 +5,8 @@ import com.ballthrower.communication.Communicator;
 import com.ballthrower.communication.PacketHandler;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
+import com.ballthrower.targeting.DirectionCalculator;
+import com.ballthrower.targeting.DistanceCalculator;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 
@@ -28,7 +30,10 @@ public class Main
             if (receivedPacket.getId() != PacketHandler.PacketIds.TargetDirectionRequest)
                 break;
 
-            LCD.drawString("BoxInst:" + ((TargetInfoRequestPacket)receivedPacket).getBoxInstanceAmount(), 0, 2);
+            TargetInfoRequestPacket infoPacket = ((TargetInfoRequestPacket)receivedPacket);
+            DistanceCalculator calc = new DistanceCalculator();
+            LCD.clear();
+            LCD.drawString("Distance:" + calc.calculateDistance(infoPacket.getTargetBoxInfo()), 0, 0);
         }
     }
 }
