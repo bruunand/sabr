@@ -26,7 +26,7 @@ public class Rotator implements IRotator
 	public Rotator(NXTRegulatedMotor motor)//Input some motor
 	{
 		_motor = motor;
-	    _motor.setSpeed(50);
+	    _motor.setSpeed(_motor.getMaxSpeed() / 2);
 	}
 
 	/* Ratio between gears on turning module is
@@ -38,7 +38,7 @@ public class Rotator implements IRotator
 		int actualDegrees = (int)(degrees * gearRatio);
 		getMotor().rotate(actualDegrees);
 		currentHeading += actualDegrees;
-		resetHeading();
+		//resetHeading();
 	}
 
 	public void resetHeading()

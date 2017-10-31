@@ -4,6 +4,7 @@ public class TargetBoxInfo implements ITargetBoxInfo
 {
     private byte _sampleCount;
     private float[] _boxHeights;
+    private float[] _boxWidths;
     private short[] _xPositions;
     private short _frameWidth;
 
@@ -12,9 +13,15 @@ public class TargetBoxInfo implements ITargetBoxInfo
         this._sampleCount = sampleCount;
         this._xPositions = new short[sampleCount];
         this._boxHeights = new float[sampleCount];
+        this._boxWidths = new float[sampleCount];
     }
 
-    public void setHeight(byte index, float val)
+    public void setBoxWidth(byte index, float val)
+    {
+        this._boxWidths[index] = val;
+    }
+
+    public void setBoxHeight(byte index, float val)
     {
         this._boxHeights[index] = val;
     }
@@ -34,6 +41,12 @@ public class TargetBoxInfo implements ITargetBoxInfo
     public float getHeight(byte index)
     {
         return this._boxHeights[index];
+    }
+
+    @Override
+    public float getWidth(byte index)
+    {
+        return this._boxWidths[index];
     }
 
     public int getXTopPos(byte index)

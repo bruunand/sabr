@@ -44,14 +44,16 @@ class HandshakePacket(Packet):
 class TargetInfoRequestPacket(Packet):
     def __init__(self):
         self.x_values = []
+        self.width_values = []
         self.height_values = []
         self.frame_width = -1
 
     def set_frame_width(self, width):
         self.frame_width = width
 
-    def append_box(self, x, height):
+    def append_box(self, x, width, height):
         self.x_values.append(x)
+        self.width_values.append(width)
         self.height_values.append(height)
 
     def send_to_connection(self, connection):
@@ -66,6 +68,8 @@ class TargetInfoRequestPacket(Packet):
         # Write box instances
         for i in range(len(self.x_values)):
             connection.send_short(self.x_values[i])
+
+            connection.send_float(self.width_values[i])
             connection.send_float(self.height_values[i])
 
     def construct_from_connection(self, connection):

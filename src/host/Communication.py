@@ -15,7 +15,7 @@ def handle_target_request(packet):
 
 	packet.set_frame_width(int(frame_width))
 	for box in bounding_boxes:
-		packet.append_box(int(box[0]), box[3])
+		packet.append_box(int(box[0]), box[2], box[3])
 
 	connection.send_packet(packet)
 
@@ -33,7 +33,7 @@ connection = BluetoothConnection("YAYER")
 connection.connect()
 
 # When connected, initialize targetinfo
-target_info = TargetInfo(sample_size=5,capture_device = 1)
+target_info = TargetInfo(sample_size=5,capture_device = 0)
 
 # Receive packets in a loop
 while True:

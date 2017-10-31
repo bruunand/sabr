@@ -30,8 +30,9 @@ public class TargetInfoRequestPacket extends Packet
             // Read x position
             this._boxInfo.setXTopPos(i, stream.readShort());
 
-            // Read box height
-            this._boxInfo.setHeight(i, stream.readFloat());
+            // Read box size
+            this._boxInfo.setBoxWidth(i, stream.readFloat());
+            this._boxInfo.setBoxHeight(i, stream.readFloat());
         }
     }
 
