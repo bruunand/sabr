@@ -1,9 +1,9 @@
-
 import abc
 
-class Connection(metaclass = abc.ABCMeta):
+
+class Connection(metaclass=abc.ABCMeta): # Todo: Descriptions for this interface
     @abc.abstractmethod
-    def connect(self, host_name = None):
+    def connect(self, host_name=None):
         pass
 
     def disconnect(self):
@@ -41,20 +41,8 @@ class Connection(metaclass = abc.ABCMeta):
     def receive_float(self):
         pass
 
-class IImageFeedable(metaclass = abc.ABCMeta):
-    @abc.abstractmethod
-    def capture_frame(self,captureDevice=1):
-        """ Reads the current frame from the capture device
 
-            Args:
-                    company_name : the id of the capture device (opencv perspective)
-            Returns:
-                    the current frame
-            """
-        return
-
-class ITargetInfo(metaclass = abc.ABCMeta):
-
+class ITargetInfo(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_target_info(self):
         """
@@ -66,7 +54,7 @@ class ITargetInfo(metaclass = abc.ABCMeta):
             Returns:
                 A touple consisting of a set of bounding rectangles and the frame width of one of the frames in the sample data
         """
-
+        pass
 
     @abc.abstractmethod
     def image_processing(self, sample_data):
@@ -80,7 +68,7 @@ class ITargetInfo(metaclass = abc.ABCMeta):
             Returns:
                 A set of bounding rectangles.
         """
-
+        pass
 
     @abc.abstractmethod
     def get_sample_data(self):
@@ -93,30 +81,4 @@ class ITargetInfo(metaclass = abc.ABCMeta):
             Returns:
                 A set of frames / pictures.
         """
-
-class IDistanceCalculatable(metaclass = abc.ABCMeta):
-    
-    @abc.abstractmethod
-    def calculate_distance(self, box_sample_list):
-        """ asd
-
-            Args:
-                    a frame
-            Returns:
-                np.array 
-            """
-        return
-
-class IDirectionCalculatable(metaclass = abc.ABCMeta):
-
-    @abc.abstractmethod
-    def calculate_direction(self, bounding_box, frame_shape):
-        """ asd
-
-            Args:
-                    np.array containing the shape of the environment
-                    np.array containing the bounding box of the target object
-            Returns:
-                asd
-            """
-        return
+        pass

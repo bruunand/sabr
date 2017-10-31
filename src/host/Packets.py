@@ -1,9 +1,11 @@
 from abc import ABC, abstractmethod
 from enum import IntEnum
 
+
 class PacketIds(IntEnum):
     HANDSHAKE = 0x0
     TARGET_INFO_REQUEST = 0x1
+
 
 # Packet class - abstract, as only concrete packets can be sent
 class Packet(ABC):
@@ -19,11 +21,13 @@ class Packet(ABC):
     def get_id(self):
         pass
 
-    def factory(id):
-        if id == PacketIds.HANDSHAKE: return HandshakePacket()
-        if id == PacketIds.TARGET_INFO_REQUEST: return TargetInfoRequestPacket()
+    @staticmethod
+    def factory(packet_id):
+        if packet_id == PacketIds.HANDSHAKE: return HandshakePacket()
+        if packet_id == PacketIds.TARGET_INFO_REQUEST: return TargetInfoRequestPacket()
 
         return None
+
 
 class HandshakePacket(Packet):
     def __init__(self):
@@ -40,6 +44,7 @@ class HandshakePacket(Packet):
 
     def get_id(self):
         return PacketIds.HANDSHAKE
+
 
 class TargetInfoRequestPacket(Packet):
     def __init__(self):

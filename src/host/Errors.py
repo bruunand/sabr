@@ -12,4 +12,3 @@ class FaultyHandshakeError(Exception):
 
     def __str__(self):
         return "Faulty handshake received, received packet id %d instead." % (self.packet_id)
-
