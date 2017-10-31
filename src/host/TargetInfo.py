@@ -6,13 +6,11 @@ from ImageFeed import ImageFeedWebcamera
 
 class TargetInfo(ITargetInfo):
 
-    _camera = None
-    _sample_size = None
-
     # Initialize TargetInfo with default capture device set to 0 and sample size set to 10
-    def __init__(self, capture_device = 0, sample_size = 10):
+    def __init__(self, capture_device = 0, sample_size = 10, debug = False):
         self._camera = cv2.VideoCapture(capture_device)
         self._sample_size = sample_size
+        self._debug = debug
 
     def get_target_info(self):
     	
@@ -65,6 +63,16 @@ class TargetInfo(ITargetInfo):
             # Create a bounding box around the largest object
             if best_contour is not None:
                 bounding_boxes.append(cv2.boundingRect(best_contour))
+
+        if len(sample_data) > 0:
+            base_image = sample_data[0]
+
+            for box in bounding_boxes:
+                cv2.rectangle(base_image, (box[0], box[1]), (box[0] + box[2], box[1] + box[3]), (0, 255, 0), 3)
+
+            if self._debug:
+                cv2.imshow('debug', base_image)
+                cv2.waitKey(1)
 
         # Return the coordinate sets
         return bounding_boxes

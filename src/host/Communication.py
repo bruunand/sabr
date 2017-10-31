@@ -29,11 +29,11 @@ def handle_packet(packet):
 	# Todo: Check if handler exists
 	id_handler_map[packet.get_id()](packet)
 
-connection = BluetoothConnection("YAYER")
-connection.connect()
+connection = BluetoothConnection()
+connection.connect("YAYER")
 
 # When connected, initialize targetinfo
-target_info = TargetInfo(sample_size=5,capture_device = 0)
+target_info = TargetInfo(sample_size = 10, capture_device = 0, debug = True)
 
 # Receive packets in a loop
 while True:

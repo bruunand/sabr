@@ -2,6 +2,7 @@ import TypeConverter
 import Errors
 import time
 import Packets
+from Interfaces import Connection
 
 try:
     import bluetooth
@@ -24,23 +25,9 @@ def find_device(target_name):
         return candidates[0]
 
 # TODO: Error handling everywhere
-class BluetoothConnection(object):
+class BluetoothConnection(Connection):
     BLUETOOTH_PORT = 1
     SLEEP_BETWEEN_RETRIES = 0.1
-
-    def __init__(self, host_name):
-        self.host_name = host_name
-        self.remote_connection = None
-
-        # Search for a candidate. Keep searching until a candidate is found
-        while True:
-            self.remote_address = find_device(host_name)
-
-            if self.remote_address != None:
-                break
-            else:
-                print("Failed to find device, retrying...")
-                time.sleep(BluetoothConnection.SLEEP_BETWEEN_RETRIES)
 
     def perform_handshake(self):
         # The NXT sends a handshake first, followed by a response from the host
@@ -52,7 +39,18 @@ class BluetoothConnection(object):
         else:
             raise(Errors.FaultyHandshakeError(packet.get_id()))
 
-    def connect(self):
+    def connect(self, host_name):
+        # Search for a candidate. Keep searching until a candidate is found
+        while True:
+            self.remote_address = find_device(host_name)
+
+            if self.remote_address != None:
+                break
+            else:
+                print("Failed to find device, retrying...")
+                time.sleep(BluetoothConnection.SLEEP_BETWEEN_RETRIES)
+
+        # Attempt to connect to host
         while True:
             try:
                 new_connection = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
@@ -82,14 +80,14 @@ class BluetoothConnection(object):
         self.send_byte(packet.get_id())
         packet.send_to_connection(self)
 
-    def send_byte(self, content):
-        self.remote_connection.send(bytes([content]))
+    def send_byte(self, value):
+        self.remote_connection.send(bytes([value]))
 
-    def send_short(self, content):
-        self.remote_connection.send(TypeConverter.short_to_bytes(content))
+    def send_short(self, value):
+        self.remote_connection.send(TypeConverter.short_to_bytes(value))
 
-    def send_float(self, content):
-        self.remote_connection.send(TypeConverter.float_to_bytes(content))
+    def send_float(self, value):
+        self.remote_connection.send(TypeConverter.float_to_bytes(value))
 
     def receive_byte(self):
         return self.remote_connection.recv(1)[0]
