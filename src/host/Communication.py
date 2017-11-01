@@ -1,3 +1,4 @@
+import Errors
 from BluetoothConnection import BluetoothConnection
 import TypeConverter
 import Packets
@@ -12,7 +13,7 @@ def handle_target_request(packet):
     bounding_boxes, frame_width = target_info.get_target_info()
 
     # Construct and send packet
-    packet = Packets.Packet.factory(Packets.PacketIds.TARGET_INFO_REQUEST)
+    packet = Packets.Packet.instantiate_from_id(Packets.PacketIds.TARGET_INFO_REQUEST)
 
     packet.set_frame_width(int(frame_width))
     for box in bounding_boxes:
@@ -30,7 +31,7 @@ id_handler_map = {Packets.PacketIds.TARGET_INFO_REQUEST: handle_target_request}
 
 def handle_packet(packet):
     if not id_handler_map.__contains__(packet.get_id()):
-        print("No packet handler for packet id %d." % packet.get_id())
+        raise Errors.NoPacketHandlerError(packet.get_id())
     else:
         id_handler_map[packet.get_id()](packet)
 

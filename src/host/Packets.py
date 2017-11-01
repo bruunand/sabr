@@ -22,7 +22,7 @@ class Packet(ABC):
         pass
 
     @staticmethod
-    def factory(packet_id):
+    def instantiate_from_id(packet_id):
         if packet_id == PacketIds.HANDSHAKE: return HandshakePacket()
         if packet_id == PacketIds.TARGET_INFO_REQUEST: return TargetInfoRequestPacket()
 

@@ -3,12 +3,7 @@ import Errors
 import time
 import Packets
 from Interfaces import Connection
-
-try:
-    import bluetooth
-except ImportError:
-    print("Bluetooth module is not installed on this PC.")
-    # TODO: Raise error
+import bluetooth
 
 def find_device(target_name):
     candidates = []
@@ -24,7 +19,6 @@ def find_device(target_name):
     else:
         return candidates[0]
 
-# TODO: Error handling everywhere
 class BluetoothConnection(Connection):
     BLUETOOTH_PORT = 1
     SLEEP_BETWEEN_RETRIES = 0.1
@@ -39,12 +33,12 @@ class BluetoothConnection(Connection):
         else:
             raise(Errors.FaultyHandshakeError(packet.get_id()))
 
-    def connect(self, host_name):
+    def connect(self, host_name=None):
         # Search for a candidate. Keep searching until a candidate is found
         while True:
             self.remote_address = find_device(host_name)
 
-            if self.remote_address != None:
+            if self.remote_address is not None:
                 break
             else:
                 print("Failed to find device, retrying...")
@@ -59,15 +53,14 @@ class BluetoothConnection(Connection):
                 self.perform_handshake()
                 break
             except bluetooth.btcommon.BluetoothError as error:
-                print("Failed to connect to device, retrying...")
+                print("Failed to connect to device, retrying... (Bluetooth error %d)" % error.errno)
                 time.sleep(BluetoothConnection.SLEEP_BETWEEN_RETRIES)
     
     def receive_packet(self):
-        # Todo: Error handling
         packet_id = self.remote_connection.recv(1)[0]
 
         # Instantiate from id using Packet's factory function
-        packet = Packets.Packet.factory(packet_id)
+        packet = Packets.Packet.instantiate_from_id(packet_id)
         packet.construct_from_connection(self)
 
         return packet
@@ -76,8 +69,10 @@ class BluetoothConnection(Connection):
         self.remote_connection.close()
 
     def send_packet(self, packet):
-        # Todo: Error handling
+        # Each packet is initiated with its associated identifier
         self.send_byte(packet.get_id())
+
+        # Packets are responsible for transmitting the rest of their properties themselves
         packet.send_to_connection(self)
 
     def send_byte(self, value):
