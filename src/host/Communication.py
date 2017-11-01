@@ -7,21 +7,16 @@ from TargetInfo import TargetInfo
 
 
 def handle_target_request(packet):
-    print("Target information requested")
-
     # Request target information from vision module
     bounding_boxes, frame_width = target_info.get_target_info()
 
     # Construct and send packet
     packet = Packets.Packet.instantiate_from_id(Packets.PacketIds.TARGET_INFO_REQUEST)
-
     packet.set_frame_width(int(frame_width))
     for box in bounding_boxes:
         packet.append_box(int(box[0]), box[2], box[3])
 
     connection.send_packet(packet)
-
-    print("Done")
 
 
 # Mapping from ids to handlers
