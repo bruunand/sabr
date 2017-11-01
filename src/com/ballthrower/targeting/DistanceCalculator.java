@@ -1,21 +1,38 @@
 package com.ballthrower.targeting;
 
-import lejos.nxt.Sound;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import static java.lang.Math.abs;
 
+// Calculates the distance to the target object based on
+// triangle similarity using the height of the target object.
 public class DistanceCalculator implements IDistanceCalculateable
 {
+    // physical height manually measured
     private static final float _targetHeight = 10.2f;
-
+    // height represented on the image plane in pixels
     private static final float _knownHeight = 52.0f;
+    // physical distance measured manually
     private static final float _knownRealDistance = 100.0f;
-    
+
+    // focallength is the distance between the image plane and lens of the camera
     private static final float _focalLengthHeight = _knownHeight * _knownRealDistance / _targetHeight;
 
+    // Returns a float representing the distance to the target object.
+    // It assumes that the target object is close to directly infront
+    // of the image capturing device. For this reason rotation should
+    // be performed before attempting to calculate the distance.
+    //
+    // Input: An instance of a class implementing ITargetBoxInfo
+    // which contains sample data received from a data gathering
+    // device.
+    //
+    // Computation:
+    //  - Find the median height from the sample list
+    //  - Remove samples deviating more than 5% from the median
+    //  - Get median from the sample list without outliers
+    //  - Calculate the distance using the focal length
     @Override
     public float calculateDistance(ITargetBoxInfo target)
     {
@@ -25,8 +42,9 @@ public class DistanceCalculator implements IDistanceCalculateable
 
         float maxDeviance = median * 0.05f;
         float deviance = 0;
-        ArrayList<Float> tmp = new ArrayList<>();
 
+        ArrayList<Float> tmp = new ArrayList<>();
+        // Removed obvious outliers from the sample list.
         for (float aHeightList : heightList)
         {
             deviance = abs(median - aHeightList);
@@ -34,30 +52,37 @@ public class DistanceCalculator implements IDistanceCalculateable
             if (deviance <= maxDeviance)
                 tmp.add(aHeightList);
         }
-
-        float[] refinedHeightList = new float[tmp.size()];
-
-        for(int i = 0; i < tmp.size(); i++) {
-            refinedHeightList[i] = tmp.get(i);
-        }
+        float[] refinedHeightList = convertToArray(tmp);
 
         if(refinedHeightList.length == 0)
             // Query the camera for a new set of data.
             return -1;
 
         median = getMedian(refinedHeightList);
+        // see report for triangle similarity method calculation method.
+        float distanceToObject = _focalLengthHeight * _targetHeight / median;
 
-        return _focalLengthHeight * _targetHeight / median;
+        return distanceToObject;
+    }
+    private float[] convertToArray(ArrayList<Float> arr)
+    {
+        float[] newArray = new float[arr.size()];
+        int iterations = arr.size();
+        for(int i = 0; i < iterations; i++) {
+            newArray[i] = arr.get(i);
+        }
+        return newArray;
     }
 
     private float getMedian(float[] arr)
     {
         float median;
+        int arrayLength = arr.length;
         Arrays.sort(arr);
-        if (arr.length % 2 == 0)
-            median = (arr[arr.length / 2] + arr[arr.length / 2 - 1]) / 2;
+        if (arrayLength  % 2 == 0)
+            median = (arr[arrayLength  / 2] + arr[arrayLength  / 2 - 1]) / 2;
         else
-            median = arr[arr.length / 2];
+            median = arr[arrayLength  / 2];
 
         return median;
     }
