@@ -4,9 +4,17 @@ import abc
 class Connection(metaclass=abc.ABCMeta): # Todo: Descriptions for this interface
     @abc.abstractmethod
     def connect(self, host_name=None):
+        """
+            Description:
+                Connect to remote host. Return when handshake has been performed.
+        """
         pass
 
     def disconnect(self):
+        """
+            Description:
+                Disconnect from remote host.
+        """
         pass
 
     @abc.abstractmethod
