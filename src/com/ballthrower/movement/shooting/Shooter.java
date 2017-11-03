@@ -9,7 +9,7 @@ import lejos.robotics.RegulatedMotor;
  */
 public class Shooter implements IShooter
 {
-    private static final double g = 9.8;
+    private static final double g = 980;
     private static final int departureAngle = 45;
     private static final double factor = 5.0895;
     private static final double offset = 27.746;
@@ -38,7 +38,7 @@ public class Shooter implements IShooter
 
     private int getPower(double velocity)
     {
-        int power = (int)(((100*velocity) - offset)/factor);
+        int power = (int)(((velocity) - offset)/factor);
         LCD.drawString("Pow: "+ power, 0, 1);
 
         double compensationFactor = 800 / regMotor.getMaxSpeed();
