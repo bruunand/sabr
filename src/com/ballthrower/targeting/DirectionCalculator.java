@@ -13,7 +13,7 @@ public class DirectionCalculator implements IDirectionCalculateable
     {
         byte iterations = target.getSampleCount();
         if (iterations == 0)
-            return 0.0f;
+            return Float.POSITIVE_INFINITY;
 
         // Computes the sum of all the box distances to the middle of the frame
         float sumDistances = 0;

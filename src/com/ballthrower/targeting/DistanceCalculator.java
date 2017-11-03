@@ -37,7 +37,7 @@ public class DistanceCalculator implements IDistanceCalculateable
     public float calculateDistance(ITargetBoxInfo target)
     {
         if (target.getSampleCount() == 0)
-            return 0f;
+            return Float.POSITIVE_INFINITY;
 
         float[] heightList = target.getHeightList();
 
