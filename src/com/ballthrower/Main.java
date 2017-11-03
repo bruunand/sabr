@@ -9,8 +9,10 @@ import com.ballthrower.movement.MovementController;
 import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetBoxInfo;
-import com.ballthrower.tools.RotationCalibrator;
-import lejos.nxt.*;
+import lejos.nxt.Button;
+import lejos.nxt.ButtonListener;
+import lejos.nxt.LCD;
+import lejos.nxt.MotorPort;
 
 public class Main
 {
@@ -23,7 +25,6 @@ public class Main
         DistanceCalculator calc = new DistanceCalculator();
         DirectionCalculator direction = new DirectionCalculator();
         MovementController controller = new MovementController(MotorPort.C, new MotorPort[]{MotorPort.A, MotorPort.B});
-
 
         Button.ENTER.addButtonListener(new ButtonListener()
         {
@@ -47,11 +48,11 @@ public class Main
                     float degrees = direction.calculateDirection(targetInformation);
                     LCD.drawString("Direction:" + degrees, 0, 1);
                     if (Math.abs(degrees) > 3f)
-                        controller.Turn(degrees);
+                        controller.turnDegrees(degrees);
                     else
                     {
-                        LCD.drawString("Distance:" + calc.calculateDistance(targetInformation), 0, 0);
-                        controller.Shoot(calc.calculateDistance(targetInformation));
+                        LCD.drawString("Distance:" + calc.calculateDistance(targetInformation), 0, 4);
+                        controller.shootDistance(calc.calculateDistance(targetInformation));
                         break;
                     }
 
@@ -77,6 +78,6 @@ public class Main
             {
             }
         });
-
+        while(true);
     }
 }

@@ -21,7 +21,7 @@ public class Rotator implements IRotator
 	public Rotator(MotorPort motor)
 	{
 		_motor = new NXTRegulatedMotor(motor);
-	    _motor.setSpeed(5);
+	    _motor.setSpeed(50);
 	}
 
 	/* Ratio between gears on turning module is

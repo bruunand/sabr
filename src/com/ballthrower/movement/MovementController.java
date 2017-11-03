@@ -5,7 +5,6 @@ import com.ballthrower.movement.aiming.Rotator;
 import com.ballthrower.movement.shooting.IShooter;
 import com.ballthrower.movement.shooting.Shooter;
 import lejos.nxt.MotorPort;
-import lejos.nxt.NXTRegulatedMotor;
 
 public class MovementController
 {
@@ -27,12 +26,12 @@ public class MovementController
         _shooter = new Shooter(shooters);
     }
 
-    public void Shoot(float distance)
+    public void shootDistance(float distance)
     {
-        _shooter.Shoot(distance);
+        _shooter.shootDistance(distance);
     }
 
-    public void Turn(float degrees)
+    public void turnDegrees(float degrees)
     {
         _rotator.turnDegrees(degrees);
     }

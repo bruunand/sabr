@@ -51,7 +51,7 @@ public class Shooter implements IShooter
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
     }
 
-    public void Shoot(float distance)
+    public void shootDistance(float distance)
     {
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);

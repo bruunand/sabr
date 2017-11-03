@@ -21,7 +21,6 @@ def find_device(target_name):
 
 class BluetoothConnection(Connection):
     BLUETOOTH_PORT = 1
-    SLEEP_BETWEEN_RETRIES = 0.1
 
     def perform_handshake(self):
         # The NXT sends a handshake first, followed by a response from the host
@@ -42,7 +41,6 @@ class BluetoothConnection(Connection):
                 break
             else:
                 print("Failed to find device, retrying...")
-                time.sleep(BluetoothConnection.SLEEP_BETWEEN_RETRIES)
 
         # Attempt to connect to host
         while True:
@@ -54,8 +52,7 @@ class BluetoothConnection(Connection):
                 break
             except bluetooth.btcommon.BluetoothError as error:
                 print("Failed to connect to device, retrying... (Bluetooth error %d)" % error.errno)
-                time.sleep(BluetoothConnection.SLEEP_BETWEEN_RETRIES)
-    
+
     def receive_packet(self):
         packet_id = self.remote_connection.recv(1)[0]
 
