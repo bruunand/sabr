@@ -106,7 +106,7 @@ public class Shooter implements IShooter
         stopMotors();
 
         motorA.resetTachoCount();
-        motorB.resetTachoCount()
+        motorB.resetTachoCount();
     }
 
 
