@@ -22,33 +22,61 @@ public class Main
 
         DistanceCalculator calc = new DistanceCalculator();
         DirectionCalculator direction = new DirectionCalculator();
-        MovementController controller = new MovementController(new NXTRegulatedMotor(MotorPort.C), null);
+        MovementController controller = new MovementController(MotorPort.C, new MotorPort[]{MotorPort.A, MotorPort.B});
 
-		while (true)
+
+        Button.ENTER.addButtonListener(new ButtonListener()
         {
-            // Request target information
-            connection.sendPacket(new TargetInfoRequestPacket());
-
-            // Receive packet with target information
-            Packet receivedPacket = connection.receivePacket();
-            if (receivedPacket.getId() != PacketIds.TargetDirectionRequest)
-                break;
-            ITargetBoxInfo targetInformation = ((TargetInfoRequestPacket)receivedPacket).getTargetBoxInfo();
-            LCD.clear();
-            float degrees = direction.calculateDirection(targetInformation);
-            LCD.drawString("Direction:" + degrees, 0, 1);
-            if (Math.abs(degrees) > 3f)
-                controller.getRotator().turnDegrees(degrees);
-            else
-                LCD.drawString("Distance:" + calc.calculateDistance(targetInformation), 0, 0);
-
-            try
+            public void buttonPressed(Button b)
             {
-                Thread.sleep(250);
-            } catch (InterruptedException e)
-            {
-
             }
-        }
+
+            public void buttonReleased(Button b)
+            {
+                while (true)
+                {
+                    // Request target information
+                    connection.sendPacket(new TargetInfoRequestPacket());
+
+                    // Receive packet with target information
+                    Packet receivedPacket = connection.receivePacket();
+                    if (receivedPacket.getId() != PacketIds.TargetDirectionRequest)
+                        break;
+                    ITargetBoxInfo targetInformation = ((TargetInfoRequestPacket)receivedPacket).getTargetBoxInfo();
+                    LCD.clear();
+                    float degrees = direction.calculateDirection(targetInformation);
+                    LCD.drawString("Direction:" + degrees, 0, 1);
+                    if (Math.abs(degrees) > 3f)
+                        controller.Turn(degrees);
+                    else
+                    {
+                        LCD.drawString("Distance:" + calc.calculateDistance(targetInformation), 0, 0);
+                        controller.Shoot(calc.calculateDistance(targetInformation));
+                        break;
+                    }
+
+
+                    try
+                    {
+                        Thread.sleep(250);
+                    } catch (InterruptedException e)
+                    {
+
+                    }
+                }
+            }
+        });
+        Button.ESCAPE.addButtonListener(new ButtonListener()
+        {
+            public void buttonPressed(Button b)
+            {
+                System.exit(1);
+            }
+
+            public void buttonReleased(Button b)
+            {
+            }
+        });
+
     }
 }

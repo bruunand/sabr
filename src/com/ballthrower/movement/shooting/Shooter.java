@@ -14,16 +14,23 @@ public class Shooter implements IShooter
     private static final double factor = 5.0895;
     private static final double offset = 27.746;
 
+    private static NXTMotor motorA;
+    private static NXTMotor motorB;
+    private static RegulatedMotor regMotor;
 
-    private static NXTMotor motorA = new NXTMotor(MotorPort.A);
-    private static NXTMotor motorB = new NXTMotor(MotorPort.B);
     private static final byte Gears = 3;
     private static final int[] gearSizes = {40, 24};
 
-
     private static int maxSpeed = 800;
 
-    private double getInitialVelocity(Double distance)
+    public Shooter(MotorPort[] motors)
+    {
+        motorA = new NXTMotor(motors[0]);
+        motorB = new NXTMotor(motors[1]);
+        regMotor = new NXTRegulatedMotor(motors[0]);
+    }
+
+    private double getInitialVelocity(float distance)
     {
         // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
         return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
@@ -33,8 +40,7 @@ public class Shooter implements IShooter
     {
         int power = (int)((velocity - offset)/factor);
 
-        RegulatedMotor motor = new NXTRegulatedMotor(MotorPort.A);
-        double compensationFactor = 800 / motor.getMaxSpeed();
+        double compensationFactor = 800 / regMotor.getMaxSpeed();
         power = (int)(power * compensationFactor);
 
         return power;
@@ -45,7 +51,7 @@ public class Shooter implements IShooter
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
     }
 
-    public void Shoot(Double distance)
+    public void Shoot(float distance)
     {
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);

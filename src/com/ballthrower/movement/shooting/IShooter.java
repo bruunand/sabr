@@ -7,5 +7,5 @@ package com.ballthrower.movement.shooting;
  */
 public interface IShooter
 {
-    void Shoot(Double distance);
+    void Shoot(float distance);
 }

@@ -1,5 +1,6 @@
 package com.ballthrower.movement.aiming;
 
+import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;
 
 public class Rotator implements IRotator
@@ -17,9 +18,9 @@ public class Rotator implements IRotator
 		return _motor;
 	}
 
-	public Rotator(NXTRegulatedMotor motor)
+	public Rotator(MotorPort motor)
 	{
-		_motor = motor;
+		_motor = new NXTRegulatedMotor(motor);
 	    _motor.setSpeed(5);
 	}
 
