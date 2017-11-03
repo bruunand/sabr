@@ -30,7 +30,7 @@ public class Shooter implements IShooter
         regMotor = new NXTRegulatedMotor(motors[0]);
     }
 
-    private double getInitialVelocity(Double distance)
+    private double getInitialVelocity(float distance)
     {
         // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
         return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
@@ -51,7 +51,7 @@ public class Shooter implements IShooter
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
     }
 
-    public void Shoot(Double distance)
+    public void Shoot(float distance)
     {
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);

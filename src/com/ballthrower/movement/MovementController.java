@@ -26,4 +26,19 @@ public class MovementController
         /* Init shooter */
         _shooter = new Shooter(shooters);
     }
+
+    public void Shoot(float distance)
+    {
+        _shooter.Shoot(distance);
+    }
+
+    public void Turn(float degrees)
+    {
+        _rotator.turnDegrees(degrees);
+    }
+
+    public void resetHeading()
+    {
+        _rotator.resetHeading();
+    }
 }
