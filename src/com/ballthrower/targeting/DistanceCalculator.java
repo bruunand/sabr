@@ -19,6 +19,9 @@ public class DistanceCalculator implements IDistanceCalculateable
     @Override
     public float calculateDistance(ITargetBoxInfo target)
     {
+        if (target.getSampleCount() == 0)
+            return 0f;
+
         float[] heightList = target.getHeightList();
 
         float median = getMedian(heightList);

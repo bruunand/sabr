@@ -20,7 +20,7 @@ public class Rotator implements IRotator
 	public Rotator(NXTRegulatedMotor motor)
 	{
 		_motor = motor;
-	    _motor.setSpeed(_motor.getMaxSpeed() / 2);
+	    _motor.setSpeed(5);
 	}
 
 	/* Ratio between gears on turning module is
