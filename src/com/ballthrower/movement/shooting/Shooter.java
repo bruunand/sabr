@@ -39,6 +39,7 @@ public class Shooter implements IShooter
     private int getPower(double velocity)
     {
         int power = (int)((velocity - offset)/factor);
+        LCD.drawString("Pow: "+ power, 0, 1);
 
         double compensationFactor = 800 / regMotor.getMaxSpeed();
         power = (int)(power * compensationFactor);
