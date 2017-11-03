@@ -9,6 +9,7 @@ import com.ballthrower.movement.MovementController;
 import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetBoxInfo;
+import com.ballthrower.tools.RotationCalibrator;
 import lejos.nxt.*;
 
 public class Main
@@ -25,10 +26,6 @@ public class Main
 
 		while (true)
         {
-            /*int pressedButton = Button.waitForAnyPress();
-            if (pressedButton != Button.ID_ENTER)
-                break;*/
-
             // Request target information
             connection.sendPacket(new TargetInfoRequestPacket());
 
@@ -36,7 +33,6 @@ public class Main
             Packet receivedPacket = connection.receivePacket();
             if (receivedPacket.getId() != PacketIds.TargetDirectionRequest)
                 break;
-
             ITargetBoxInfo targetInformation = ((TargetInfoRequestPacket)receivedPacket).getTargetBoxInfo();
             LCD.clear();
             float degrees = direction.calculateDirection(targetInformation);

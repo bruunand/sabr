@@ -2,9 +2,14 @@ package com.ballthrower.targeting;
 
 public class DirectionCalculator implements IDirectionCalculateable
 {
-    private static final float _degreesPerPixel = 0.1017F;
+    private static final float _degreesPerPixel = 0.133F;
 
     public float calculateDirection(ITargetBoxInfo target)
+    {
+        return calculateMeanPixelDistance(target) * _degreesPerPixel;
+    }
+
+    public float calculateMeanPixelDistance(ITargetBoxInfo target)
     {
         byte iterations = target.getSampleCount();
         if (iterations == 0)
@@ -19,7 +24,6 @@ public class DirectionCalculator implements IDirectionCalculateable
             sumDistances += frameMiddle - boxOffset;
         }
 
-        // Return the mean distance times the amount of degrees per pixel
-        return (sumDistances / iterations) * _degreesPerPixel;
+        return sumDistances / iterations;
     }
 }

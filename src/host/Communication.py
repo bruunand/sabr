@@ -7,6 +7,8 @@ from TargetInfo import TargetInfo
 
 
 def handle_target_request(packet):
+    print("Information requested")
+
     # Request target information from vision module
     bounding_boxes, frame_width = target_info.get_target_info()
 
@@ -35,7 +37,7 @@ connection = BluetoothConnection()
 connection.connect("YAYER")
 
 # When connected, initialize targetinfo
-target_info = TargetInfo(sample_size=10, capture_device=0, debug=True)
+target_info = TargetInfo(sample_size=10, capture_device=1, debug=True)
 
 # Receive packets in a loop
 while True:
