@@ -39,7 +39,7 @@ public class RotationCalibrator
     /* Searches for a cup and returns its degrees per pixel. */
     public float calibrate()
     {
-        Rotator rotator = new Rotator(new NXTRegulatedMotor(MotorPort.C));
+        Rotator rotator = new Rotator(MotorPort.C);
         DirectionCalculator directionCalculator = new DirectionCalculator();
         float startDistance = directionCalculator.calculateMeanPixelDistance(getTargetInformation());
 
