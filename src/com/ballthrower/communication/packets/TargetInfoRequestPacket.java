@@ -1,81 +1,54 @@
 package com.ballthrower.communication.packets;
 
-import com.ballthrower.communication.PacketHandler;
-import lejos.nxt.LCD;
-import lejos.nxt.Sound;
+import com.ballthrower.communication.Connection;
+import com.ballthrower.targeting.ITargetBoxInfo;
+import com.ballthrower.targeting.TargetBoxInfo;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class TargetInfoRequestPacket extends Packet
 {
-    /* Frame information */
-    private short _frameWidth;
-
-    /* Box information */
-    private short[] _x;//, _y;
-    private float[] _width, _height;
+    private TargetBoxInfo _boxInfo;
 
     @Override
-    public void constructFromStream(DataInputStream stream) throws IOException
+    public void constructFromConnection(Connection connection) throws IOException
     {
+        DataInputStream stream = connection.getInputStream();
+
         // Read the width of the frame, used to calculate the middle of the image
-        this._frameWidth = stream.readShort();
+        short frameWidth = stream.readShort();
 
-        // Read number of box instances
-        byte numBoxInstances = stream.readByte();
+        // Read the number of samples and create target box info object
+        byte numBoxSamples = stream.readByte();
+        this._boxInfo = new TargetBoxInfo(numBoxSamples);
+        this._boxInfo.setFrameWidth(frameWidth);
 
-        // Initialize arrays based on number of box instances
-        this._x = new short[numBoxInstances];
-        this._width = new float[numBoxInstances];
-        this._height = new float[numBoxInstances];
-
-        // Read box instances
-        for (byte i = 0; i < numBoxInstances; i++)
+        // Read box samples
+        for (byte i = 0; i < numBoxSamples; i++)
         {
-            // Read start position (just x)
-            this._x[i] = stream.readShort();
+            // Read x position
+            this._boxInfo.setXTopPos(i, stream.readShort());
 
             // Read box size
-            this._width[i] = stream.readFloat();
-            this._height[i] = stream.readFloat();
+            this._boxInfo.setBoxWidth(i, stream.readFloat());
+            this._boxInfo.setBoxHeight(i, stream.readFloat());
         }
     }
 
-    public short getFrameWidth()
+    public ITargetBoxInfo getTargetBoxInfo()
     {
-        return this._frameWidth;
-    }
-
-    public byte getBoxInstanceAmount()
-    {
-        return (byte) this._x.length;
-    }
-
-    public short getBoxX(byte index)
-    {
-        return this._x[index];
-    }
-
-    public float getBoxWidth(byte index)
-    {
-        return this._width[index];
-    }
-
-    public float getBoxHeight(byte index)
-    {
-        return this._height[index];
+        return this._boxInfo;
     }
 
     @Override
-    public void writeToStream(DataOutputStream stream) throws IOException
+    public void writeToConnection(Connection connection) throws IOException
     {
     }
 
     @Override
-    public PacketHandler.PacketIds getId()
+    public PacketIds getId()
     {
-        return PacketHandler.PacketIds.TargetDirectionRequest;
+        return PacketIds.TargetDirectionRequest;
     }
 }

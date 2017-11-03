@@ -1,58 +1,66 @@
 package com.ballthrower.targeting;
 
-import com.ballthrower.targeting.ITargetBoxInfo;
-
 public class TargetBoxInfo implements ITargetBoxInfo
 {
-    TargetBoxInfo(int samples)
-    {
-        this.samples = samples;
-        _boxWidths = new float[samples];
-        _boxHeights = new float[samples];
-        _xPositions = new int[samples];
-    }
-
-    private int _samples;
-    private float[] _boxWidths;
+    private byte _sampleCount;
     private float[] _boxHeights;
-    private int[] _xPositions;
-    private float _frameMid;
+    private float[] _boxWidths;
+    private short[] _xPositions;
+    private short _frameWidth;
 
-    // Todo: Fix naming conventions
-    public void SetWidth(int index, float val)
+    public TargetBoxInfo(byte sampleCount)
     {
-        _boxWidths[index] = val;
+        this._sampleCount = sampleCount;
+        this._xPositions = new short[sampleCount];
+        this._boxHeights = new float[sampleCount];
+        this._boxWidths = new float[sampleCount];
     }
-    public float SetHeight(int index, float val)
+
+    public void setBoxWidth(byte index, float val)
     {
-        _boxHeights[index] = val;
+        this._boxWidths[index] = val;
     }
-    public int SetXTopPos(int index, int val)
+
+    public void setBoxHeight(byte index, float val)
     {
-        _xPositions[index] = val;
+        this._boxHeights[index] = val;
     }
-    public float SetFrameMid(int val)
+
+    public void setXTopPos(byte index, short val)
     {
-        _frameMid = val;
+        this._xPositions[index] = val;
     }
-    public float GetWidth(int index)
+
+    public void setFrameWidth(short val)
     {
-        return _boxWidths[index];
+        this._frameWidth = val;
     }
-    public float GetHeight(int index)
+
+    public float[] getHeightList() { return this._boxHeights; }
+
+    public float getHeight(byte index)
     {
-        return _boxHeights[index];
+        return this._boxHeights[index];
     }
-    public int GetXTopPos(int index)
+
+    @Override
+    public float getWidth(byte index)
     {
-        return _xPositions[index];
+        return this._boxWidths[index];
     }
-    public float getFrameMid()
+
+    public int getXTopPos(byte index)
     {
-        return _frameMid;
+        return this._xPositions[index];
     }
-    public int getSamples()
+
+    public short getFrameWidth()
     {
-        return _samples;
+        return this._frameWidth;
+    }
+
+    public byte getSampleCount()
+    {
+        return this._sampleCount;
     }
 }

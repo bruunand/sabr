@@ -1,25 +1,29 @@
 package com.ballthrower.targeting;
 
-
 public class DirectionCalculator implements IDirectionCalculateable
 {
-    private static final float _degreesPerPixel = 0.1017F;
+    private static final float _degreesPerPixel = 0.133F;
 
-    public float CalculateDirection(ITargetBoxInfo target)
+    public float calculateDirection(ITargetBoxInfo target)
     {
-        int iterations = target.getSamples();
+        return calculateMeanPixelDistance(target) * _degreesPerPixel;
+    }
+
+    public float calculateMeanPixelDistance(ITargetBoxInfo target)
+    {
+        byte iterations = target.getSampleCount();
+        if (iterations == 0)
+            return 0.0f;
+
+        // Computes the sum of all the box distances to the middle of the frame
         float sumDistances = 0;
-        float frameMid = target.getFrameMid();
-        for(int i=0;i<iterations;++i)
+        float frameMiddle = target.getFrameWidth() / 2;
+        for (byte i = 0; i < iterations; i++)
         {
-            int xTopLeft = target.GetXPostion(i);
-            float height = target.GetHeight(i);
-            float xCentre = xTopLeft + height/2;
-            vec2lineX = (frameMid-xCentre);
-            sumDistances += (float)sqrt(vec2lineX*vec2lineX)
+            float boxOffset = target.getXTopPos(i) + target.getWidth(i) / 2;
+            sumDistances += frameMiddle - boxOffset;
         }
-        int meanDistance = sumDistances/iterations;
-        int angle2Rotate = meanDistance * _degreesPerPixel;
-        return angle2Rotate;
+
+        return sumDistances / iterations;
     }
 }
