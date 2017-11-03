@@ -14,14 +14,21 @@ public class Shooter implements IShooter
     private static final double factor = 5.0895;
     private static final double offset = 27.746;
 
+    private static NXTMotor motorA;
+    private static NXTMotor motorB;
+    private static RegulatedMotor regMotor;
 
-    private static NXTMotor motorA = new NXTMotor(MotorPort.A);
-    private static NXTMotor motorB = new NXTMotor(MotorPort.B);
     private static final byte Gears = 3;
     private static final int[] gearSizes = {40, 24};
 
-
     private static int maxSpeed = 800;
+
+    public Shooter(MotorPort[] motors)
+    {
+        motorA = new NXTMotor(motors[0]);
+        motorB = new NXTMotor(motors[1]);
+        regMotor = new NXTRegulatedMotor(motors[0]);
+    }
 
     private double getInitialVelocity(Double distance)
     {
@@ -33,8 +40,7 @@ public class Shooter implements IShooter
     {
         int power = (int)((velocity - offset)/factor);
 
-        RegulatedMotor motor = new NXTRegulatedMotor(MotorPort.A);
-        double compensationFactor = 800 / motor.getMaxSpeed();
+        double compensationFactor = 800 / regMotor.getMaxSpeed();
         power = (int)(power * compensationFactor);
 
         return power;

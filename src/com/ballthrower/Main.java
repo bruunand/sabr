@@ -22,7 +22,7 @@ public class Main
 
         DistanceCalculator calc = new DistanceCalculator();
         DirectionCalculator direction = new DirectionCalculator();
-        MovementController controller = new MovementController(new NXTRegulatedMotor(MotorPort.C), null);
+        MovementController controller = new MovementController(MotorPort.C, new MotorPort[]{MotorPort.A, MotorPort.B});
 
 		while (true)
         {

@@ -2,6 +2,9 @@ package com.ballthrower.movement;
 
 import com.ballthrower.movement.aiming.IRotator;
 import com.ballthrower.movement.aiming.Rotator;
+import com.ballthrower.movement.shooting.IShooter;
+import com.ballthrower.movement.shooting.Shooter;
+import lejos.nxt.MotorPort;
 import lejos.nxt.NXTRegulatedMotor;
 
 public class MovementController
@@ -12,9 +15,15 @@ public class MovementController
         return _rotator;
     }
 
-    public MovementController(NXTRegulatedMotor rotate, NXTRegulatedMotor shooter)
+    private IShooter _shooter;
+    public IShooter getShooter() { return _shooter; }
+
+
+    public MovementController(MotorPort rotator, MotorPort[] shooters)
     {
-        _rotator = new Rotator(rotate);
+        /* Init rotator */
+        _rotator = new Rotator(rotator);
         /* Init shooter */
+        _shooter = new Shooter(shooters);
     }
 }
