@@ -30,6 +30,12 @@ public class Shooter implements IShooter
         regMotor = new NXTRegulatedMotor(motors[0]);
     }
 
+    private int getPowerLinear(float distance)
+    {
+        double compensationFactor = 800 / regMotor.getMaxSpeed();
+        return (int)(((distance * 429.7)/6.668)*compensationFactor);
+    }
+
     private double getInitialVelocity(float distance)
     {
         // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
@@ -54,8 +60,11 @@ public class Shooter implements IShooter
 
     public void shootDistance(float distance)
     {
+        /*
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);
+        */
+        int power = getPowerLinear(distance);
 
         if (power > 100)
         {
