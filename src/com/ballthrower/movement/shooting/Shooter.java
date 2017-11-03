@@ -2,6 +2,7 @@ package com.ballthrower.movement.shooting;
 
 import java.lang.Math;
 import lejos.nxt.*;
+import lejos.robotics.RegulatedMotor;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
@@ -10,11 +11,17 @@ public class Shooter implements IShooter
 {
     private static final double g = 9.8;
     private static final int departureAngle = 45;
-    private static final double factor = 1;
+    private static final double factor = 5.0895;
+    private static final double offset = 27.746;
+
+
     private static NXTMotor motorA = new NXTMotor(MotorPort.A);
     private static NXTMotor motorB = new NXTMotor(MotorPort.B);
     private static final byte Gears = 3;
     private static final int[] gearSizes = {40, 24};
+
+
+    private static int maxSpeed = 800;
 
     private double getInitialVelocity(Double distance)
     {
@@ -24,11 +31,11 @@ public class Shooter implements IShooter
 
     private int getPower(double velocity)
     {
-        double maxDistance = 4;
-        double maxVelocity = getInitialVelocity(maxDistance);
+        int power = (int)((velocity - offset)/factor);
 
-        // Calculate power as a direct linear function.
-        int power = (velocity < maxVelocity) ? 100 * (int)(velocity / maxVelocity): 100;
+        RegulatedMotor motor = new NXTRegulatedMotor(MotorPort.A);
+        double compensationFactor = 800 / motor.getMaxSpeed();
+        power = (int)(power * compensationFactor);
 
         return power;
     }
@@ -43,18 +50,31 @@ public class Shooter implements IShooter
         double initialVelocity = getInitialVelocity(distance);
         int power = getPower(initialVelocity);
 
-        int degrees = (int)((2*360) / getGearFactor());
+        if (power > 100)
+        {
+            // This is bad! Redo to throw exception!
+            LCD.drawString("Target out of range.", 0, 0 );
+            return;
+        }
+        else if (power < 70)
+        {
+            // This is bad! Redo to throw exception!
+            LCD.drawString("Target too close.", 0, 0);
+            return;
+        }
+
+        int degrees = (int)((1.5*360) / getGearFactor());
 
         runMotors(power);
 
-        // wait for motors to turn once
+        // wait for motors to turn
         while( Math.abs(motorA.getTachoCount()) < degrees){}
 
         stopMotors();
-        waitMs(100);
+        waitMs(1000);
         resetMotors();
     }
-    
+
     private static void runMotors(int power)
     {
         // ready motors
@@ -81,11 +101,12 @@ public class Shooter implements IShooter
 
     private static void resetMotors()
     {
-        runMotors(20);
-        waitMs(1000);
+        runMotors(15);
+        waitMs(2500);
         stopMotors();
 
         motorA.resetTachoCount();
+        motorB.resetTachoCount()
     }
 
 
