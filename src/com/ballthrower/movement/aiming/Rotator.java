@@ -12,11 +12,6 @@ public class Rotator implements IRotator
 	private int currentHeading = 0;
 
 	private NXTRegulatedMotor _motor;
-	
-	private NXTRegulatedMotor getMotor()
-	{
-		return _motor;
-	}
 
 	public Rotator(MotorPort motor)
 	{
@@ -31,7 +26,7 @@ public class Rotator implements IRotator
 	public void turnDegrees(float degrees)
 	{
 		int actualDegrees = (int)(degrees * GearRatio);
-		getMotor().rotate(actualDegrees);
+		_motor.rotate(actualDegrees);
 		currentHeading += actualDegrees;
 	}
 

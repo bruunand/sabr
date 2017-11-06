@@ -1,56 +1,35 @@
 package com.ballthrower.movement.shooting;
 
 import java.lang.Math;
+
+import com.ballthrower.movement.MotorController;
 import lejos.nxt.*;
 import lejos.robotics.RegulatedMotor;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
  */
-public class Shooter implements IShooter
+public class Shooter extends MotorController implements IShooter
 {
     private static final double g = 980;
     private static final int departureAngle = 45;
     private static final double factor = 5.0895;
     private static final double offset = 27.746;
-
-    private static NXTMotor motorA;
-    private static NXTMotor motorB;
     private static RegulatedMotor regMotor;
 
     private static final byte Gears = 3;
     private static final int[] gearSizes = {40, 24};
 
-    private static int maxSpeed = 800;
-
     public Shooter(MotorPort[] motors)
     {
-        motorA = new NXTMotor(motors[0]);
-        motorB = new NXTMotor(motors[1]);
+        super(new NXTMotor(motors[0]), new NXTMotor(motors[1]));
         regMotor = new NXTRegulatedMotor(motors[0]);
     }
 
     private int getPowerLinear(float distance)
     {
         double compensationFactor = 800 / regMotor.getMaxSpeed();
-        return (int)(((distance * 429.7)/6.668)*compensationFactor);
-    }
-
-    private double getInitialVelocity(float distance)
-    {
-        // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
-        return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
-    }
-
-    private int getPower(double velocity)
-    {
-        int power = (int)(((velocity) - offset)/factor);
-        LCD.drawString("Pow: "+ power, 0, 1);
-
-        double compensationFactor = 800 / regMotor.getMaxSpeed();
-        power = (int)(power * compensationFactor);
-
-        return power;
+        return (int)(((distance * 429.7)/6.668) * compensationFactor);
     }
 
     private double getGearFactor()
@@ -81,18 +60,44 @@ public class Shooter implements IShooter
 
         int degrees = (int)((1.5*360) / getGearFactor());
 
-        runMotors(power);
+        super.startMotors(power, Gears % 2 == 0);
+        super.turnDegrees(degrees);
+        super.stopMotors();
 
-        // wait for motors to turn
-        while( Math.abs(motorA.getTachoCount()) < degrees){}
+        super.waitMiliseconds(1000);
 
-        stopMotors();
-        waitMs(1000);
         resetMotors();
     }
 
-    private static void runMotors(int power)
+    private void resetMotors()
     {
+        super.startMotors(15, Gears % 2 == 0);
+        super.waitMiliseconds(2500);
+        super.stopMotors();
+
+        super.resetTacho();
+    }
+
+    private double getInitialVelocity(float distance)
+    {
+        // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
+        return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
+    }
+
+    private int getPower(double velocity)
+    {
+        int power = (int)(((velocity) - offset)/factor);
+        LCD.drawString("Pow: "+ power, 0, 1);
+
+        double compensationFactor = 800 / regMotor.getMaxSpeed();
+        power = (int)(power * compensationFactor);
+
+        return power;
+    }
+
+     /*private static void runMotors(int power)
+    {
+        super.startMotors(power, Gears % 2 == 0);
         // ready motors
         motorA.setPower(power);
         motorB.setPower(power);
@@ -107,26 +112,15 @@ public class Shooter implements IShooter
             motorA.backward();
             motorB.backward();
         }
-    }
+    }*/
 
-    private static void stopMotors()
+    /*private static void stopMotors()
     {
         motorA.stop();
         motorB.stop();
-    }
+    }*/
 
-    private static void resetMotors()
-    {
-        runMotors(15);
-        waitMs(2500);
-        stopMotors();
-
-        motorA.resetTachoCount();
-        motorB.resetTachoCount();
-    }
-
-
-    static void waitMs(long time)
+    /*private static void waitMs(long time)
     {
         try
         {
@@ -135,6 +129,5 @@ public class Shooter implements IShooter
         catch (Exception ex)
         {
         }
-    }
-
+    }*/
 }
