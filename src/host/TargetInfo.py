@@ -113,6 +113,3 @@ class TargetInfo(ITargetInfo):
             sample_data.append(frame)
 
         return sample_data
-
-asd = TargetInfo()
-asd.get_target_info()
