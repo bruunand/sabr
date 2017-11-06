@@ -5,10 +5,11 @@ from Interfaces import ITargetInfo
 
 class TargetInfo(ITargetInfo):
     # Initialize TargetInfo with default capture device set to 0 and sample size set to 10
-    def __init__(self, capture_device = 0, sample_size = 10, debug = False):
+    def __init__(self, capture_device = 1, sample_size = 10, target_width = 8.25, target_height = 10.5, debug = True):
         self._camera = cv2.VideoCapture(capture_device)
         self._sample_size = sample_size
         self._debug = debug
+        self._aspect_ratio = target_width / target_height
 
     def get_target_info(self):
 
@@ -58,6 +59,11 @@ class TargetInfo(ITargetInfo):
             # Create a bounding box around the contour
             bounding_boxes.append(cv2.boundingRect(best_contour))
 
+
+        # Refine bounding box set
+        bounding_boxes = self.remove_outliers(bounding_boxes)
+
+
         # If debugging is enabled draw all bounding boxes on the first frame and show the result
         if self._debug and len(sample_data) > 0:
             
@@ -65,12 +71,38 @@ class TargetInfo(ITargetInfo):
 
             for box in bounding_boxes:
                 cv2.rectangle(base_image, (box[0], box[1]), (box[0] + box[2], box[1] + box[3]), (0, 255, 0), 3)
+                print(box)
 
             cv2.imshow('debug', base_image)
             cv2.waitKey(1)
 
         # Return the coordinate sets
         return bounding_boxes
+
+    def remove_outliers(self, bounding_boxes, max_deviance = 20, max_return_size = 100):
+        refined_dict = {}
+        refined_set = []
+
+
+        for box in bounding_boxes:
+            aspect_ratio = box[2] / box[3]
+
+            ar_deviance = abs(self._aspect_ratio - aspect_ratio) / ((self._aspect_ratio + aspect_ratio) / 2) * 100
+
+            if ar_deviance < max_deviance:
+                refined_dict[ar_deviance] = box
+
+        i = 0
+
+        for key in sorted(refined_dict):
+            if i == max_return_size: 
+                break
+            refined_set.append(refined_dict[key])
+            i = i + 1
+
+        return refined_set
+
+
 
     def get_sample_data(self):
         sample_data = []
@@ -81,3 +113,6 @@ class TargetInfo(ITargetInfo):
             sample_data.append(frame)
 
         return sample_data
+
+asd = TargetInfo()
+asd.get_target_info()

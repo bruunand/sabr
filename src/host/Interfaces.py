@@ -90,3 +90,7 @@ class ITargetInfo(metaclass=abc.ABCMeta):
                 A set of frames / pictures.
         """
         pass
+
+    @abc.abstractmethod
+    def remove_outliers(self, bounding_boxes):
+        pass
