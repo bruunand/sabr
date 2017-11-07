@@ -1,7 +1,9 @@
 package com.ballthrower;
 
 import com.ballthrower.communication.BluetoothConnection;
+import com.ballthrower.communication.BluetoothConnectionFactory;
 import com.ballthrower.communication.Connection;
+import com.ballthrower.communication.ConnectionFactory;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
@@ -20,9 +22,8 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-        LCD.drawString("Awaiting connection", 0, 0);
-        Connection connection = new BluetoothConnection();
-		connection.awaitConnection();
+	    Robot robot = Robot.getInstance();
+	    robot.awaitConnection(new BluetoothConnectionFactory());
 
         DistanceCalculator calc = new DistanceCalculator();
         DirectionCalculator direction = new DirectionCalculator();
