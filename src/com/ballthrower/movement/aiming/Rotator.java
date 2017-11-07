@@ -9,6 +9,8 @@ public class Rotator extends MotorController implements IRotator
 	/* GearRatio = robot.numberOfGearTeeth / motor.numberOfGearTeeth. */
 	private final float GearRatio = 2.33f;
 
+	private final int MotorPower = 40;
+
 	/* Updates every time we turn so we can reset position. */
 	private int currentHeading = 0;
 
@@ -17,21 +19,20 @@ public class Rotator extends MotorController implements IRotator
 	public Rotator(MotorPort motor)
 	{
 		super(new NXTMotor(motor));
-	    //_motor.setPower(50);
 	}
 
-	/* Ratio between gears on turning module is
-	 * 56 : 40. Degrees requested must be scaled
-	 * by 1.4 and floored to i. */
-	@Override
+	/**
+	 * Rotate a specific number of degrees
+	 * @param degrees number of degrees to rotate
+	 */
 	public void turnDegrees(float degrees)
 	{
 		int actualDegrees = (int)(degrees * GearRatio);
 
 		super.resetTacho();
-		
-		super.startMotors(30, degrees > 0);
-		super.turnDegrees(actualDegrees);
+
+		super.startMotors(MotorPower, degrees > 0);
+		super.waitWhileTurning(actualDegrees);
 		super.stopMotors();
 
 		currentHeading += actualDegrees;

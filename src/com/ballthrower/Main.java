@@ -6,6 +6,8 @@ import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
 import com.ballthrower.movement.MovementController;
+import com.ballthrower.movement.shooting.IShooter;
+import com.ballthrower.movement.shooting.Shooter;
 import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetBoxInfo;

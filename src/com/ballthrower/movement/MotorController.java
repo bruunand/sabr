@@ -26,7 +26,7 @@ public class MotorController
      * Turns a number of degrees
      * @param degrees number of degrees to turn
      */
-    protected void turnDegrees(int degrees)
+    protected void waitWhileTurning(int degrees)
     {
         while( Math.abs(_motors.get(0).getTachoCount()) < degrees){}
     }

@@ -11,15 +11,16 @@ import lejos.robotics.RegulatedMotor;
  */
 public class Shooter extends MotorController implements IShooter
 {
-    private static final double g = 980;
-    private static final int departureAngle = 45;
-    private static final double factor = 10.179;
-    private static final double offset = -435.07;
-    private static RegulatedMotor regMotor;
+    private final int Gravity = 980;
+    private final int DepartureAngle = 51;
+    private final float Factor = 9.7095f;
+    private final int Offset = -415;
+    private RegulatedMotor regMotor;
 
-    private static final byte Gears = 3;
-    private static final boolean Direction = Gears % 2 == 0;
-    private static final int[] gearSizes = {40, 24};
+    //private static final byte Gears = 3;
+    private final boolean Direction = false;
+    //private static final int[] gearSizes = {40, 24};
+    private final float GearFactor = 4.630f;
 
     public Shooter(MotorPort[] motors)
     {
@@ -42,10 +43,10 @@ public class Shooter extends MotorController implements IShooter
      *
      * @return
      */
-    private double getGearFactor()
+    /*private double getGearFactor()
     {
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
-    }
+    }*/
 
     public void shootDistance(float distance)
     {
@@ -68,10 +69,10 @@ public class Shooter extends MotorController implements IShooter
             return;
         }
 
-        int degrees = (int)((1.5*360) / getGearFactor());
+        int degrees = (int)((1.5*360) / GearFactor);
 
         super.startMotors(power, Direction);
-        super.turnDegrees(degrees);
+        super.waitWhileTurning(degrees);
         super.stopMotors();
 
         super.waitMiliseconds(1000);
@@ -94,12 +95,12 @@ public class Shooter extends MotorController implements IShooter
     private double getInitialVelocity(float distance)
     {
         // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
-        return Math.sqrt((distance * g)/Math.sin(2*Math.toRadians(departureAngle)));
+        return Math.sqrt((distance * Gravity)/Math.sin(2*Math.toRadians(DepartureAngle)));
     }
 
     private int getPower(double velocity)
     {
-        int power = (int)(((velocity) - offset)/factor);
+        int power = (int)(((velocity) - Offset)/Factor);
         LCD.drawString("Pow: "+ power, 0, 1);
 
         double compensationFactor = 800 / regMotor.getMaxSpeed();
