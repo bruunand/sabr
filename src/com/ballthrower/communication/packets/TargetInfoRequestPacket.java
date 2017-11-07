@@ -2,6 +2,7 @@ package com.ballthrower.communication.packets;
 
 import com.ballthrower.communication.Connection;
 import com.ballthrower.targeting.ITargetBoxInfo;
+import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetBoxInfo;
 
 import java.io.DataInputStream;
@@ -27,12 +28,12 @@ public class TargetInfoRequestPacket extends Packet
         // Read box samples
         for (byte i = 0; i < numBoxSamples; i++)
         {
-            // Read x position
-            this._boxInfo.setXTopPos(i, stream.readShort());
+            // read info from data stream
+            short xPos = stream.readShort();
+            float width = stream.readFloat();
+            float height = stream.readFloat();
 
-            // Read box size
-            this._boxInfo.setBoxWidth(i, stream.readFloat());
-            this._boxInfo.setBoxHeight(i, stream.readFloat());
+            this._boxInfo.getBoxes()[i] = new TargetBox(height, width, xPos);
         }
     }
 

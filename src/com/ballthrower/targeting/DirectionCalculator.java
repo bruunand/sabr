@@ -9,18 +9,19 @@ public class DirectionCalculator implements IDirectionCalculateable
         return calculateMeanPixelDistance(target) * _degreesPerPixel;
     }
 
-    public float calculateMeanPixelDistance(ITargetBoxInfo target)
+    public float calculateMeanPixelDistance(ITargetBoxInfo targets)
     {
-        byte iterations = target.getSampleCount();
+        byte iterations = targets.getSampleCount();
         if (iterations == 0)
             return Float.POSITIVE_INFINITY;
 
         // Computes the sum of all the box distances to the middle of the frame
         float sumDistances = 0;
-        float frameMiddle = target.getFrameWidth() / 2;
+        float frameMiddle = targets.getFrameWidth() / 2;
         for (byte i = 0; i < iterations; i++)
         {
-            float boxOffset = target.getXTopPos(i) + target.getWidth(i) / 2;
+            float boxOffset = targets.getBoxes()[i].getXPosition()
+                            + targets.getBoxes()[i].getWidth() / 2;
             sumDistances += frameMiddle - boxOffset;
         }
 
