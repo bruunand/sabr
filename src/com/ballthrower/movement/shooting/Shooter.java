@@ -13,11 +13,12 @@ public class Shooter extends MotorController implements IShooter
 {
     private static final double g = 980;
     private static final int departureAngle = 45;
-    private static final double factor = 5.0895;
-    private static final double offset = 27.746;
+    private static final double factor = 10.179;
+    private static final double offset = -435.07;
     private static RegulatedMotor regMotor;
 
     private static final byte Gears = 3;
+    private static final boolean Direction = Gears % 2 == 0;
     private static final int[] gearSizes = {40, 24};
 
     public Shooter(MotorPort[] motors)
@@ -26,12 +27,21 @@ public class Shooter extends MotorController implements IShooter
         regMotor = new NXTRegulatedMotor(motors[0]);
     }
 
+    /**
+     * Calculate the power needed to shoot a specific distance, defined by battery power. Assume linear relation between distance and motor power required.
+     * @param distance the distance to shoot.
+     * @return the motor power needed.
+     */
     private int getPowerLinear(float distance)
     {
         double compensationFactor = 800 / regMotor.getMaxSpeed();
         return (int)(((distance * 429.7)/6.668) * compensationFactor);
     }
 
+    /**
+     *
+     * @return
+     */
     private double getGearFactor()
     {
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
@@ -60,7 +70,7 @@ public class Shooter extends MotorController implements IShooter
 
         int degrees = (int)((1.5*360) / getGearFactor());
 
-        super.startMotors(power, Gears % 2 == 0);
+        super.startMotors(power, Direction);
         super.turnDegrees(degrees);
         super.stopMotors();
 
@@ -69,9 +79,12 @@ public class Shooter extends MotorController implements IShooter
         resetMotors();
     }
 
+    /**
+     * Run motor at a slow speed to stop at tension stick
+     */
     private void resetMotors()
     {
-        super.startMotors(15, Gears % 2 == 0);
+        super.startMotors(15, Direction);
         super.waitMiliseconds(2500);
         super.stopMotors();
 

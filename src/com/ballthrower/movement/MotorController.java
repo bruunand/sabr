@@ -23,14 +23,8 @@ public class MotorController
     }
 
     /**
-     * Starts motors turns motors a specific amount of degrees.
-     * @param power sets the power of the motors.
-     * @param direction direction of motors is forward if value is true and backwards otherwise.
-     * @param degrees number of degrees the motors should turn
-     */
-
-    /**
-     *
+     * Turns a number of degrees
+     * @param degrees number of degrees to turn
      */
     protected void turnDegrees(int degrees)
     {

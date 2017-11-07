@@ -1,9 +1,10 @@
 package com.ballthrower.movement.aiming;
 
+import com.ballthrower.movement.MotorController;
 import lejos.nxt.MotorPort;
-import lejos.nxt.NXTRegulatedMotor;
+import lejos.nxt.NXTMotor;
 
-public class Rotator implements IRotator
+public class Rotator extends MotorController implements IRotator
 {
 	/* GearRatio = robot.numberOfGearTeeth / motor.numberOfGearTeeth. */
 	private final float GearRatio = 2.33f;
@@ -11,12 +12,12 @@ public class Rotator implements IRotator
 	/* Updates every time we turn so we can reset position. */
 	private int currentHeading = 0;
 
-	private NXTRegulatedMotor _motor;
+	//private NXTMotor _motor;
 
 	public Rotator(MotorPort motor)
 	{
-		_motor = new NXTRegulatedMotor(motor);
-	    _motor.setSpeed(50);
+		super(new NXTMotor(motor));
+	    //_motor.setPower(50);
 	}
 
 	/* Ratio between gears on turning module is
@@ -26,7 +27,13 @@ public class Rotator implements IRotator
 	public void turnDegrees(float degrees)
 	{
 		int actualDegrees = (int)(degrees * GearRatio);
-		_motor.rotate(actualDegrees);
+
+		super.resetTacho();
+		
+		super.startMotors(30, degrees > 0);
+		super.turnDegrees(actualDegrees);
+		super.stopMotors();
+
 		currentHeading += actualDegrees;
 	}
 
