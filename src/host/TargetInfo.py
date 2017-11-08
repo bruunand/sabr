@@ -11,7 +11,7 @@ class TargetInfo(ITargetInfo):
         self._debug = debug
         self._aspect_ratio = target_width / target_height
 
-    def get_target_info(self):
+    def get_targets(self):
 
         # Retrieve a list of sample data to be processed
         sample_data = self.get_sample_data()

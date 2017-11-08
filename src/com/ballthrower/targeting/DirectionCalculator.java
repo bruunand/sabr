@@ -20,8 +20,8 @@ public class DirectionCalculator implements IDirectionCalculateable
         float frameMiddle = targets.getFrameWidth() / 2;
         for (byte i = 0; i < iterations; i++)
         {
-            float boxOffset = targets.getBoxes()[i].getXPosition()
-                            + targets.getBoxes()[i].getWidth() / 2;
+            float boxOffset = targets.getTargets()[i].getXPosition()
+                            + targets.getTargets()[i].getWidth() / 2;
             sumDistances += frameMiddle - boxOffset;
         }
 

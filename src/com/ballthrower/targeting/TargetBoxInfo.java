@@ -13,20 +13,9 @@ public class TargetBoxInfo implements ITargetBoxInfo
         this._boxes = new TargetBox[sampleCount];
     }
 
-    public TargetBox[] getBoxes()
+    public TargetBox[] getTargets()
     {
         return _boxes;
-    }
-
-    public float[] getHeights()
-    {
-        float[] heights = new float[getSampleCount()];
-        for (int i = 0; i < getSampleCount(); i++)
-        {
-            heights[i] = getBoxes()[i].getHeight();
-        }
-
-        return heights;
     }
 
     public byte getSampleCount()

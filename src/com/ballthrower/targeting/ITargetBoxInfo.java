@@ -4,9 +4,7 @@ public interface ITargetBoxInfo
 {
     byte getSampleCount();
 
-    TargetBox[] getBoxes();
-
-    float[] getHeights();
+    TargetBox[] getTargets();
 
     short getFrameWidth();
     void setFrameWidth(short frameWidth);

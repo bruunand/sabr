@@ -52,7 +52,7 @@ class Connection(metaclass=abc.ABCMeta): # Todo: Descriptions for this interface
 
 class ITargetInfo(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def get_target_info(self):
+    def get_targets(self):
         """
             Description:
                 Calls the get_sample_data() method and passes the return value to the image_processing() method.

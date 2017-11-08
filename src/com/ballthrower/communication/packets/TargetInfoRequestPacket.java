@@ -33,7 +33,7 @@ public class TargetInfoRequestPacket extends Packet
             float width = stream.readFloat();
             float height = stream.readFloat();
 
-            this._boxInfo.getBoxes()[i] = new TargetBox(height, width, xPos);
+            this._boxInfo.getTargets()[i] = new TargetBox(height, width, xPos);
         }
     }
 

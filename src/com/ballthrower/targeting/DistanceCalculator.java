@@ -34,21 +34,26 @@ public class DistanceCalculator implements IDistanceCalculateable
     //  - Get median from the sample list without outliers
     //  - Calculate the distance using the focal length
     @Override
-    public float calculateDistance(ITargetBoxInfo targets)
+    public float calculateDistance(ITargetBoxInfo target)
     {
-        if (targets.getSampleCount() == 0)
+        if (target.getSampleCount() == 0)
             return Float.POSITIVE_INFINITY;
 
-        float[] heightList = targets.getHeights();
+        float[] heights = new float[target.getSampleCount()];
 
-        float median = getMedian(heightList);
+        for (int i = 0; i < target.getSampleCount(); i++)
+        {
+            heights[i] = target.getTargets()[i].getHeight();
+        }
+
+        float median = getMedian(heights);
 
         float maxDeviance = median * 0.05f;
         float deviance = 0;
 
         ArrayList<Float> tmp = new ArrayList<>();
         // Removed obvious outliers from the sample list.
-        for (float aHeightList : heightList)
+        for (float aHeightList : heights)
         {
             deviance = abs(median - aHeightList);
 

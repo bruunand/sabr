@@ -10,7 +10,7 @@ def handle_target_request(packet):
     print("Information requested")
 
     # Request target information from vision module
-    bounding_boxes, frame_width = target_info.get_target_info()
+    bounding_boxes, frame_width = target_info.get_targets()
 
     # Construct and send packet
     packet = Packets.Packet.instantiate_from_id(Packets.PacketIds.TARGET_INFO_REQUEST)
