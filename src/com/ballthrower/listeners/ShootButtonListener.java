@@ -1,5 +1,6 @@
 package com.ballthrower.listeners;
 
+import com.ballthrower.Robot;
 import lejos.nxt.Button;
 import lejos.nxt.ButtonListener;
 
@@ -13,6 +14,6 @@ public class ShootButtonListener implements ButtonListener
     @Override
     public void buttonReleased(Button button)
     {
-        System.exit(1);
+        Robot.getInstance().locateAndShoot();
     }
 }

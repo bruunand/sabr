@@ -1,5 +1,7 @@
 package com.ballthrower.communication;
 
+import com.ballthrower.abortion.AbortCode;
+import com.ballthrower.abortion.IAbortable;
 import com.ballthrower.communication.packets.HandshakePacket;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
@@ -18,6 +20,13 @@ public class BluetoothConnection extends Connection
     private NXTConnection _socket;
 	private DataInputStream _inputStream;
 	private DataOutputStream _outputStream;
+
+	private final IAbortable _abortable;
+
+	public BluetoothConnection(IAbortable abortable)
+    {
+        this._abortable = abortable;
+    }
 
 	@Override
 	public void awaitConnection()
@@ -41,7 +50,8 @@ public class BluetoothConnection extends Connection
             LCD.drawString("Connected", 0, 0);
             Sound.beep();
         }
-        // Todo: Error handling if not handshake
+        else
+            _abortable.abort(AbortCode.INVALID_HANDSHAKE);
 	}
 
     @Override
@@ -80,11 +90,11 @@ public class BluetoothConnection extends Connection
         }
         catch (IOException exception)
         {
-            LCD.drawString("IO Exception.", 0, 3);
+            _abortable.abort(AbortCode.GENERIC, "I/O exception.");
         }
         catch (UnknownPacketException e)
         {
-            LCD.drawString("Unknown packet type.", 0, 3);
+            _abortable.abort(AbortCode.UNKNOWN_PACKET);
         }
 
         return null;
@@ -101,7 +111,7 @@ public class BluetoothConnection extends Connection
         }
         catch (IOException exception)
         {
-            LCD.drawString("IO Exception.", 0, 3);
+            _abortable.abort(AbortCode.GENERIC, "I/O exception.");
         }
 	}
 }
