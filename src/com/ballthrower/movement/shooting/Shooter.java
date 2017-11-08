@@ -2,6 +2,8 @@ package com.ballthrower.movement.shooting;
 
 import java.lang.Math;
 
+import com.ballthrower.exceptions.OutOfRangeException;
+
 import com.ballthrower.movement.MotorController;
 import lejos.nxt.*;
 import lejos.robotics.RegulatedMotor;
@@ -58,15 +60,11 @@ public class Shooter extends MotorController implements IShooter
 
         if (power > 100)
         {
-            // This is bad! Redo to throw exception!
-            LCD.drawString("Target out of range.", 0, 0 );
-            return;
+            throw new OutOfRangeException("Target out of range: Too far.");
         }
         else if (power < 70)
         {
-            // This is bad! Redo to throw exception!
-            LCD.drawString("Target too close.", 0, 0);
-            return;
+            throw new OutOfRangeException("Target out of range: Too close.");
         }
 
         int degrees = (int)((1.5*360) / GearFactor);
