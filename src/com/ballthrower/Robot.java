@@ -7,9 +7,13 @@ import com.ballthrower.communication.ConnectionFactory;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
+import com.ballthrower.exceptions.OutOfRangeException;
 import com.ballthrower.listeners.ExitButtonListener;
 import com.ballthrower.listeners.ShootButtonListener;
-import com.ballthrower.movement.MovementController;
+import com.ballthrower.movement.aiming.IRotator;
+import com.ballthrower.movement.aiming.Rotator;
+import com.ballthrower.movement.shooting.IShooter;
+import com.ballthrower.movement.shooting.Shooter;
 import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetBoxInfo;
@@ -30,7 +34,8 @@ public class Robot implements IAbortable
 
     private final DistanceCalculator _distanceCalculator;
     private final DirectionCalculator _directionCalculator;
-    private final MovementController _movementController;
+    private final IShooter _shooter;
+    private final IRotator _rotator;
 
     private Connection _connection;
 
@@ -45,8 +50,9 @@ public class Robot implements IAbortable
         this._distanceCalculator = new DistanceCalculator();
         this._directionCalculator = new DirectionCalculator();
 
-        // Set up movement controller with desired motors.
-        this._movementController = new MovementController(MotorPort.C, new MotorPort[]{MotorPort.A, MotorPort.B});
+        // Set up movement controllers with desired motors.
+        this._rotator = new Rotator(MotorPort.C);
+        this._shooter = new Shooter(new MotorPort[]{MotorPort.A, MotorPort.B});
     }
 
     public void addButtonListeners()
@@ -66,13 +72,20 @@ public class Robot implements IAbortable
             if (Math.abs(directionAngle) > TARGET_ANGLE_THRESHOLD)
             {
                 // We are not facing the target, so we must rotate towards it first.
-                _movementController.turnDegrees(directionAngle);
+                _rotator.turnDegrees(directionAngle);
             }
             else
             {
                 // Target is faced, shoot it.
                 Sound.beep(); // TODO: Debug, remove me
-                _movementController.shootDistance(_distanceCalculator.calculateDistance(targetInformation));
+                try
+                {
+                    _shooter.shootDistance(_distanceCalculator.calculateDistance(targetInformation));
+                }
+                catch (OutOfRangeException ex)
+                {
+                    LCD.drawString(ex.getMessage(),0,0);
+                }
                 return;
             }
         }

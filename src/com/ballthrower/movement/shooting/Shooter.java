@@ -50,7 +50,7 @@ public class Shooter extends MotorController implements IShooter
         return Math.pow(gearSizes[0]/gearSizes[1], Gears);
     }*/
 
-    public void shootDistance(float distance)
+    public void shootDistance(float distance)throws OutOfRangeException
     {
         /*
         double initialVelocity = getInitialVelocity(distance);

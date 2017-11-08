@@ -1,5 +1,7 @@
 package com.ballthrower.movement.shooting;
 
+import com.ballthrower.exceptions.OutOfRangeException;
+
 /**
  * Created by Thomas Buhl on 17/10/2017.
  * Should be used as defined in the UML diagram
@@ -7,5 +9,5 @@ package com.ballthrower.movement.shooting;
  */
 public interface IShooter
 {
-    void shootDistance(float distance);
+    void shootDistance(float distance)throws OutOfRangeException;
 }
