@@ -22,7 +22,11 @@ public class Main
 {
 	public static void main(String[] args)
 	{
+        LCD.drawString("Robot instantiated", 0, 0);
+
+	    // Get instance of Robot
 	    Robot robot = Robot.getInstance();
+	    robot.addButtonListeners();
 	    robot.awaitConnection(new BluetoothConnectionFactory());
 
         DistanceCalculator calc = new DistanceCalculator();
