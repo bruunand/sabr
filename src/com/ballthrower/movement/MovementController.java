@@ -9,13 +9,13 @@ import lejos.nxt.MotorPort;
 public class MovementController
 {
     private IRotator _rotator;
-    public IRotator getRotator()
+    /*public IRotator getRotator()
     {
         return _rotator;
-    }
+    }*/
 
     private IShooter _shooter;
-    public IShooter getShooter() { return _shooter; }
+    /*public IShooter getShooter() { return _shooter; }*/
 
 
     public MovementController(MotorPort rotator, MotorPort[] shooters)
