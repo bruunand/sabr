@@ -11,10 +11,10 @@ import lejos.robotics.RegulatedMotor;
  */
 public class Shooter extends MotorController implements IShooter
 {
-    private final int Gravity = 980;
-    private final int DepartureAngle = 51;
-    private final float Factor = 9.7095f;
-    private final int Offset = -415;
+    private static final int GRAVITY = 980;
+    private static final int DEPARTURE_ANGLE = 51;
+    private static final float FACTOR = 9.7095f;
+    private static final int OFFSET = -415;
     private RegulatedMotor regMotor;
 
     //private static final byte Gears = 3;
@@ -94,13 +94,13 @@ public class Shooter extends MotorController implements IShooter
 
     private double getInitialVelocity(float distance)
     {
-        // Calculate and return the required initial velocity given the target distance, gravity and departure angle.
-        return Math.sqrt((distance * Gravity)/Math.sin(2*Math.toRadians(DepartureAngle)));
+        // Calculate and return the required initial velocity given the target distance, GRAVITY and departure angle.
+        return Math.sqrt((distance * GRAVITY)/Math.sin(2*Math.toRadians(DEPARTURE_ANGLE)));
     }
 
     private int getPower(double velocity)
     {
-        int power = (int)(((velocity) - Offset)/Factor);
+        int power = (int)(((velocity) - OFFSET)/FACTOR);
         LCD.drawString("Pow: "+ power, 0, 1);
 
         double compensationFactor = 800 / regMotor.getMaxSpeed();
