@@ -1,4 +1,4 @@
-package com.ballthrower.movement.aiming;
+package Tools.unitTests.com.ballthrower.movement.aiming;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

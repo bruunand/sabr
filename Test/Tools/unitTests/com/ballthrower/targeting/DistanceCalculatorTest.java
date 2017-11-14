@@ -1,4 +1,4 @@
-package com.ballthrower.targeting;
+package Tools.unitTests.com.ballthrower.targeting;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

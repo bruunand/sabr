@@ -1,4 +1,4 @@
-package com.ballthrower.communication;
+package Tools.unitTests.com.ballthrower.communication;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

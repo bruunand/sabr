@@ -1,4 +1,4 @@
-package com.ballthrower.movement;
+package Tools.unitTests.com.ballthrower.movement;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
