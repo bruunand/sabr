@@ -18,4 +18,23 @@ public class TestTargetBoxInfo
         _targetBoxInfo = targetBoxInfo;
         _realDistance = realDistance;
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        int numObjects = getTargetBoxInfo().getTargets().length;
+        sb.append("Number of objects: " + numObjects);
+        for (int i = 0; i < numObjects; i++)
+        {
+            sb.append("Target #" + i+1 + ":");
+            sb.append("Real distance: " + getRealDistance());
+            sb.append("Height: " + getTargetBoxInfo().getTargets()[i].getHeight());
+            sb.append("Width: " + getTargetBoxInfo().getTargets()[i].getWidth());
+            sb.append("xPos: " + getTargetBoxInfo().getTargets()[i].getXPosition());
+        }
+
+        return sb.toString();
+    }
+
 }
