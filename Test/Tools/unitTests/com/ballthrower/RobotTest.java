@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Created by Anders Brams on 11/14/2017.
- */
 class RobotTest {
     @BeforeEach
     void setUp() {
