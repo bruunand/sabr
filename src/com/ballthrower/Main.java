@@ -17,6 +17,6 @@ public class Main
 		System.out.println();
 		String path = System.getProperty("user.dir") + "\\data\\test_data_distance.csv";
         CSVReader cr = new CSVReader();
-        System.out.println(cr.getData(path));
+        System.out.println(cr.getData(path).get(0));
     }
 }

@@ -28,9 +28,9 @@ public class CSVReader
         {
             toReturn.add(
                     TargetBoxFromData(
-                        objects.subList(i, i + objSize - 1)));
+                        objects.subList(i, i + objSize)));
         }
-        
+
         return toReturn;
     }
 
