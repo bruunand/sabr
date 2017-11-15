@@ -83,7 +83,7 @@ public class CSVReader
     {
         String[] objs = raw.split("\n");
         ArrayList<String> toReturn = new ArrayList<String>();
-        for (String s : objs) { toReturn.add(s); }
+        Collections.addAll(toReturn, objs);
 
         return toReturn;
     }
