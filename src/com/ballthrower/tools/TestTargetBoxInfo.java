@@ -1,4 +1,4 @@
-package Tools;
+package com.ballthrower.tools;
 
 import com.ballthrower.targeting.TargetBoxInfo;
 
