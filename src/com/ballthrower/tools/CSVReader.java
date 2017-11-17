@@ -37,11 +37,11 @@ public class CSVReader
     private TestTargetBoxInfo TargetBoxFromData(List<String> objects)
     {
         TargetBoxInfo tbi = new TargetBoxInfo( (byte)objSize );
-        float realHeight = Float.parseFloat(objects.get(0).split(",")[0]);
+        float realHeight = Float.parseFloat(split(objects.get(0), ',')[0]);
 
         for (int i = 0; i < objects.size(); i++)
         {
-            String[] data = objects.get(i).split(",");
+            String[] data = split(objects.get(i), ',');
 
             short xPos = Short.parseShort(data[1]);
             float height = Float.parseFloat(data[4]);
@@ -51,6 +51,25 @@ public class CSVReader
         }
 
         return new TestTargetBoxInfo(tbi, realHeight);
+    }
+
+    public String[] split(String input, char symbol)
+    {
+        ArrayList<String> result = new ArrayList<String>();
+
+        int startIndex = 0;
+        for (int i = 0; i < input.toCharArray().length; i++)
+        {
+            if (input.toCharArray()[i] == symbol)
+            {
+                result.add(input.substring(startIndex, i+1));
+                startIndex = i+1;
+            }
+        }
+
+        String[] arrayResult = new String[result.size()];
+        result.toArray(arrayResult);
+        return arrayResult;
     }
 
     private String getRawData(String path)
@@ -81,7 +100,7 @@ public class CSVReader
 
     private ArrayList<String> getObjects(String raw)
     {
-        String[] objs = raw.split("\n");
+        String[] objs = split(raw, '\n');
         ArrayList<String> toReturn = new ArrayList<String>();
         for (String s : objs) { toReturn.add(s); }
 
