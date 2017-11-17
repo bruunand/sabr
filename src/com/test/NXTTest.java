@@ -1,6 +1,5 @@
 package com.test;
 
-import com.ballthrower.targeting.DistanceCalculator;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
 
