@@ -1,7 +1,5 @@
 package com.ballthrower;
 
-import com.ballthrower.communication.ConnectionFactory;
-import com.ballthrower.tools.CSVReader;
 import com.test.NXTTest;
 import lejos.nxt.LCD;
 
@@ -17,7 +15,7 @@ public class Main
 	    while(true);
 	    */
 
-		//runTests();
+		runTests();
 
     }
 
@@ -26,6 +24,4 @@ public class Main
 		NXTTest test = new NXTTest();
 		LCD.drawString("Failed tests: " + test.runAllTests(), 0, 0);
 	}
-
-
 }
