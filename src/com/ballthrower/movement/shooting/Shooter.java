@@ -22,11 +22,10 @@ public class Shooter extends MotorController implements IShooter
     //private static final byte Gears = 3;
     private final boolean Direction = false;
     //private static final int[] gearSizes = {40, 24};
-    private final float GearFactor = 4.630f;
 
     public Shooter(MotorPort[] motors)
     {
-        super(new NXTMotor(motors[0]), new NXTMotor(motors[1]));
+        super(new NXTMotor(motors[0]), new NXTMotor(motors[1]), 4.630f);
         regMotor = new NXTRegulatedMotor(motors[0]);
     }
 
@@ -67,7 +66,7 @@ public class Shooter extends MotorController implements IShooter
             throw new OutOfRangeException("Target out of range: Too close.");
         }
 
-        int degrees = (int)((1.5*360) / GearFactor);
+        int degrees = (int)((1.5*360) / getGearRatio());
 
         super.startMotors(power, Direction);
         super.waitWhileTurning(degrees);

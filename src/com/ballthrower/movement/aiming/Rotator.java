@@ -6,9 +6,7 @@ import lejos.nxt.NXTMotor;
 
 public class Rotator extends MotorController implements IRotator
 {
-	/* GEAR_RATIO = robot.numberOfGearTeeth / motor.numberOfGearTeeth. */
-	private static final float GEAR_RATIO = 2.33f;
-
+	/* getGearRatio = robot.numberOfGearTeeth / motor.numberOfGearTeeth. */
 	private static final int MOTOR_POWER = 40;
 
 	/* Updates every time we turn so we can reset position. */
@@ -18,7 +16,7 @@ public class Rotator extends MotorController implements IRotator
 
 	public Rotator(MotorPort motor)
 	{
-		super(new NXTMotor(motor));
+		super(new NXTMotor(motor), 2.33f);
 	}
 
 	/**
@@ -27,7 +25,7 @@ public class Rotator extends MotorController implements IRotator
 	 */
 	public void turnDegrees(float degrees)
 	{
-		int actualDegrees = (int)(degrees * GEAR_RATIO);
+		int actualDegrees = (int)(degrees * getGearRatio());
 
 		super.resetTacho();
 
