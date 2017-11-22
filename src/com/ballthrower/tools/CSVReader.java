@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Used for reading TargetBoxInfo data for unit tests
@@ -60,7 +61,7 @@ public class CSVReader
      * */
     public String[] split(String str, String regex)
     {
-        Vector<String> result = new Vector<String>();
+        ArrayList<String> result = new ArrayList<String>();
         int start = 0;
         int pos = str.indexOf(regex);
 
@@ -80,13 +81,24 @@ public class CSVReader
             result.add(str.substring(start));
         }
 
-        /* Get rid of the splitters */
-        result.removeIf( s -> s.equals(regex));
-        /* Remove empty strings, null elements */
-        result.removeAll(Arrays.asList("", null));
+        /* Get rid of the splitters, null and empty elements */
+        result = removeIf(result, s -> s.equals(regex));
+        result = removeIf(result, s -> s.equals(""));
+        result = removeIf(result, s -> s.equals(null));
 
         String[] array = result.toArray(new String[0]);
         return array;
+    }
+
+    public ArrayList<String> removeIf(ArrayList<String> col, Predicate predicate)
+    {
+        ArrayList<String> result = new ArrayList<String>();
+        for (String s : col)
+        {
+            if (!predicate.test(s))
+                result.add(s);
+        }
+        return result;
     }
 
     private String getRawData(String path)
