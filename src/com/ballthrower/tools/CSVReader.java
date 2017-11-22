@@ -82,20 +82,20 @@ public class CSVReader
         }
 
         /* Get rid of the splitters, null and empty elements */
-        result = removeIf(result, s -> s.equals(regex));
-        result = removeIf(result, s -> s.equals(""));
-        result = removeIf(result, s -> s.equals(null));
+        result = removeIfEquals(result, regex);
+        result = removeIfEquals(result, "");
+        result = removeIfEquals(result, null);
 
         String[] array = result.toArray(new String[0]);
         return array;
     }
 
-    public ArrayList<String> removeIf(ArrayList<String> col, Predicate predicate)
+    public ArrayList<String> removeIfEquals(ArrayList<String> col, String test)
     {
         ArrayList<String> result = new ArrayList<String>();
         for (String s : col)
         {
-            if (!predicate.test(s))
+            if (!s.equals(test))
                 result.add(s);
         }
         return result;
