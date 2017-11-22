@@ -37,11 +37,12 @@ public class CSVReader
     private TestTargetBoxInfo TargetBoxFromData(List<String> objects)
     {
         TargetBoxInfo tbi = new TargetBoxInfo( (byte)objSize );
-        float realHeight = Float.parseFloat(split(objects.get(0), ',')[0]);
+        float realHeight = (split(objects.get(0), ",")[0] != "") ?
+                            0 : Float.parseFloat(split(objects.get(0), ",")[0]);
 
         for (int i = 0; i < objects.size(); i++)
         {
-            String[] data = split(objects.get(i), ',');
+            String[] data = split(objects.get(i), ",");
 
             short xPos = Short.parseShort(data[1]);
             float height = Float.parseFloat(data[4]);
@@ -53,23 +54,39 @@ public class CSVReader
         return new TestTargetBoxInfo(tbi, realHeight);
     }
 
-    public String[] split(String input, char symbol)
+    /**
+     * Splits the input string and returns a string array.
+     * If splitting by new lines, split by the '\r' character, not '\n'.
+     * */
+    public String[] split(String str, String regex)
     {
-        ArrayList<String> result = new ArrayList<String>();
+        Vector<String> result = new Vector<String>();
+        int start = 0;
+        int pos = str.indexOf(regex);
 
-        int startIndex = 0;
-        for (int i = 0; i < input.toCharArray().length; i++)
+        while (pos >= start)
         {
-            if (input.toCharArray()[i] == symbol)
+            if (pos > start)
             {
-                result.add(input.substring(startIndex, i+1));
-                startIndex = i+1;
+                result.add(str.substring(start,pos));
             }
+            start = pos + regex.length();
+            result.add(regex);
+            pos = str.indexOf(regex,start);
         }
 
-        String[] arrayResult = new String[result.size()];
-        result.toArray(arrayResult);
-        return arrayResult;
+        if (start < str.length())
+        {
+            result.add(str.substring(start));
+        }
+
+        /* Get rid of the splitters */
+        result.removeIf( s -> s.equals(regex));
+        /* Remove empty strings, null elements */
+        result.removeAll(Arrays.asList("", null));
+
+        String[] array = result.toArray(new String[0]);
+        return array;
     }
 
     private String getRawData(String path)
@@ -100,7 +117,7 @@ public class CSVReader
 
     private ArrayList<String> getObjects(String raw)
     {
-        String[] objs = split(raw, '\n');
+        String[] objs = split(raw, "\r\n");
         ArrayList<String> toReturn = new ArrayList<String>();
         for (String s : objs) { toReturn.add(s); }
 
