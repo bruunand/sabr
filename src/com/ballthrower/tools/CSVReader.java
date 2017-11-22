@@ -8,7 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Used for reading TargetBoxInfo data for unit tests
