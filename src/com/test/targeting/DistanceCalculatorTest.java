@@ -51,15 +51,29 @@ public class DistanceCalculatorTest
     {
         NXTAssert test = new NXTAssert();
 
+        /* Instantiate heights */
         float[] heights = new float[tbi.getSampleCount()];
         for (int i = 0; i < tbi.getSampleCount(); i++)
         {
             heights[i] = tbi.getTargets()[i].getHeight();
         }
 
+        /* Remove outliers, get median and maxDeviance */
+        float[] refinedHeights = dc.removeOutliers(heights, dc.getMedian(heights));
+        float median = dc.getMedian(refinedHeights);
+        float maxDeviance = median * 0.05f;
+
         /* One outlier in test target box info */
-        test.assertThat(dc.removeOutliers(heights, dc.getMedian(heights)).length, "DistanceCalculator:removeOutliers")
+        test.assertThat(refinedHeights.length, "DistanceCalculator:removeOutliers")
                 .isEqualTo(5);
+
+        /* Test that outliers were removed correctly (by 5% deviation) */
+        for (float height : refinedHeights)
+        {
+            test.assertThat(height, "DistanceCalculator:removeOutliers")
+                    .isInRangeOf(median, maxDeviance);
+        }
+
     }
 
     public void getMedianTest() throws AssertException
@@ -67,8 +81,9 @@ public class DistanceCalculatorTest
         NXTAssert test = new NXTAssert();
 
         float[] evenLength = new float[] {20, 30, 40, 50, 60, 70};
-        float evenLengthMedian = (40 + 50) / 2;
         float[] unevenLength = new float[] {20, 30, 40, 50, 60};
+        float evenLengthMedian = (40 + 50) / 2;
+
         float unevenLengthMedian = 40;
 
         test.assertThat(dc.getMedian(evenLength), "DistanceCalculator:getMedianTest")
