@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.max;
 
 // Calculates the distance to the target object based on
 // triangle similarity using the height of the target object.
@@ -51,16 +52,7 @@ public class DistanceCalculator implements IDistanceCalculateable
         float maxDeviance = median * 0.05f;
         float deviance = 0;
 
-        ArrayList<Float> tmp = new ArrayList<>();
-        // Removed obvious outliers from the sample list.
-        for (float aHeightList : heights)
-        {
-            deviance = abs(median - aHeightList);
-
-            if (deviance <= maxDeviance)
-                tmp.add(aHeightList);
-        }
-        float[] refinedHeightList = convertToArray(tmp);
+        float[] refinedHeightList = removeOutliers(heights, median, maxDeviance);
 
         if(refinedHeightList.length == 0)
             // Query the camera for a new set of data.
@@ -93,6 +85,22 @@ public class DistanceCalculator implements IDistanceCalculateable
             median = arr[arrayLength  / 2];
 
         return median;
+    }
+
+    private float[] removeOutliers(float[] heights, float median, float maxDeviance)
+    {
+        ArrayList<Float> toReturn = new ArrayList<Float>();
+        float deviance = 0;
+
+        for (float aHeightList : heights)
+        {
+            deviance = abs(median - aHeightList);
+
+            if (deviance <= maxDeviance)
+                toReturn.add(aHeightList);
+        }
+
+        return convertToArray(toReturn);
     }
 
 }

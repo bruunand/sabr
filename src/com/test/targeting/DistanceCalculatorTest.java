@@ -18,19 +18,25 @@ public class DistanceCalculatorTest
         tbi = NXTTest.getTestTargetBox();
     }
 
-    public DistanceCalculatorTest()
+    public void calculateDistance() throws AssertException
     {
 
     }
 
-    public void calculateDistance() throws AssertException
+    public void zeroSampleCountTest() throws AssertException
     {
+        NXTAssert test = new NXTAssert();
+        TargetBoxInfo zeroSample = new TargetBoxInfo((byte)0);
+
+        test.assertThat(dc.calculateDistance(zeroSample), "DistanceCalculator:zeroSampleCountTest")
+                .isEqualTo(Float.POSITIVE_INFINITY);
 
     }
 
     public void runAllTests() throws AssertException
     {
         setUp();
-        calculateDistance();
+        zeroSampleCountTest();
+
     }
 }
