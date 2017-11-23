@@ -48,9 +48,7 @@ public class DistanceCalculator implements IDistanceCalculateable
         }
 
         float median = getMedian(heights);
-
         float maxDeviance = median * 0.05f;
-        float deviance = 0;
 
         float[] refinedHeightList = removeOutliers(heights, median, maxDeviance);
 
@@ -59,6 +57,7 @@ public class DistanceCalculator implements IDistanceCalculateable
             return -1;
 
         median = getMedian(refinedHeightList);
+
         // see report for triangle similarity method calculation method.
         float distanceToObject = _focalLengthHeight * _targetHeight / median;
 
@@ -87,6 +86,8 @@ public class DistanceCalculator implements IDistanceCalculateable
         return median;
     }
 
+    /** Removes outliers where the difference between the outlier and the calculated median
+     *  exceeds the maximum deviation. */
     private float[] removeOutliers(float[] heights, float median, float maxDeviance)
     {
         ArrayList<Float> toReturn = new ArrayList<Float>();
