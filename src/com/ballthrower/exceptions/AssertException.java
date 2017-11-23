@@ -1,4 +1,4 @@
-package com.test;
+package com.ballthrower.exceptions;
 
 /**
  * Exception used for representing assert errors in unit testing

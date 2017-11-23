@@ -1,5 +1,7 @@
 package com.ballthrower;
 
+import com.ballthrower.targeting.DirectionCalculator;
+import com.ballthrower.targeting.TargetBoxInfo;
 import com.ballthrower.tools.CSVReader;
 import com.test.NXTTest;
 import lejos.nxt.LCD;
@@ -22,7 +24,8 @@ public class Main
 
     public static void runTests()
 	{
-		NXTTest test = new NXTTest();
-		System.out.println("Failed tests: " + test.runAllTests());
+		DirectionCalculator dc = new DirectionCalculator();
+		TargetBoxInfo tbi = NXTTest.getTestTargetBox();
+		System.out.println(dc.calculateMeanPixelDistance(tbi));
 	}
 }

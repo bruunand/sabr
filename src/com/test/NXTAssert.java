@@ -1,5 +1,7 @@
 package com.test;
 
+import com.ballthrower.exceptions.AssertException;
+
 /**
  * Assertions boi
  */

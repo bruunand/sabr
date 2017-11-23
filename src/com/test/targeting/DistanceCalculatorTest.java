@@ -3,7 +3,7 @@ package com.test.targeting;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.tools.CSVReader;
 import com.ballthrower.tools.TestTargetBoxInfo;
-import com.test.AssertException;
+import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 
 import java.util.ArrayList;

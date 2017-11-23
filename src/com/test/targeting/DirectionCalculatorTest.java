@@ -1,10 +1,13 @@
 package com.test.targeting;
 
 import com.ballthrower.targeting.DirectionCalculator;
+import com.ballthrower.targeting.ITargetBoxInfo;
+import com.ballthrower.targeting.TargetBoxInfo;
 import com.ballthrower.tools.CSVReader;
 import com.ballthrower.tools.TestTargetBoxInfo;
-import com.test.AssertException;
+import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
+import com.test.NXTTest;
 
 import java.util.ArrayList;
 
@@ -12,42 +15,29 @@ import java.util.ArrayList;
 public class DirectionCalculatorTest
 {
     private DirectionCalculator dc;
-    private ArrayList<TestTargetBoxInfo> tbis;
     private float degreesPerPixel = 0.133F;
+    private ITargetBoxInfo tbi;
 
     private void setUp()
     {
-        CSVReader cr = new CSVReader();
-        tbis = cr.getData("testdata.csv");
         dc = new DirectionCalculator();
+        tbi = NXTTest.getTestTargetBox();
     }
 
-    public void directionPixelIntegrationTest() throws AssertException {
-        for (TestTargetBoxInfo ttbi : tbis) {
-            float dir = dc.calculateDirection(ttbi.getTargetBoxInfo());
-            float pixelDist = dc.calculateMeanPixelDistance(ttbi.getTargetBoxInfo());
+    private void sampleCountZeroTest() throws AssertException
+    {
+        TargetBoxInfo zeroSample = new TargetBoxInfo((byte)0);
 
-            NXTAssert test = new NXTAssert();
+        NXTAssert test = new NXTAssert();
 
-            test.assertThat(dir, "directionPixelIntegrationTest")
-                    .isEqualTo(pixelDist * degreesPerPixel);
-
-            if (dir < 0) {
-                test.assertThat(pixelDist < 0, "directionPixelIntegrationTest")
-                        .isTrue();
-            }
-
-            if (dir > 0) {
-                test.assertThat(pixelDist > 0, "directionPixelIntegrationTest")
-                        .isTrue();
-            }
-        }
+        test.assertThat(dc.calculateMeanPixelDistance(zeroSample), "DirectionCalculator:sampleCountZeroTest")
+                .isEqualTo(Float.NEGATIVE_INFINITY);
     }
 
     public void runAllTests() throws AssertException
     {
         setUp();
-        directionPixelIntegrationTest();
+        sampleCountZeroTest();
     }
 }
 
