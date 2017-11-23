@@ -34,10 +34,26 @@ public class DirectionCalculatorTest
                 .isEqualTo(Float.NEGATIVE_INFINITY);
     }
 
+    private void meanPixelDistanceTest() throws AssertException
+    {
+        /* Calculated beforehand */
+        float actualMeanPixelDistance = -300.5F;
+
+        tbi = NXTTest.getTestTargetBox();
+        tbi.setFrameWidth((short)1600);
+
+        NXTAssert test = new NXTAssert();
+
+        test.assertThat(dc.calculateMeanPixelDistance(tbi), "DirectionCalculator:meanPixelDistanceTest")
+                .isEqualTo(actualMeanPixelDistance);
+    }
+
+
     public void runAllTests() throws AssertException
     {
         setUp();
         sampleCountZeroTest();
+        meanPixelDistanceTest();
     }
 }
 
