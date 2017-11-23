@@ -3,9 +3,12 @@ package com.test;
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetBoxInfo;
+import com.test.communication.BluetoothConnectionTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
 import lejos.nxt.*;
+
+import java.io.IOException;
 
 /**
  * Assertions used for unit testing on the NXT
@@ -19,11 +22,13 @@ public class NXTTest
 
         DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
         DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
+        BluetoothConnectionTest blueTooth = new BluetoothConnectionTest();
 
         try
         {
             disCalc.runAllTests();
             dirCalc.runAllTests();
+            blueTooth.runAllTests();
         }
         catch (AssertException e)
         {
@@ -31,6 +36,10 @@ public class NXTTest
             LCD.drawString("Failure from method: " + e.methodName, 0, 0);
             LCD.drawString("Cause: "               + e.message,    0, 1);
             LCD.drawString("Failed tests: "        + numErrors,    0, 2);
+        }
+        catch (IOException e)
+        {
+            /* Nothing we can do anything about here. */
         }
     }
 
