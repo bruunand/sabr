@@ -13,7 +13,7 @@ import lejos.nxt.*;
 public class NXTTest
 {
     /** Runs all tests and returns the number of failed tests. */
-    public int runAllTests()
+    public void runAllTests()
     {
         int numErrors = 0;
 
@@ -29,12 +29,9 @@ public class NXTTest
         {
             numErrors++;
             LCD.drawString("Failure from method: " + e.methodName, 0, 0);
-            LCD.drawString("Cause: " + e.message, 0, 1);
-            LCD.drawString("Failed tests: " + numErrors, 0, 2);
+            LCD.drawString("Cause: "               + e.message,    0, 1);
+            LCD.drawString("Failed tests: "        + numErrors,    0, 2);
         }
-
-        System.out.println("All tests run. " + numErrors + " tests failed.");
-        return numErrors;
     }
 
     public static TargetBoxInfo getTestTargetBox() {
