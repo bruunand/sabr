@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class DirectionCalculatorTest
 {
     private DirectionCalculator dc;
-    private float degreesPerPixel = 0.133F;
     private ITargetBoxInfo tbi;
 
     private void setUp()
@@ -47,7 +46,6 @@ public class DirectionCalculatorTest
         test.assertThat(dc.calculateMeanPixelDistance(tbi), "DirectionCalculator:meanPixelDistanceTest")
                 .isEqualTo(actualMeanPixelDistance);
     }
-
 
     public void runAllTests() throws AssertException
     {
