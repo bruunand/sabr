@@ -6,6 +6,8 @@ import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 
+import java.util.ArrayList;
+
 public class DistanceCalculatorTest
 {
     private DistanceCalculator dc;
@@ -65,15 +67,19 @@ public class DistanceCalculatorTest
 
         /* One outlier in test target box info */
         test.assertThat(refinedHeights.length, "DistanceCalculator:removeOutliers")
-                .isEqualTo(5);
+                .isEqualTo(heights.length - 1);
+
+        /* Test that no new elements were introduced */
+        test.assertThat(heights, "DistanceCalculator:removeOutliers")
+                .containsAll((refinedHeights));
 
         /* Test that outliers were removed correctly (by 5% deviation) */
         for (float height : refinedHeights)
         {
             test.assertThat(height, "DistanceCalculator:removeOutliers")
+                    .isNotNull()
                     .isInRangeOf(median, maxDeviance);
         }
-
     }
 
     public void getMedianTest() throws AssertException

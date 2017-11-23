@@ -27,8 +27,10 @@ public class NXTTest
         }
         catch (AssertException e)
         {
-            System.out.println("\n -- TEST FAILED -- \nFrom method: " + e.methodName + ": "+  e.message + "\n");
             numErrors++;
+            LCD.drawString("Failure from method: " + e.methodName, 0, 0);
+            LCD.drawString("Cause: " + e.message, 0, 1);
+            LCD.drawString("Failed tests: " + numErrors, 0, 2);
         }
 
         System.out.println("All tests run. " + numErrors + " tests failed.");

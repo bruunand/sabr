@@ -2,6 +2,9 @@ package com.test;
 
 import com.ballthrower.exceptions.AssertException;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Assertions boi
  */
@@ -76,6 +79,36 @@ public class NXTAssert
             throw new AssertException("Objects are not equal (" + _obj + " and " + obj + ")",
                                       _methodName);
         }
+
+        return this;
+    }
+
+    public NXTAssert containsAll(float[] arr) throws AssertException
+    {
+        boolean foundEqual = false;
+        float misMatch;
+
+        for (float o : arr)
+        {
+            foundEqual = false;
+            for (float _o : (float[])_obj)
+            {
+                if (_o == (o))
+                    foundEqual = true;
+            }
+
+            if (!foundEqual)
+                throw new AssertException("Original collection did not contain following element: " + o,
+                                          _methodName);
+        }
+
+        return this;
+    }
+
+    public NXTAssert isNotNull() throws AssertException
+    {
+        if (_obj == null)
+            throw new AssertException("Object is null", _methodName);
 
         return this;
     }
