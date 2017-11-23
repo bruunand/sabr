@@ -57,7 +57,7 @@ public class NXTAssert
 
     public NXTAssert isInRangeOf(float target, float range) throws AssertException
     {
-        double obj = (double)_obj;
+        float obj = (float)_obj;
         if (  (obj < target - range) || obj > target + range  )
         {
             throw new AssertException("Object not in range",

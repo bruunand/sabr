@@ -16,7 +16,7 @@ public class DistanceCalculatorTest
     public DistanceCalculatorTest()
     {
         CSVReader cr = new CSVReader();
-        tbis = cr.getData(System.getProperty("user.dir") + "\\data\\test_data_distance.csv");
+        tbis = cr.getData("testdata.csv");
         dc = new DistanceCalculator();
     }
 

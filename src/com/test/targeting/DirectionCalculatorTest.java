@@ -18,7 +18,7 @@ public class DirectionCalculatorTest
     private void setUp()
     {
         CSVReader cr = new CSVReader();
-        tbis = cr.getData(System.getProperty("user.dir") + "\\data\\test_data_distance.csv");
+        tbis = cr.getData("testdata.csv");
         dc = new DirectionCalculator();
     }
 
@@ -46,6 +46,7 @@ public class DirectionCalculatorTest
 
     public void runAllTests() throws AssertException
     {
+        setUp();
         directionPixelIntegrationTest();
     }
 }
