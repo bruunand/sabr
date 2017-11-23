@@ -6,7 +6,6 @@ import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 
-
 public class DistanceCalculatorTest
 {
     private DistanceCalculator dc;
@@ -48,12 +47,43 @@ public class DistanceCalculatorTest
 
     }
 
+    public void removeOutliersTest() throws AssertException
+    {
+        NXTAssert test = new NXTAssert();
 
+        float[] heights = new float[tbi.getSampleCount()];
+        for (int i = 0; i < tbi.getSampleCount(); i++)
+        {
+            heights[i] = tbi.getTargets()[i].getHeight();
+        }
+
+        /* One outlier in test target box info */
+        test.assertThat(dc.removeOutliers(heights, dc.getMedian(heights)).length, "DistanceCalculator:removeOutliers")
+                .isEqualTo(5);
+    }
+
+    public void getMedianTest() throws AssertException
+    {
+        NXTAssert test = new NXTAssert();
+
+        float[] evenLength = new float[] {20, 30, 40, 50, 60, 70};
+        float evenLengthMedian = (40 + 50) / 2;
+        float[] unevenLength = new float[] {20, 30, 40, 50, 60};
+        float unevenLengthMedian = 40;
+
+        test.assertThat(dc.getMedian(evenLength), "DistanceCalculator:getMedianTest")
+                .isEqualTo(evenLengthMedian);
+
+        test.assertThat(dc.getMedian(unevenLength), "DistanceCalculator:getMedianTest")
+                .isEqualTo(unevenLengthMedian);
+    }
 
     public void runAllTests() throws AssertException
     {
         setUp();
         zeroSampleCountTest();
         calculateDistanceTest();
+        removeOutliersTest();
+        getMedianTest();
     }
 }

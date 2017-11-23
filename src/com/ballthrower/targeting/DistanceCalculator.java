@@ -73,7 +73,7 @@ public class DistanceCalculator implements IDistanceCalculateable
         return newArray;
     }
 
-    private float getMedian(float[] arr)
+    public float getMedian(float[] arr)
     {
         float median;
         int arrayLength = arr.length;
@@ -87,7 +87,7 @@ public class DistanceCalculator implements IDistanceCalculateable
     }
 
     /** Removes samples deviating more than 5% from the median */
-    private float[] removeOutliers(float[] heights, float median)
+    public float[] removeOutliers(float[] heights, float median)
     {
         ArrayList<Float> toReturn = new ArrayList<Float>();
         float maxDeviance = median * 0.05f;
