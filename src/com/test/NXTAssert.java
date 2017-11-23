@@ -73,7 +73,7 @@ public class NXTAssert
     {
         if (!_obj.equals(obj))
         {
-            throw new AssertException("Objects are not equal",
+            throw new AssertException("Objects are not equal (" + _obj + " and " + obj + ")",
                                       _methodName);
         }
 

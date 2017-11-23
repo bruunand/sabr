@@ -17,29 +17,23 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        Sound.buzz();
         DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
-        Sound.buzz();
         DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
 
         try
         {
-            Sound.beep();
             disCalc.runAllTests();
-            Sound.buzz();
             dirCalc.runAllTests();
-            Sound.beep();
         }
         catch (AssertException e)
         {
-            Sound.beepSequence();
             System.out.println("\n -- TEST FAILED -- \nFrom method: " + e.methodName + ": "+  e.message + "\n");
             numErrors++;
         }
 
+        System.out.println("All tests run. " + numErrors + " tests failed.");
         return numErrors;
     }
-
 
     public static TargetBoxInfo getTestTargetBox() {
         TargetBoxInfo toReturn = new TargetBoxInfo((byte)6);

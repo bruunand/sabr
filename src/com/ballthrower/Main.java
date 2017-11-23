@@ -25,16 +25,7 @@ public class Main
 
     public static void runTests()
 	{
-		DistanceCalculator dc = new DistanceCalculator();
-		TargetBoxInfo tbi = NXTTest.getTestTargetBox();
-
-		float[] heights = new float[tbi.getSampleCount()];
-
-		for (int i = 0; i < tbi.getSampleCount(); i++)
-		{
-			heights[i] = tbi.getTargets()[i].getHeight();
-		}
-
-		System.out.println(heights.length + "\n and \n" + dc.removeOutliers(heights, dc.getMedian(heights)).length);
+		NXTTest tests = new NXTTest();
+		tests.runAllTests();
 	}
 }

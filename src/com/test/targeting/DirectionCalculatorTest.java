@@ -36,7 +36,7 @@ public class DirectionCalculatorTest
     private void meanPixelDistanceTest() throws AssertException
     {
         /* Calculated beforehand */
-        float actualMeanPixelDistance = -300.5F;
+        float actualMeanPixelDistance = 499.5f;
 
         tbi.setFrameWidth((short)1600);
 
