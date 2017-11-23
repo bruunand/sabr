@@ -12,15 +12,30 @@ public class DistanceCalculatorTest
     private DistanceCalculator dc;
     private TargetBoxInfo tbi;
 
+    // physical height manually measured
+    private static final float _targetHeight = 10.2f;
+    // height represented on the image plane in pixels
+    private static final float _knownHeight = 52.0f;
+    // physical distance measured manually
+    private static final float _knownRealDistance = 100.0f;
+    // focallength is the distance between the image plane and lens of the camera
+    private static final float _focalLengthHeight = _knownHeight * _knownRealDistance / _targetHeight;
+
     private void setUp()
     {
         dc = new DistanceCalculator();
         tbi = NXTTest.getTestTargetBox();
     }
 
-    public void calculateDistance() throws AssertException
+    public void calculateDistanceTest() throws AssertException
     {
+        NXTAssert test = new NXTAssert();
+        /* Calculated beforehand */
+        float median = 60;
+        float realDistance = _focalLengthHeight * _targetHeight / median;
 
+        test.assertThat(dc.calculateDistance(tbi), "DistanceCalculator:CalculateDistance")
+                .isEqualTo(realDistance);
     }
 
     public void zeroSampleCountTest() throws AssertException
@@ -33,10 +48,12 @@ public class DistanceCalculatorTest
 
     }
 
+
+
     public void runAllTests() throws AssertException
     {
         setUp();
         zeroSampleCountTest();
-
+        calculateDistanceTest();
     }
 }
