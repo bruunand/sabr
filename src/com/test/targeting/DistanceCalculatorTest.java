@@ -6,8 +6,6 @@ import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 
-import java.util.ArrayList;
-
 public class DistanceCalculatorTest
 {
     private DistanceCalculator dc;

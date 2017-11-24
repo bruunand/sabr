@@ -25,7 +25,7 @@ public class TargetInfoRequestPacket extends Packet
         this._boxInfo = new TargetBoxInfo(numBoxSamples);
         this._boxInfo.setFrameWidth(frameWidth);
 
-        // Read box samples
+        // Get target box samples
         for (byte i = 0; i < numBoxSamples; i++)
         {
             // read info from data stream

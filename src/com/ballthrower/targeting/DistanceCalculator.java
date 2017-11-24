@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.max;
 
 // Calculates the distance to the target object based on
 // triangle similarity using the height of the target object.

@@ -3,8 +3,6 @@ package com.test.targeting;
 import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.ITargetBoxInfo;
 import com.ballthrower.targeting.TargetBoxInfo;
-import com.ballthrower.tools.CSVReader;
-import com.ballthrower.tools.TestTargetBoxInfo;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;

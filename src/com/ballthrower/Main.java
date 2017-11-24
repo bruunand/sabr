@@ -1,11 +1,6 @@
 package com.ballthrower;
 
-import com.ballthrower.targeting.DirectionCalculator;
-import com.ballthrower.targeting.DistanceCalculator;
-import com.ballthrower.targeting.TargetBoxInfo;
-import com.ballthrower.tools.CSVReader;
 import com.test.NXTTest;
-import lejos.nxt.LCD;
 
 public class Main
 {
