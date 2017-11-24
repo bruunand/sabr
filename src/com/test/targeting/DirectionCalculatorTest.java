@@ -6,7 +6,6 @@ import com.ballthrower.targeting.TargetBoxInfo;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
-import lejos.nxt.Sound;
 
 public class DirectionCalculatorTest
 {
@@ -25,7 +24,6 @@ public class DirectionCalculatorTest
 
         NXTAssert test = new NXTAssert();
 
-        Sound.beep();
         test.assertThat(dc.calculateMeanPixelDistance(zeroSample), "DirectionCalculator:sampleCountZeroTest")
                 .isEqualTo(Float.POSITIVE_INFINITY);
     }

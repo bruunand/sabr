@@ -28,7 +28,6 @@ public class NXTTest
         {
             disCalc.runAllTests();
             dirCalc.runAllTests();
-            blueTooth.runAllTests();
         }
         catch (AssertException e)
         {
@@ -38,10 +37,8 @@ public class NXTTest
             LCD.drawString(e.message, 0, 2);
         }
 
-        catch (IOException e)
-        {
-            LCD.drawString("BT Fail", 0, 0);
-        }
+        if (numErrors == 0)
+            LCD.drawString("All tests passed!", 0, 0);
     }
 
     public static TargetBoxInfo getTestTargetBox() {

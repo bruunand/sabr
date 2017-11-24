@@ -1,7 +1,6 @@
 package com.test;
 
 import com.ballthrower.exceptions.AssertException;
-import lejos.nxt.Sound;
 
 /**
  * Assertions boi
