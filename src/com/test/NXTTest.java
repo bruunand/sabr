@@ -33,13 +33,14 @@ public class NXTTest
         catch (AssertException e)
         {
             numErrors++;
-            LCD.drawString("Failure from method: " + e.methodName, 0, 0);
-            LCD.drawString("Cause: "               + e.message,    0, 1);
-            LCD.drawString("Failed tests: "        + numErrors,    0, 2);
+            LCD.drawString("Tests failed: " + numErrors, 0, 0);
+            LCD.drawString(e.methodName, 0, 1);
+            LCD.drawString(e.message, 0, 2);
         }
+
         catch (IOException e)
         {
-            /* Nothing we can do anything about here. */
+            LCD.drawString("BT Fail", 0, 0);
         }
     }
 

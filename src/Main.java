@@ -1,6 +1,5 @@
-package com.ballthrower;
-
 import com.test.NXTTest;
+import lejos.nxt.LCD;
 
 public class Main
 {
@@ -15,7 +14,7 @@ public class Main
 	    */
 
 		runTests();
-
+		while (true){}
     }
 
     public static void runTests()
