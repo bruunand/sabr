@@ -48,30 +48,20 @@ public class DistanceCalculator implements IDistanceCalculateable
 
         float median = getMedian(heights);
 
-        float maxDeviance = median * 0.05f;
-        float deviance = 0;
-
-        ArrayList<Float> tmp = new ArrayList<>();
-        // Removed obvious outliers from the sample list.
-        for (float aHeightList : heights)
-        {
-            deviance = abs(median - aHeightList);
-
-            if (deviance <= maxDeviance)
-                tmp.add(aHeightList);
-        }
-        float[] refinedHeightList = convertToArray(tmp);
+        float[] refinedHeightList = removeOutliers(heights, median);
 
         if(refinedHeightList.length == 0)
             // Query the camera for a new set of data.
             return -1;
 
         median = getMedian(refinedHeightList);
+
         // see report for triangle similarity method calculation method.
         float distanceToObject = _focalLengthHeight * _targetHeight / median;
 
         return distanceToObject;
     }
+
     private float[] convertToArray(ArrayList<Float> arr)
     {
         float[] newArray = new float[arr.size()];
@@ -82,7 +72,7 @@ public class DistanceCalculator implements IDistanceCalculateable
         return newArray;
     }
 
-    private float getMedian(float[] arr)
+    public float getMedian(float[] arr)
     {
         float median;
         int arrayLength = arr.length;
@@ -95,4 +85,21 @@ public class DistanceCalculator implements IDistanceCalculateable
         return median;
     }
 
+    /** Removes samples deviating more than 5% from the median */
+    public float[] removeOutliers(float[] heights, float median)
+    {
+        ArrayList<Float> toReturn = new ArrayList<Float>();
+        float maxDeviance = median * 0.05f;
+        float deviance = 0;
+
+        for (float aHeightList : heights)
+        {
+            deviance = abs(median - aHeightList);
+
+            if (deviance <= maxDeviance)
+                toReturn.add(aHeightList);
+        }
+
+        return convertToArray(toReturn);
+    }
 }

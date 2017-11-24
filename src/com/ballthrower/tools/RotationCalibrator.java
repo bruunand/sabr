@@ -9,7 +9,6 @@ import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.ITargetBoxInfo;
 import lejos.nxt.LCD;
 import lejos.nxt.MotorPort;
-import lejos.nxt.NXTRegulatedMotor;
 
 public class RotationCalibrator
 {
