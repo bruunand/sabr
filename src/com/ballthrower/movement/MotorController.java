@@ -11,15 +11,23 @@ public class MotorController
 {
     private ArrayList<NXTMotor> _motors = new ArrayList<>();
 
-    public MotorController(NXTMotor motor1)
+    private float _gearRatio;
+    public float getGearRatio()
     {
-        _motors.add(motor1);
+        return _gearRatio;
     }
 
-    public MotorController(NXTMotor motor1, NXTMotor motor2)
+    public MotorController(NXTMotor motor1, float gearRatio)
+    {
+        _motors.add(motor1);
+        _gearRatio = gearRatio;
+    }
+
+    public MotorController(NXTMotor motor1, NXTMotor motor2, float gearRatio)
     {
         _motors.add(motor1);
         _motors.add(motor2);
+        _gearRatio = gearRatio;
     }
 
     /**
