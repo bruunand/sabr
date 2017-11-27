@@ -2,6 +2,7 @@ import os
 import cv2
 import numpy as np
 import tensorflow as tf
+import Errors
 from utils import label_map_util
 from Interfaces import ITargetInfo
 from PIL import Image
@@ -143,6 +144,7 @@ class TargetInfo(ITargetInfo):
                     area = cv2.boundingRect(contour)
                     size = cv2.contourArea(contour)
                     
+                    # Continue if no bounding box is found
                     if size == 0:
                         continue
 
@@ -212,7 +214,12 @@ class TargetInfo(ITargetInfo):
 
         # Add x frames to the sample data collection
         for i in range(0, self._sample_size):
-            ret, frame = self._camera.read()
+            return_value, frame = self._camera.read()
+
+            # Should exit if the no pictures are returned from _camera.read() function
+            if not return_value:
+                raise Errors.CaptureDeviceUnavailableError()
+
             sample_data.append(frame)
 
         return sample_data
