@@ -25,14 +25,14 @@ public class NXTTest
         DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
         DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
         ShooterTest shooter = new ShooterTest();
-        TargetInfoRequestPacketTest requestPacketTest = new TargetInfoRequestPacketTest();
+        TargetInfoRequestPacketTest requestPacket = new TargetInfoRequestPacketTest();
 
         try
         {
             disCalc.runAllTests();
             dirCalc.runAllTests();
             shooter.runAllTests();
-            requestPacketTest.runAllTests();
+            requestPacket.runAllTests();
         }
         catch (AssertException e)
         {
