@@ -4,6 +4,7 @@ import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetBoxInfo;
 import com.test.communication.BluetoothConnectionTest;
+import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
 import lejos.nxt.*;
@@ -22,12 +23,13 @@ public class NXTTest
 
         DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
         DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
-        BluetoothConnectionTest blueTooth = new BluetoothConnectionTest();
+        ShooterTest shooter = new ShooterTest();
 
         try
         {
             disCalc.runAllTests();
             dirCalc.runAllTests();
+            shooter.runAllTests();
         }
         catch (AssertException e)
         {
