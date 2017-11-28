@@ -3,12 +3,11 @@ package com.test;
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetBoxInfo;
-import com.test.communication.BluetoothConnectionTest;
+import com.test.communication.TargetInfoRequestPacketTest;
+import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
 import lejos.nxt.*;
-
-import java.io.IOException;
 
 /**
  * Assertions used for unit testing on the NXT
@@ -22,12 +21,15 @@ public class NXTTest
 
         DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
         DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
-        BluetoothConnectionTest blueTooth = new BluetoothConnectionTest();
+        ShooterTest shooter = new ShooterTest();
+        TargetInfoRequestPacketTest requestPacket = new TargetInfoRequestPacketTest();
 
         try
         {
             disCalc.runAllTests();
             dirCalc.runAllTests();
+            shooter.runAllTests();
+            requestPacket.runAllTests();
         }
         catch (AssertException e)
         {
