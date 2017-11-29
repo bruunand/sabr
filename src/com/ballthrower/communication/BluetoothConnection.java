@@ -18,28 +18,28 @@ import java.io.IOException;
 public class BluetoothConnection extends Connection
 {
     private NXTConnection _socket;
-	private DataInputStream _inputStream;
-	private DataOutputStream _outputStream;
+    private DataInputStream _inputStream;
+    private DataOutputStream _outputStream;
 
-	private final IAbortable _abortable;
+    private final IAbortable _abortable;
 
-	public BluetoothConnection(IAbortable abortable)
+    public BluetoothConnection(IAbortable abortable)
     {
         this._abortable = abortable;
     }
 
-	@Override
-	public void awaitConnection()
-	{
-	    // Wait for connection and set mode to raw
-		_socket = Bluetooth.waitForConnection();
-		_socket.setIOMode(NXTConnection.RAW);
+    @Override
+    public void awaitConnection()
+    {
+        // Wait for connection and set mode to raw
+        _socket = Bluetooth.waitForConnection();
+        _socket.setIOMode(NXTConnection.RAW);
 
-		// Get streams
-		_inputStream = _socket.openDataInputStream();
-		_outputStream = _socket.openDataOutputStream();
+        // Get streams
+        _inputStream = _socket.openDataInputStream();
+        _outputStream = _socket.openDataOutputStream();
 
-		// Send handshake
+        // Send handshake
         HandshakePacket handshake = new HandshakePacket();
         sendPacket(new HandshakePacket());
 
@@ -52,7 +52,7 @@ public class BluetoothConnection extends Connection
         }
         else
             _abortable.abort(AbortCode.INVALID_HANDSHAKE);
-	}
+    }
 
     @Override
     public DataInputStream getInputStream()
@@ -72,9 +72,9 @@ public class BluetoothConnection extends Connection
     }
 
     @Override
-	public Packet receivePacket()
-	{
-	    try
+    public Packet receivePacket()
+    {
+        try
         {
             // The first element of each packet is the id of the packet type
             byte packetId = _inputStream.readByte();
@@ -98,12 +98,12 @@ public class BluetoothConnection extends Connection
         }
 
         return null;
-	}
+    }
 
-	@Override
-	public void sendPacket(Packet packet)
-	{
-	    try
+    @Override
+    public void sendPacket(Packet packet)
+    {
+        try
         {
             _outputStream.writeByte(packet.getId().asByte());
             packet.writeToConnection(this);
@@ -113,5 +113,5 @@ public class BluetoothConnection extends Connection
         {
             _abortable.abort(AbortCode.GENERIC, "I/O exception.");
         }
-	}
+    }
 }
