@@ -33,9 +33,7 @@ public class HandshakePacket extends Packet
 
     public boolean isValidReply(Packet other)
     {
-        return other.getId() == PacketIds.Handshake &&
-                ((HandshakePacket) other).getValidationToken() == this.getValidationToken();
-
+        return other.getId() == PacketIds.Handshake && ((HandshakePacket) other).getValidationToken() == this.getValidationToken();
     }
 
     @Override
