@@ -4,7 +4,7 @@ class MultipleCandidatesError(Exception):
         self.target_name = target_name
 
     def __str__(self):
-        return "Found %d candidates when searching for host %s" % (self.num_candidates, self.target_name)
+        return "Found %d candidates when searching for host %s." % (self.num_candidates, self.target_name)
 
 
 class FaultyHandshakeError(Exception):
@@ -12,7 +12,7 @@ class FaultyHandshakeError(Exception):
         self.packet_id = packet_id
 
     def __str__(self):
-        return "Faulty handshake received, received packet id %d instead" % (self.packet_id)
+        return "Faulty handshake received, received packet id %d instead." % (self.packet_id)
 
 
 class NoPacketHandlerError(Exception):
@@ -20,4 +20,8 @@ class NoPacketHandlerError(Exception):
         self.packet_id = packet_id
 
     def __str__(self):
-        return "Packet with identifier %d has no handler" % self.packet_id
+        return "Packet with identifier %d has no handler." % self.packet_id
+
+class CaptureDeviceUnavailableError(Exception):
+    def __str__(self):
+        return "Video capture device has been disconnected, or there are no more frames in video file."
