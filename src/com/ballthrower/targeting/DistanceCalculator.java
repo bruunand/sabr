@@ -24,7 +24,7 @@ public class DistanceCalculator implements IDistanceCalculateable
 
     /**
      * Returns a float representing the distance to the target object.
-     * It assumes that the target object is close to directly infront
+     * It assumes that the target object is close to directly in front
      * of the image capturing device. For this reason rotation should
      * be performed before attempting to calculate the distance.
 
