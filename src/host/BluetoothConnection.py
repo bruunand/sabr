@@ -5,7 +5,13 @@ import Packets
 from Interfaces import Connection
 import bluetooth
 
+
 def find_device(target_name):
+
+    # Even though we only need to return one candidate, we
+    # need to store them in an array so we can yield a proper
+    # error message if several units with the same name exist.
+
     candidates = []
 
     for address, name in bluetooth.discover_devices(lookup_names=True):
@@ -14,6 +20,7 @@ def find_device(target_name):
 
     if len(candidates) == 0:
         return None
+    # There should only be one unit in distance with this name, abort
     elif len(candidates) > 1:
         raise(Errors.MultipleCandidatesError(len(candidates), target_name))
     else:

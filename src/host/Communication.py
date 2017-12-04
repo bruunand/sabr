@@ -25,7 +25,7 @@ def handle_target_request(packet):
 # Handshake has no handler as it is handled by connector
 id_handler_map = {Packets.PacketIds.TARGET_INFO_REQUEST: handle_target_request}
 
-
+# Query the id_handler_map for the appropriate method to run.
 def handle_packet(packet):
     if not id_handler_map.__contains__(packet.get_id()):
         raise Errors.NoPacketHandlerError(packet.get_id())
