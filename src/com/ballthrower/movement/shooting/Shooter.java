@@ -70,13 +70,11 @@ public class Shooter extends MotorController implements IShooter
             throw new OutOfRangeException("Target out of range: Too close.");
         }
 
-        int degrees = (int)((1.5*360) / getGearRatio());
+        int degrees = (int)((180) / getGearRatio());
 
         super.startMotors(power, Direction);
         super.waitWhileTurning(degrees);
-        super.stopMotors();
-
-        super.waitMiliseconds(1000);
+        super.resetTacho();
 
         resetMotors();
     }
@@ -86,10 +84,14 @@ public class Shooter extends MotorController implements IShooter
      */
     private void resetMotors()
     {
-        super.startMotors(15, Direction);
-        super.waitMiliseconds(2500);
-        super.stopMotors();
+        /* Move in opposite direction */
+        super.startMotors(15, !Direction);
 
+        /* 180 degrees should be enough */
+        waitWhileTurning((int)(180 / getGearRatio()));
+
+        /* Stop motors, reset tacho count */
+        super.stopMotors();
         super.resetTacho();
     }
 
