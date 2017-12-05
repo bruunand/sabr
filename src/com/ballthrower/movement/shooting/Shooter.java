@@ -30,14 +30,22 @@ public class Shooter extends MotorController implements IShooter
     }
 
     /**
-     * Calculate the power needed to shoot a specific distance, defined by battery power. Assume linear relation between distance and motor power required.
+     * Calculate the power needed to shoot a specific distance, defined by battery power.
+     * Assume linear relation between distance and motor power required.
      * @param distance the distance to shoot.
      * @return the motor power needed.
      */
     private int getPowerLinear(float distance)
     {
+        /*
+        * Distance = 1.039 * Power + 37.43 (r^2 = 0.9948)
+        *                   <=>
+        * Power = (Distance / 1.039) - 37.43
+        *
+        * */
+
         double compensationFactor = 800 / regMotor.getMaxSpeed();
-        return (int)(((distance * 429.7)/6.668) * compensationFactor);
+        return (int)(((distance / 1.039) - 37.43) * compensationFactor);
     }
 
     /**
@@ -51,17 +59,13 @@ public class Shooter extends MotorController implements IShooter
 
     public void shootDistance(float distance)throws OutOfRangeException
     {
-        /*
-        double initialVelocity = getInitialVelocity(distance);
-        int power = getPower(initialVelocity);
-        */
         int power = getPowerLinear(distance);
 
         if (power > 100)
         {
             throw new OutOfRangeException("Target out of range: Too far.");
         }
-        else if (power < 70)
+        else if (power < 50)
         {
             throw new OutOfRangeException("Target out of range: Too close.");
         }
