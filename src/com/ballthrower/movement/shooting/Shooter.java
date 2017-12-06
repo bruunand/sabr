@@ -43,8 +43,8 @@ public class Shooter extends MotorController implements IShooter
         * Power = (Distance / 1.039) - 37.43
         *
         * */
-
-        double compensationFactor = 800 / regMotor.getMaxSpeed();
+        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
+        double compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
         return (int)(((distance / 1.039) - 37.43) * compensationFactor);
     }
 

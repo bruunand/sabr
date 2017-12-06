@@ -10,7 +10,7 @@ import static java.lang.Math.abs;
 public class DistanceCalculator implements IDistanceCalculateable
 {
     /** Physical height, manually measured */
-    private static final float _targetHeight = 10.2f;
+    private static final float _targetHeight = 11.5f;
 
     /** Pixel height at distance = _knownRealDistance */
     private static final float _knownHeight = 120.0f;

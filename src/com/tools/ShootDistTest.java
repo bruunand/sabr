@@ -44,13 +44,13 @@ public class ShootDistTest
         {
             public void buttonPressed(Button b)
             {
-                if (distance >= 95)
+                if (distance >= 90)
                 {
                     distance -= 5;
                 }
                 else
                 {
-                    distance = 90;
+                    distance = 85;
                 }
             }
 
@@ -81,7 +81,10 @@ public class ShootDistTest
         {
             while (!Button.ESCAPE.isDown())
             {
-                LCD.drawString("Distance: " + distance + "%", 0, 2);
+                LCD.drawString("Distance: " + distance + " cm", 0, 0);
+                LCD.drawString("Power: " + shooter.rawPower, 0, 1);
+                LCD.drawString("Comp. Power: " + shooter.compensatedPower, 0, 2);
+                LCD.drawString("Comp. Factor: " + shooter.compFactor, 0, 3);
 
                 Thread.sleep(50);
             }
