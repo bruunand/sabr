@@ -6,11 +6,12 @@ import Errors
 from utils import label_map_util
 from Interfaces import ITargetInfo
 from PIL import Image
-
 from utils import label_map_util
-
 from utils import visualization_utils as vis_util
 
+
+# Normalizes a box from TensorFlow and returns it as a tuple
+def normalize_box(im_width, im_height, box):
 
 class TargetInfo(ITargetInfo):
     """ 
@@ -45,14 +46,15 @@ class TargetInfo(ITargetInfo):
     detection_graph = tf.Graph()
 
     label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
-    categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
+    categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES,
+                                                                use_display_name=True)
     category_index = label_map_util.create_category_index(categories)
 
-    # Initialize TargetInfo with default capture device set to 0 and sample size set to 10
+    # Initialize TargetInfo with default capture device set to 1 and sample size set to 10
     def __init__(self, capture_device=1, sample_size=10, target_width=8.25, target_height=10.5, debug=True):
         self._camera = cv2.VideoCapture(capture_device)
-        #self._camera.set(3,1600)
-        #self._camera.set(4,1200)
+        # self._camera.set(3,1600)
+        # self._camera.set(4,1200)
         self._sample_size = sample_size
         self._debug = debug
         self._aspect_ratio = target_width / target_height
@@ -63,8 +65,6 @@ class TargetInfo(ITargetInfo):
                 serialized_graph = fid.read()
                 od_graph_def.ParseFromString(serialized_graph)
                 tf.import_graph_def(od_graph_def, name='')
-
-
 
     def get_targets(self):
         """
@@ -137,7 +137,7 @@ class TargetInfo(ITargetInfo):
                     (boxes, scores, classes, num_detections) = sess.run(
                         [boxes, scores, classes, num_detections],
                         feed_dict={image_tensor: image_np_expanded})
-
+                    vis_util.visualize_boxes_and_labels_on_image_array()
                     percent_difference = 0.40
 
                     height, width, _ = np.shape(frame)
@@ -149,10 +149,10 @@ class TargetInfo(ITargetInfo):
                     y_max = int(y_max * height)
                     x_max = int(x_max * width)
 
-                    centre_x,centre_y = int((x_max+x_min)/2),int((y_max+y_min)/2)
+                    centre_x, centre_y = int((x_max + x_min) / 2), int((y_max + y_min) / 2)
                     # Get the colour value at the center of bounding box
-                    colour = frame[centre_y,centre_x]
-                    colour = np.uint8([[[int(colour[0]),int(colour[1]),int(colour[2])]]])
+                    colour = frame[centre_y, centre_x]
+                    colour = np.uint8([[[int(colour[0]), int(colour[1]), int(colour[2])]]])
                     # Convert the current frame with a BGR color profile to a frame with a HSV color profile
                     hsv_colour = cv2.cvtColor(colour, cv2.COLOR_BGR2HSV)
                     hsv_1dcolor = np.array(hsv_colour[0][0])
@@ -160,8 +160,8 @@ class TargetInfo(ITargetInfo):
                     # Set the colour bounds based on the colour at the center of the
                     ## bounding box.
                     for i in range(3):
-                        lower_hsv_colour[i] = int(hsv_1dcolor[i]*(1-percent_difference))
-                        upper_hsv_colour[i] = int(hsv_1dcolor[i]*(1+percent_difference))
+                        lower_hsv_colour[i] = int(hsv_1dcolor[i] * (1 - percent_difference))
+                        upper_hsv_colour[i] = int(hsv_1dcolor[i] * (1 + percent_difference))
 
                     hsv_red = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
@@ -172,12 +172,12 @@ class TargetInfo(ITargetInfo):
 
                     if len(contours) == 0:
                         continue
-                    
+
                     # Get the largest contour
                     contour = max(contours, key=cv2.contourArea)
                     area = cv2.boundingRect(contour)
                     size = cv2.contourArea(contour)
-                    
+
                     # Continue if no bounding box is found
                     if size == 0:
                         continue
@@ -186,12 +186,12 @@ class TargetInfo(ITargetInfo):
 
         # Refine bounding box set
         ## OBS !!!! Currently removes too much !!!! OBS
-        #bounding_boxes = self.remove_outliers(bounding_boxes)
+        # bounding_boxes = self.remove_outliers(bounding_boxes)
 
 
         # If debugging is enabled draw all bounding boxes on the first frame and show the result
         if self._debug and len(sample_data) > 0:
-            
+
             base_image = sample_data[0]
             for box in bounding_boxes:
                 cv2.rectangle(base_image, (box[0], box[1]), (box[0] + box[2], box[1] + box[3]), (0, 255, 0), 3)
@@ -202,7 +202,7 @@ class TargetInfo(ITargetInfo):
         # Return the coordinate sets
         return bounding_boxes
 
-    def remove_outliers(self, bounding_boxes, max_deviance = 20, max_return_size = 100):
+    def remove_outliers(self, bounding_boxes, max_deviance=20, max_return_size=100):
         """
         remove_outliers(): a simple outlier_detection based on a red cups aspect ratio.
 
@@ -225,7 +225,6 @@ class TargetInfo(ITargetInfo):
         refined_dict = {}
         refined_set = []
 
-
         for box in bounding_boxes:
             aspect_ratio = box[2] / box[3]
 
@@ -237,7 +236,7 @@ class TargetInfo(ITargetInfo):
         i = 0
 
         for key in sorted(refined_dict):
-            if i == max_return_size: 
+            if i == max_return_size:
                 break
             refined_set.append(refined_dict[key])
             i = i + 1
