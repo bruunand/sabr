@@ -22,6 +22,7 @@ class NoPacketHandlerError(Exception):
     def __str__(self):
         return "Packet with identifier %d has no handler." % self.packet_id
 
+
 class CaptureDeviceUnavailableError(Exception):
     def __str__(self):
         return "Video capture device has been disconnected, or there are no more frames in video file."

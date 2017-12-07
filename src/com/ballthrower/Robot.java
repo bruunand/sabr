@@ -118,7 +118,7 @@ public class Robot implements IAbortable
         // Close any existing connection
         this.closeConnection();
 
-        // Instantiate the connection and await the connection from host.
+        // Instantiate the connection and await the connection from
         this._connection = connectionFactory.createInstance(ConnectionFactory.ConnectionType.Bluetooth, this);
         this._connection.awaitConnection();
     }
