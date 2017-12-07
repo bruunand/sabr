@@ -114,10 +114,10 @@ class TargetInfo(ITargetInfo):
         """
 
         # Retrieve a list of sample data to be processed
-        frame = [cv2.imread('cup.jpg')]  # self.get_sample_data()
+        frame = cv2.imread('cup.jpg')  # self.get_sample_data()
 
         # Get the width of a frame in the sample_data
-        frame_width = frame.shape(frame[0])[1]
+        frame_width = np.shape(frame)[1]
 
         # Process the sample data to a list of bounding boxes (a bounding box / rectangle consists of four integers: x-coordinate, y-coordinate, width and height)
         bounding_boxes = self.get_bounding_boxes(frame)
@@ -172,8 +172,6 @@ class TargetInfo(ITargetInfo):
                 boxes = np.squeeze(boxes)
 
                 # Iterate detections and filter based on score
-                # There is a mapping between the indices of scores and boxes
-                # Meaning that the score of index 0 is associated with the box that has index 0
                 filtered_boxes = []
                 for index, score in enumerate(scores):
                     if score >= 0.5:
@@ -232,7 +230,7 @@ class TargetInfo(ITargetInfo):
         # Return the coordinate sets
         return all_bounding_boxes
 
-    def capture_frame(self):
+    def get_frame(self):
         """
         capture_frame(): uses the capture device to capture a frame from the
             capture device.

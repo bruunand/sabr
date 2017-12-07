@@ -65,28 +65,28 @@ class ITargetInfo(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def image_processing(self, sample_data):
+    def get_bounding_boxes(self, farme):
         """
             Description:
-                Processes a set of frames from the passed sample data to construct bounding rectangles around the largets countours.
+                Processes a frame from the passed sample data to construct bounding rectangles around the largets countours.
 
             Args:
-                sample_data - a list of frames
+                frame - a frame to process
 
             Returns:
-                A set of bounding rectangles.
+                A set of BoundingBox instances.
         """
         pass
 
     @abc.abstractmethod
-    def get_sample_data(self):
+    def get_frame(self):
         """
             Description:
-                Queries the camera to take x amount of pictures.
+                Get a frame to be used for further processing.
 
             Args:
 
             Returns:
-                A set of frames / pictures.
+                A frame.
         """
         pass
