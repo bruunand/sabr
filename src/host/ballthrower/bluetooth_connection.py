@@ -1,7 +1,7 @@
-from host.ballthrower.errors import MultipleCandidatesError, FaultyHandshakeError
-from host.ballthrower.interfaces import Connection
-from host.ballthrower.packets import PacketIds, Packet
-from host.ballthrower.type_converter import *
+from ballthrower.errors import MultipleCandidatesError, FaultyHandshakeError
+from ballthrower.interfaces import Connection
+from ballthrower.packets import PacketIds, Packet
+from ballthrower.type_converter import *
 import bluetooth
 
 def find_device(target_name):

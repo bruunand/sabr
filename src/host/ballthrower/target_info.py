@@ -2,8 +2,8 @@ import os
 import cv2
 import numpy as np
 from math import floor
-from host.ballthrower.errors import CaptureDeviceUnavailableError
-from host.ballthrower.interfaces import ITargetInfo
+from ballthrower.errors import CaptureDeviceUnavailableError
+from ballthrower.interfaces import ITargetInfo
 
 #TensorFlow imports
 from utils import label_map_util
@@ -71,9 +71,9 @@ class TargetInfo(ITargetInfo):
 
     MODEL_NAME = 'redcup_model'
 
-    PATH_TO_CKPT = '../resources/' + MODEL_NAME + '/frozen_inference_graph.pb'
+    PATH_TO_CKPT = os.path.join(os.path.join('res', MODEL_NAME), 'frozen_inference_graph.pb')
 
-    PATH_TO_LABELS = os.path.join(MODEL_NAME, 'label_map.pbtxt')
+    PATH_TO_LABELS = os.path.join(os.path.join('res', MODEL_NAME), 'label_map.pbtxt')
 
     NUM_CLASSES = 1
 
@@ -245,7 +245,3 @@ class TargetInfo(ITargetInfo):
             raise CaptureDeviceUnavailableError()
 
         return frame
-
-
-t = TargetInfo()
-t.get_targets()

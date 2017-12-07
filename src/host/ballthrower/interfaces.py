@@ -6,14 +6,14 @@ class Connection(metaclass=abc.ABCMeta): # Todo: Descriptions for this interface
     def connect(self, host_name=None):
         """
             Description:
-                Connect to remote host. Return when handshake has been performed.
+                Connect to remote  Return when handshake has been performed.
         """
         pass
 
     def disconnect(self):
         """
             Description:
-                Disconnect from remote host.
+                Disconnect from remote
         """
         pass
 

@@ -1,7 +1,7 @@
-from host.ballthrower.packets import PacketIds, Packet
-from host.ballthrower.bluetooth_connection import BluetoothConnection
-from host.ballthrower.errors import NoPacketHandlerError
-from host.ballthrower.target_info import TargetInfo
+from ballthrower.packets import PacketIds, Packet
+from ballthrower.bluetooth_connection import BluetoothConnection
+from ballthrower.errors import NoPacketHandlerError
+from ballthrower.target_info import TargetInfo
 
 
 class BallThrower(object):
@@ -36,6 +36,7 @@ class BallThrower(object):
     def connect(self):
         self.connection = BluetoothConnection()
         self.connection.connect(self.host_name)
+        print("connected")
 
     def handle_packets(self):
         # When connected, initialize targetinfo

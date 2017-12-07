@@ -1,4 +1,4 @@
-from host.ballthrower.ballthrower import BallThrower
+from ballthrower.ballthrower import BallThrower
 
 if __name__ == '__main__':
     instance = BallThrower("YAYER")
