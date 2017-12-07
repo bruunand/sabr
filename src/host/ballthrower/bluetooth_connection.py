@@ -4,6 +4,7 @@ from ballthrower.packets import PacketIds, Packet
 from ballthrower.type_converter import *
 import bluetooth
 
+
 def find_device(target_name):
     # Even though we only need to return one candidate, we
     # need to store them in an array so we can yield a proper

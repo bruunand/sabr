@@ -5,7 +5,7 @@ from math import floor
 from ballthrower.errors import CaptureDeviceUnavailableError
 from ballthrower.interfaces import ITargetInfo
 
-#TensorFlow imports
+# TensorFlow imports
 from utils import label_map_util
 import tensorflow as tf
 
@@ -26,7 +26,8 @@ class BoundingBox():
         return (int(self.width / 2), int(self.height / 2))
 
     def __str__(self):
-        return "x: {}-{}, y: {}-{}, width: {}, height: {}".format(self.x_min, self.y_min, self.y_min, self.y_max, self.width, self.height)
+        return "x: {}-{}, y: {}-{}, width: {}, height: {}".format(self.x_min, self.y_min, self.y_min, self.y_max,
+                                                                  self.width, self.height)
 
     def draw_rectangle(self, source_image):
         cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 3)
