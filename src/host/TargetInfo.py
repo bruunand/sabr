@@ -10,23 +10,44 @@ from utils import label_map_util
 from utils import visualization_utils as vis_util
 
 
-# Normalizes a box from TensorFlow and returns it as a tuple
-def normalize_box(im_width, im_height, box):
+class BoundingBox():
+    def __init__(self, source_width, source_height, box_array):
+        self.y_min = floor(box_array[0] * source_height)
+        self.x_min = floor(box_array[1] * source_width)
+        self.y_max = floor(box_array[2] * source_height)
+        self.x_max = floor(box_array[3] * source_width)
+
+        # For convenience, calculate the width and height of the box
+        self.width  = self.x_max - self.x_min
+        self.height = self.y_max - self.y_min
+
+    def crop(self, from_image):
+        self.cropped_image = from_image[self.y_min:self.y_max, self.x_min:self.x_max]
+        return self.cropped_image
+
+    def get_centre(self):
+        return (self.width / 2, self.height / 2)
+
+    def __str__(self):
+        return "x: {}, y: {}, width: {}, height: {}".format(self.x_min, self.y_min, self.width, self.height)
+
 
 class TargetInfo(ITargetInfo):
-    """ 
+    """
     This class is used for capturing frames of the environment
     and provide target object information to an embedded system
-    
+
     Attributes:
+        HSV_MAX_DEVIATION (float): Maximum deviation used in determining
+            which HSV lower and upper bounds to be used.
         MODEL_NAME (string): Path to folder where the neural network object
-            detection model resides. 
-        PATH_TO_CKPT (string): Path to frozen detection graph. 
+            detection model resides.
+        PATH_TO_CKPT (string): Path to frozen detection graph.
             This is the actual model that is used for the object detection.
         PATH_TO_LABELS (string): Path to the list labels used to classify
             detected objects.
         NUM_CLASSES (integer): number of categories for classification.
-        detection_graph (object): a computation graph. 
+        detection_graph (object): a computation graph.
         label_map (list): list of labels.
         categories (list): list of dictionaries representing all possible categories.
         category_index (dictionary): a dictionary of the same entries as categories but
@@ -35,6 +56,8 @@ class TargetInfo(ITargetInfo):
     Todo:
         *
     """
+    HSV_MAX_DEVIATION = 0.4
+
     MODEL_NAME = 'redcuprcnn'
 
     PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
@@ -68,14 +91,14 @@ class TargetInfo(ITargetInfo):
 
     def get_targets(self):
         """
-        get_targets() gathers the necessary data need by the 
+        get_targets() gathers the necessary data need by the
         embedded system to calculate the direction or distance.
 
         args:
-            
+
         returns:
-            A tuple contaning a list of bounding boxes and 
-            an integer representing the frame width 
+            A tuple contaning a list of bounding boxes and
+            an integer representing the frame width
 
         todo:
             *
@@ -99,12 +122,12 @@ class TargetInfo(ITargetInfo):
         It uses the neural network object detection model
         to detect red cups and uses these results to dynamically calculate the
         colour ranges for colour and contouring which sets the final bounding box
-        around the red cups. 
+        around the red cups.
 
         args:
             sample data: an integer representing the number of frames to process.
         return:
-            bounding_boxes: a list of 4-tuples each 
+            bounding_boxes: a list of 4-tuples each
                 having the following form [top_x_pos,top_y_pos,width,height].
 
         todo:
@@ -134,24 +157,38 @@ class TargetInfo(ITargetInfo):
                     num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
                     # Actual detection.
-                    (boxes, scores, classes, num_detections) = sess.run(
-                        [boxes, scores, classes, num_detections],
-                        feed_dict={image_tensor: image_np_expanded})
-                    vis_util.visualize_boxes_and_labels_on_image_array()
-                    percent_difference = 0.40
+                    (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections], feed_dict={image_tensor: image_np_expanded})
+                    #vis_util.visualize_boxes_and_labels_on_image_array()
 
-                    height, width, _ = np.shape(frame)
-                    # Squeeze all detected boxes into a list of tuples
-                    y_min, x_min, y_max, x_max = np.squeeze(boxes)[0]
-                    # Normalize the positions
-                    y_min = int(y_min * height)
-                    x_min = int(x_min * width)
-                    y_max = int(y_max * height)
-                    x_max = int(x_max * width)
+                    # Squeeze score and box arrays as they are both single-dimensional arrays of arrays
+                    scores = np.squeeze(scores)
+                    boxes = np.squeeze(boxes)
 
-                    centre_x, centre_y = int((x_max + x_min) / 2), int((y_max + y_min) / 2)
+                    # Iterate detections and filter based on score
+                    # There is a mapping between the indices of scores and boxes
+                    # Meaning that the score of index 0 is associated with the box that has index 0
+                    filtered_boxes = []
+                    for index, score in enumerate(scores):
+                        if score >= 0.5:
+                            filtered_boxes.append(boxes[index])
+
+                    # Normalize box sizes by converting them to BoundingBox classes
+                    height, width, _, = np.shape(image_np)
+                    filtered_boxes = [BoundingBox(width, height, box) for box in filtered_boxes]
+
+                    # Crop all cups out of the image
+                    for index, box in enumerate(filtered_boxes):
+                        # Crop the subset of the image corresponding to the bounding box
+                        cropped = box.crop(image_np)
+
+                        # Get the colour value at the center of the bounding box
+                        crop_centre = box.get_centre()
+                        centre_colour = frame[centre_y, centre_x]
+                        print("Centre colour: {}", centre_colour)
+                        cv2.imwrite("test.png", cropped)
+
                     # Get the colour value at the center of bounding box
-                    colour = frame[centre_y, centre_x]
+                    colour = frame[0, 0]
                     colour = np.uint8([[[int(colour[0]), int(colour[1]), int(colour[2])]]])
                     # Convert the current frame with a BGR color profile to a frame with a HSV color profile
                     hsv_colour = cv2.cvtColor(colour, cv2.COLOR_BGR2HSV)
@@ -160,8 +197,8 @@ class TargetInfo(ITargetInfo):
                     # Set the colour bounds based on the colour at the center of the
                     ## bounding box.
                     for i in range(3):
-                        lower_hsv_colour[i] = int(hsv_1dcolor[i] * (1 - percent_difference))
-                        upper_hsv_colour[i] = int(hsv_1dcolor[i] * (1 + percent_difference))
+                        lower_hsv_colour[i] = int(hsv_1dcolor[i] * (1 - HSV_MAX_DEVIATION))
+                        upper_hsv_colour[i] = int(hsv_1dcolor[i] * (1 + HSV_MAX_DEVIATION))
 
                     hsv_red = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
