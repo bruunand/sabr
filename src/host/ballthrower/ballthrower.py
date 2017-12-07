@@ -36,7 +36,6 @@ class BallThrower(object):
     def connect(self):
         self.connection = BluetoothConnection()
         self.connection.connect(self.host_name)
-        print("connected")
 
     def handle_packets(self):
         # When connected, initialize targetinfo
