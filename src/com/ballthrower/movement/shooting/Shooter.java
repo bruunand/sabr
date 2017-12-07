@@ -30,14 +30,22 @@ public class Shooter extends MotorController implements IShooter
     }
 
     /**
-     * Calculate the power needed to shoot a specific distance, defined by battery power. Assume linear relation between distance and motor power required.
+     * Calculate the power needed to shoot a specific distance, defined by battery power.
+     * Assume linear relation between distance and motor power required.
      * @param distance the distance to shoot.
      * @return the motor power needed.
      */
     private int getPowerLinear(float distance)
     {
-        double compensationFactor = 800 / regMotor.getMaxSpeed();
-        return (int)(((distance * 429.7)/6.668) * compensationFactor);
+        /*
+        * Distance = 1.039 * Power + 37.43 (r^2 = 0.9948)
+        *                   <=>
+        * Power = (Distance / 1.039) - 37.43
+        *
+        * */
+        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
+        double compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
+        return (int)(((distance / 1.039) - 37.43) * compensationFactor);
     }
 
     /**
@@ -51,28 +59,22 @@ public class Shooter extends MotorController implements IShooter
 
     public void shootDistance(float distance)throws OutOfRangeException
     {
-        /*
-        double initialVelocity = getInitialVelocity(distance);
-        int power = getPower(initialVelocity);
-        */
         int power = getPowerLinear(distance);
 
         if (power > 100)
         {
             throw new OutOfRangeException("Target out of range: Too far.");
         }
-        else if (power < 70)
+        else if (power < 50)
         {
             throw new OutOfRangeException("Target out of range: Too close.");
         }
 
-        int degrees = (int)((1.5*360) / getGearRatio());
+        int degrees = (int)((180) / getGearRatio());
 
         super.startMotors(power, Direction);
         super.waitWhileTurning(degrees);
-        super.stopMotors();
-
-        super.waitMiliseconds(1000);
+        super.resetTacho();
 
         resetMotors();
     }
@@ -82,10 +84,14 @@ public class Shooter extends MotorController implements IShooter
      */
     private void resetMotors()
     {
-        super.startMotors(15, Direction);
-        super.waitMiliseconds(2500);
-        super.stopMotors();
+        /* Move in opposite direction */
+        super.startMotors(15, !Direction);
 
+        /* 180 degrees should be enough */
+        waitWhileTurning((int)(180 / getGearRatio()));
+
+        /* Stop motors, reset tacho count */
+        super.stopMotors();
         super.resetTacho();
     }
 

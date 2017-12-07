@@ -9,59 +9,73 @@ import static java.lang.Math.abs;
 // triangle similarity using the height of the target object.
 public class DistanceCalculator implements IDistanceCalculateable
 {
-    // physical height manually measured
-    private static final float _targetHeight = 10.2f;
-    // height represented on the image plane in pixels
-    private static final float _knownHeight = 52.0f;
-    // physical distance measured manually
-    private static final float _knownRealDistance = 100.0f;
+    /** Physical height, manually measured */
+    private static final float _targetHeight = 11.5f;
 
-    // focallength is the distance between the image plane and lens of the camera
+    /** Pixel height at distance = _knownRealDistance */
+    private static final float _knownHeight = 120.0f;
+
+    /** Real distance in centimeters */
+    private static final float _knownRealDistance = 110.2f;
+
+    /** Focal length is the distance between the image plane and lens of the camera
+      * Used for calculating the distance to an object */
     private static final float _focalLengthHeight = _knownHeight * _knownRealDistance / _targetHeight;
 
-    // Returns a float representing the distance to the target object.
-    // It assumes that the target object is close to directly infront
-    // of the image capturing device. For this reason rotation should
-    // be performed before attempting to calculate the distance.
-    //
-    // Input: An instance of a class implementing ITargetBoxInfo
-    // which contains sample data received from a data gathering
-    // device.
-    //
-    // Computation:
-    //  - Find the median height from the sample list
-    //  - Remove samples deviating more than 5% from the median
-    //  - Get median from the sample list without outliers
-    //  - Calculate the distance using the focal length
+    /**
+     * Returns a float representing the distance to the target object.
+     * It assumes that the target object is close to directly in front
+     * of the image capturing device. For this reason rotation should
+     * be performed before attempting to calculate the distance.
+
+     * Input: An instance of a class implementing ITargetBoxInfo
+     * which contains sample data received from a data gathering
+     * device.
+
+     * Computation:
+     *  - Find the median height from the sample list
+     *  - Remove samples deviating more than 5% from the median
+     *  - Get median from the sample list without outliers
+     *  - Calculate the distance using the focal length
+     */
     @Override
     public float calculateDistance(ITargetBoxInfo target)
     {
+        /* Iterate over all samples; if none exist, return */
         if (target.getSampleCount() == 0)
             return Float.POSITIVE_INFINITY;
 
+        /* Store heights in an array */
         float[] heights = new float[target.getSampleCount()];
-
         for (int i = 0; i < target.getSampleCount(); i++)
         {
             heights[i] = target.getTargets()[i].getHeight();
         }
 
+        /* Calculate median */
         float median = getMedian(heights);
 
+        /* Remove outliers from the list of heights given
+         * the current median */
         float[] refinedHeightList = removeOutliers(heights, median);
 
+        /* If every sample was an outlier... */
         if(refinedHeightList.length == 0)
             // Query the camera for a new set of data.
             return -1;
 
+        /* Recalculate median based on refined heights */
         median = getMedian(refinedHeightList);
 
-        // see report for triangle similarity method calculation method.
+        /* Calculate the distance.
+         * See report for triangle similarity method calculation method. */
         float distanceToObject = _focalLengthHeight * _targetHeight / median;
 
         return distanceToObject;
     }
 
+    /** Utility method for converting an ArrayList
+     *  to an array. */
     private float[] convertToArray(ArrayList<Float> arr)
     {
         float[] newArray = new float[arr.size()];
@@ -72,10 +86,14 @@ public class DistanceCalculator implements IDistanceCalculateable
         return newArray;
     }
 
+    /** Sorts the array of floats, and returns the middle
+     *  element. If number of elements is even, return mean
+     *  of the two middle-most elements. */
     public float getMedian(float[] arr)
     {
         float median;
         int arrayLength = arr.length;
+
         Arrays.sort(arr);
         if (arrayLength  % 2 == 0)
             median = (arr[arrayLength  / 2] + arr[arrayLength  / 2 - 1]) / 2;
@@ -85,7 +103,7 @@ public class DistanceCalculator implements IDistanceCalculateable
         return median;
     }
 
-    /** Removes samples deviating more than 5% from the median */
+    /** Removes samples deviating more than 5% from the median. */
     public float[] removeOutliers(float[] heights, float median)
     {
         ArrayList<Float> toReturn = new ArrayList<Float>();
