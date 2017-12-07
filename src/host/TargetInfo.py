@@ -8,28 +8,40 @@ from Interfaces import ITargetInfo
 from PIL import Image
 from utils import label_map_util
 from utils import visualization_utils as vis_util
+from math import floor
 
 
 class BoundingBox():
-    def __init__(self, source_width, source_height, box_array):
-        self.y_min = floor(box_array[0] * source_height)
-        self.x_min = floor(box_array[1] * source_width)
-        self.y_max = floor(box_array[2] * source_height)
-        self.x_max = floor(box_array[3] * source_width)
-
-        # For convenience, calculate the width and height of the box
-        self.width  = self.x_max - self.x_min
-        self.height = self.y_max - self.y_min
+    def __init__(self, x_min, x_max, y_min, y_max, width, height):
+        self.x_min = x_min
+        self.y_min = y_min
+        self.x_max = x_max
+        self.y_max = y_max
+        self.width = width
+        self.height = height
 
     def crop(self, from_image):
-        self.cropped_image = from_image[self.y_min:self.y_max, self.x_min:self.x_max]
-        return self.cropped_image
+        return from_image[self.y_min:self.y_max, self.x_min:self.x_max]
 
     def get_centre(self):
-        return (self.width / 2, self.height / 2)
+        return (int(self.width / 2), int(self.height / 2))
 
     def __str__(self):
-        return "x: {}, y: {}, width: {}, height: {}".format(self.x_min, self.y_min, self.width, self.height)
+        return "x: {}-{}, y: {}-{}, width: {}, height: {}".format(self.x_min, self.y_min, self.y_min, self.y_max, self.width, self.height)
+
+    def draw_rectangle(self, source_image):
+        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 3)
+
+    def fromTensorFlowBox(source_width, source_height, box_array):
+        y_min = floor(box_array[0] * source_height)
+        x_min = floor(box_array[1] * source_width)
+        y_max = floor(box_array[2] * source_height)
+        x_max = floor(box_array[3] * source_width)
+
+        return BoundingBox(x_min, x_max, y_min, y_max, x_max - x_min, y_max - y_min)
+
+    def fromNormalized(x_min, y_min, width, height):
+        return BoundingBox(x_min, x_min + width, y_min, y_min + height, width, height)
 
 
 class TargetInfo(ITargetInfo):
@@ -74,14 +86,13 @@ class TargetInfo(ITargetInfo):
     category_index = label_map_util.create_category_index(categories)
 
     # Initialize TargetInfo with default capture device set to 1 and sample size set to 10
-    def __init__(self, capture_device=1, sample_size=10, target_width=8.25, target_height=10.5, debug=True):
+    def __init__(self, capture_device=3, sample_size=10, target_width=8.25, target_height=10.5, debug=True):
         self._camera = cv2.VideoCapture(capture_device)
-        # self._camera.set(3,1600)
-        # self._camera.set(4,1200)
-        self._sample_size = sample_size
-        self._debug = debug
-        self._aspect_ratio = target_width / target_height
+        self.sample_size = sample_size
+        self.debug = debug
+        self.aspect_ratio = target_width / target_height
 
+        # Load frozen graph
         with self.detection_graph.as_default():
             od_graph_def = tf.GraphDef()
             with tf.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid:
@@ -105,7 +116,7 @@ class TargetInfo(ITargetInfo):
         """
 
         # Retrieve a list of sample data to be processed
-        sample_data = self.get_sample_data()
+        sample_data = [cv2.imread('cup.jpg')]  # self.get_sample_data()
 
         # Get the width of a frame in the sample_data
         frame_width = np.shape(sample_data[0])[1]
@@ -134,7 +145,7 @@ class TargetInfo(ITargetInfo):
             * (maybe) split this function into smaller functions.
 
         """
-        bounding_boxes = []
+        all_bounding_boxes = []
 
         # Colour ranges for colour and contouring
         lower_hsv_colour = np.array([0, 0, 0])
@@ -157,8 +168,8 @@ class TargetInfo(ITargetInfo):
                     num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
                     # Actual detection.
-                    (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections], feed_dict={image_tensor: image_np_expanded})
-                    #vis_util.visualize_boxes_and_labels_on_image_array()
+                    (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections],
+                                                                        feed_dict={image_tensor: image_np_expanded})
 
                     # Squeeze score and box arrays as they are both single-dimensional arrays of arrays
                     scores = np.squeeze(scores)
@@ -172,113 +183,60 @@ class TargetInfo(ITargetInfo):
                         if score >= 0.5:
                             filtered_boxes.append(boxes[index])
 
+                    # If no boxes were found, continue to next sample
+                    if len(filtered_boxes) == 0:
+                        continue
+
                     # Normalize box sizes by converting them to BoundingBox classes
-                    height, width, _, = np.shape(image_np)
-                    filtered_boxes = [BoundingBox(width, height, box) for box in filtered_boxes]
+                    height, width, _, = np.shape(frame)
+                    filtered_boxes = [BoundingBox.fromTensorFlowBox(width, height, box) for box in filtered_boxes]
 
                     # Crop all cups out of the image
                     for index, box in enumerate(filtered_boxes):
                         # Crop the subset of the image corresponding to the bounding box
-                        cropped = box.crop(image_np)
+                        cropped = box.crop(frame)
+                        cropped_hsv = cv2.cvtColor(cropped, cv2.COLOR_BGR2HSV)
 
                         # Get the colour value at the center of the bounding box
                         crop_centre = box.get_centre()
-                        centre_colour = frame[centre_y, centre_x]
-                        print("Centre colour: {}", centre_colour)
-                        cv2.imwrite("test.png", cropped)
+                        centre_colour_hsv = cropped_hsv[crop_centre[1], crop_centre[0]]
 
-                    # Get the colour value at the center of bounding box
-                    colour = frame[0, 0]
-                    colour = np.uint8([[[int(colour[0]), int(colour[1]), int(colour[2])]]])
-                    # Convert the current frame with a BGR color profile to a frame with a HSV color profile
-                    hsv_colour = cv2.cvtColor(colour, cv2.COLOR_BGR2HSV)
-                    hsv_1dcolor = np.array(hsv_colour[0][0])
+                        # Get lower and upper bounds based on centre colour
+                        for i in range(3):
+                            lower_hsv_colour[i] = int(centre_colour_hsv[i] * (1 - TargetInfo.HSV_MAX_DEVIATION))
+                            upper_hsv_colour[i] = int(centre_colour_hsv[i] * (1 + TargetInfo.HSV_MAX_DEVIATION))
 
-                    # Set the colour bounds based on the colour at the center of the
-                    ## bounding box.
-                    for i in range(3):
-                        lower_hsv_colour[i] = int(hsv_1dcolor[i] * (1 - HSV_MAX_DEVIATION))
-                        upper_hsv_colour[i] = int(hsv_1dcolor[i] * (1 + HSV_MAX_DEVIATION))
+                        # Mask colour with dynamically retrieved range
+                        crop_masked = cv2.inRange(cropped_hsv, lower_hsv_colour, upper_hsv_colour)
 
-                    hsv_red = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+                        # Create contours for all objects in the defined colorspace
+                        _, contours, _ = cv2.findContours(crop_masked.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-                    mask_red = cv2.inRange(hsv_red, lower_hsv_colour, upper_hsv_colour)
+                        # If no contours are found, we cann
+                        if len(contours) == 0:
+                            all_bounding_boxes.append(box)
+                            continue
 
-                    # Create contours for all objects in the defined colorspace
-                    _, contours, _ = cv2.findContours(mask_red.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+                        # Get the largest contour
+                        contour = max(contours, key=cv2.contourArea)
+                        area = cv2.boundingRect(contour)
 
-                    if len(contours) == 0:
-                        continue
-
-                    # Get the largest contour
-                    contour = max(contours, key=cv2.contourArea)
-                    area = cv2.boundingRect(contour)
-                    size = cv2.contourArea(contour)
-
-                    # Continue if no bounding box is found
-                    if size == 0:
-                        continue
-                    bounding_boxes.append(area)
-                    print("iaro ist und faglord")
-
-        # Refine bounding box set
-        ## OBS !!!! Currently removes too much !!!! OBS
-        # bounding_boxes = self.remove_outliers(bounding_boxes)
-
+                        # Define a narrow bounding box and add it to the list of all boxes
+                        narrow_box = BoundingBox.fromNormalized(box.x_min + area[0], box.y_min + area[1], area[2],
+                                                                area[3])
+                        all_bounding_boxes.append(narrow_box)
+                        print(narrow_box)
 
         # If debugging is enabled draw all bounding boxes on the first frame and show the result
-        if self._debug and len(sample_data) > 0:
-
+        if self.debug and len(sample_data) > 0:
             base_image = sample_data[0]
-            for box in bounding_boxes:
-                cv2.rectangle(base_image, (box[0], box[1]), (box[0] + box[2], box[1] + box[3]), (0, 255, 0), 3)
-
-            cv2.imshow('debug', base_image)
-            cv2.waitKey(1)
+            for box in all_bounding_boxes:
+                print(box)
+                box.draw_rectangle(base_image)
+            cv2.imwrite('debug.png', base_image)
 
         # Return the coordinate sets
-        return bounding_boxes
-
-    def remove_outliers(self, bounding_boxes, max_deviance=20, max_return_size=100):
-        """
-        remove_outliers(): a simple outlier_detection based on a red cups aspect ratio.
-
-        args:
-            bounding_boxes: a list of 4-tuples representing the calculated bounding
-                boxes around the red cups.
-            max_deviance: integer representing the maximum amount the aspect ration
-                of each bounding can deviate.
-            max_return_size: integer defining the maximum amount of bounding boxes
-                that can be returned by this function.
-        return:
-            refined_set: a list of bounding boxes where obvoius outliers have been
-                removed.
-        todo:
-            * Mikkel Jarlund comment this function
-            * Removes all bounding boxes with the new object detection method
-            ** PLZ FIX
-
-        """
-        refined_dict = {}
-        refined_set = []
-
-        for box in bounding_boxes:
-            aspect_ratio = box[2] / box[3]
-
-            ar_deviance = abs(self._aspect_ratio - aspect_ratio) / ((self._aspect_ratio + aspect_ratio) / 2) * 100
-
-            if ar_deviance < max_deviance:
-                refined_dict[ar_deviance] = box
-
-        i = 0
-
-        for key in sorted(refined_dict):
-            if i == max_return_size:
-                break
-            refined_set.append(refined_dict[key])
-            i = i + 1
-
-        return refined_set
+        return all_bounding_boxes
 
     def get_sample_data(self):
         """
@@ -292,7 +250,7 @@ class TargetInfo(ITargetInfo):
         sample_data = []
 
         # Add x frames to the sample data collection
-        for i in range(0, self._sample_size):
+        for i in range(0, self.sample_size):
             return_value, frame = self._camera.read()
 
             # Should exit if the no pictures are returned from _camera.read() function
@@ -302,3 +260,7 @@ class TargetInfo(ITargetInfo):
             sample_data.append(frame)
 
         return sample_data
+
+
+t = TargetInfo()
+t.get_targets()
