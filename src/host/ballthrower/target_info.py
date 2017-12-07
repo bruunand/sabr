@@ -114,7 +114,7 @@ class TargetInfo(ITargetInfo):
         """
 
         # Retrieve a list of sample data to be processed
-        frame = cv2.imread('cup.jpg')  # self.get_sample_data()
+        frame = self.get_frame()
 
         # Get the width of a frame in the sample_data
         frame_width = np.shape(frame)[1]
