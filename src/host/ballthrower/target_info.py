@@ -1,14 +1,13 @@
 import os
 import cv2
 import numpy as np
-import tensorflow as tf
-import Errors
-from utils import label_map_util
-from Interfaces import ITargetInfo
-from PIL import Image
-from utils import label_map_util
-from utils import visualization_utils as vis_util
 from math import floor
+from host.ballthrower.errors import CaptureDeviceUnavailableError
+from host.ballthrower.interfaces import ITargetInfo
+
+#TensorFlow imports
+from utils import label_map_util
+import tensorflow as tf
 
 
 class BoundingBox():
@@ -70,9 +69,9 @@ class TargetInfo(ITargetInfo):
     """
     HSV_MAX_DEVIATION = 0.4
 
-    MODEL_NAME = 'redcuprcnn'
+    MODEL_NAME = 'redcup_model'
 
-    PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
+    PATH_TO_CKPT = '../resources/' + MODEL_NAME + '/frozen_inference_graph.pb'
 
     PATH_TO_LABELS = os.path.join(MODEL_NAME, 'label_map.pbtxt')
 
@@ -243,7 +242,7 @@ class TargetInfo(ITargetInfo):
 
         # Exits if no frame is returned from _camera.read() function
         if not return_value:
-            raise Errors.CaptureDeviceUnavailableError()
+            raise CaptureDeviceUnavailableError()
 
         return frame
 

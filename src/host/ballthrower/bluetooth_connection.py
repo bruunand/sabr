@@ -1,13 +1,10 @@
-import TypeConverter
-import Errors
-import time
-import Packets
-from Interfaces import Connection
+from host.ballthrower.errors import MultipleCandidatesError, FaultyHandshakeError
+from host.ballthrower.interfaces import Connection
+from host.ballthrower.packets import PacketIds, Packet
+from host.ballthrower.type_converter import *
 import bluetooth
 
-
 def find_device(target_name):
-
     # Even though we only need to return one candidate, we
     # need to store them in an array so we can yield a proper
     # error message if several units with the same name exist.
@@ -22,9 +19,10 @@ def find_device(target_name):
         return None
     # There should only be one unit in distance with this name, abort
     elif len(candidates) > 1:
-        raise(Errors.MultipleCandidatesError(len(candidates), target_name))
+        raise (MultipleCandidatesError(len(candidates), target_name))
     else:
         return candidates[0]
+
 
 class BluetoothConnection(Connection):
     BLUETOOTH_PORT = 1
@@ -33,11 +31,11 @@ class BluetoothConnection(Connection):
         # The NXT sends a handshake first, followed by a response from the host
         packet = self.receive_packet()
 
-        if packet.get_id() == Packets.PacketIds.HANDSHAKE:
+        if packet.get_id() == PacketIds.HANDSHAKE:
             print("Received handshake with token %d" % packet.get_validation_token())
             self.send_packet(packet)
         else:
-            raise(Errors.FaultyHandshakeError(packet.get_id()))
+            raise FaultyHandshakeError(packet.get_id())
 
     def connect(self, host_name=None):
         # Search for a candidate. Keep searching until a candidate is found
@@ -64,7 +62,7 @@ class BluetoothConnection(Connection):
         packet_id = self.remote_connection.recv(1)[0]
 
         # Instantiate from id using Packet's factory function
-        packet = Packets.Packet.instantiate_from_id(packet_id)
+        packet = Packet.instantiate_from_id(packet_id)
         packet.construct_from_connection(self)
 
         return packet
@@ -83,16 +81,16 @@ class BluetoothConnection(Connection):
         self.remote_connection.send(bytes([value]))
 
     def send_short(self, value):
-        self.remote_connection.send(TypeConverter.short_to_bytes(value))
+        self.remote_connection.send(short_to_bytes(value))
 
     def send_float(self, value):
-        self.remote_connection.send(TypeConverter.float_to_bytes(value))
+        self.remote_connection.send(float_to_bytes(value))
 
     def receive_byte(self):
         return self.remote_connection.recv(1)[0]
 
     def receive_short(self):
-        return TypeConverter.bytes_to_short(self.remote_connection.recv(2))
+        return bytes_to_short(self.remote_connection.recv(2))
 
     def receive_float(self):
-        return TypeConverter.bytes_to_float(self.remote_connection.recv(4))
+        return bytes_to_float(self.remote_connection.recv(4))
