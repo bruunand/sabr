@@ -86,11 +86,9 @@ class TargetInfo(ITargetInfo):
     category_index = label_map_util.create_category_index(categories)
 
     # Initialize TargetInfo with default capture device set to 1 and sample size set to 10
-    def __init__(self, capture_device=3, sample_size=10, target_width=8.25, target_height=10.5, debug=True):
+    def __init__(self, capture_device=3, debug=True):
         self._camera = cv2.VideoCapture(capture_device)
-        self.sample_size = sample_size
         self.debug = debug
-        self.aspect_ratio = target_width / target_height
 
         # Load frozen graph
         with self.detection_graph.as_default():
@@ -116,18 +114,17 @@ class TargetInfo(ITargetInfo):
         """
 
         # Retrieve a list of sample data to be processed
-        sample_data = [cv2.imread('cup.jpg')]  # self.get_sample_data()
+        frame = [cv2.imread('cup.jpg')]  # self.get_sample_data()
 
         # Get the width of a frame in the sample_data
-        frame_width = np.shape(sample_data[0])[1]
+        frame_width = frame.shape(frame[0])[1]
 
         # Process the sample data to a list of bounding boxes (a bounding box / rectangle consists of four integers: x-coordinate, y-coordinate, width and height)
-        bounding_boxes = self.image_processing(sample_data)
+        bounding_boxes = self.get_bounding_boxes(frame)
 
-        # Return the bounding boxes and frame width as a touple
-        return (bounding_boxes, frame_width)
+        return bounding_boxes, frame_width
 
-    def image_processing(self, sample_data):
+    def get_bounding_boxes(self, frame):
         """
         image_processing() processes a collection of frames.
         It uses the neural network object detection model
@@ -153,113 +150,104 @@ class TargetInfo(ITargetInfo):
 
         with self.detection_graph.as_default():
             with tf.Session(graph=self.detection_graph) as sess:
-                for frame in sample_data:
-                    # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-                    image_np_expanded = np.expand_dims(frame, axis=0)
-                    image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+                # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+                image_np_expanded = np.expand_dims(frame, axis=0)
+                image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
 
-                    # Each box represents a part of the image where a particular object was detected.
-                    boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+                # Each box represents a part of the image where a particular object was detected.
+                boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
 
-                    # Each score represent how level of confidence for each of the objects.
-                    # Score is shown on the result image, together with the class label.
-                    scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
-                    classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
-                    num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
+                # Each score represent how level of confidence for each of the objects.
+                # Score is shown on the result image, together with the class label.
+                scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+                classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+                num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
-                    # Actual detection.
-                    (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections],
-                                                                        feed_dict={image_tensor: image_np_expanded})
+                # Actual detection.
+                (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections],
+                                                                    feed_dict={image_tensor: image_np_expanded})
 
-                    # Squeeze score and box arrays as they are both single-dimensional arrays of arrays
-                    scores = np.squeeze(scores)
-                    boxes = np.squeeze(boxes)
+                # Squeeze score and box arrays as they are both single-dimensional arrays of arrays
+                scores = np.squeeze(scores)
+                boxes = np.squeeze(boxes)
 
-                    # Iterate detections and filter based on score
-                    # There is a mapping between the indices of scores and boxes
-                    # Meaning that the score of index 0 is associated with the box that has index 0
-                    filtered_boxes = []
-                    for index, score in enumerate(scores):
-                        if score >= 0.5:
-                            filtered_boxes.append(boxes[index])
+                # Iterate detections and filter based on score
+                # There is a mapping between the indices of scores and boxes
+                # Meaning that the score of index 0 is associated with the box that has index 0
+                filtered_boxes = []
+                for index, score in enumerate(scores):
+                    if score >= 0.5:
+                        filtered_boxes.append(boxes[index])
 
-                    # If no boxes were found, continue to next sample
-                    if len(filtered_boxes) == 0:
+                # If no boxes were found, return empty list
+                if len(filtered_boxes) == 0:
+                    return all_bounding_boxes
+
+                # Normalize box sizes by converting them to BoundingBox classes
+                height, width, _, = np.shape(frame)
+                filtered_boxes = [BoundingBox.fromTensorFlowBox(width, height, box) for box in filtered_boxes]
+
+                # Crop all cups out of the image
+                for index, box in enumerate(filtered_boxes):
+                    # Crop the subset of the image corresponding to the bounding box
+                    cropped = box.crop(frame)
+                    cropped_hsv = cv2.cvtColor(cropped, cv2.COLOR_BGR2HSV)
+
+                    # Get the colour value at the center of the bounding box
+                    crop_centre = box.get_centre()
+                    centre_colour_hsv = cropped_hsv[crop_centre[1], crop_centre[0]]
+
+                    # Get lower and upper bounds based on centre colour
+                    for i in range(3):
+                        lower_hsv_colour[i] = int(centre_colour_hsv[i] * (1 - TargetInfo.HSV_MAX_DEVIATION))
+                        upper_hsv_colour[i] = int(centre_colour_hsv[i] * (1 + TargetInfo.HSV_MAX_DEVIATION))
+
+                    # Mask colour with dynamically retrieved range
+                    crop_masked = cv2.inRange(cropped_hsv, lower_hsv_colour, upper_hsv_colour)
+
+                    # Create contours for all objects in the defined colorspace
+                    _, contours, _ = cv2.findContours(crop_masked.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+
+                    # If no contours are found, we cann
+                    if len(contours) == 0:
+                        all_bounding_boxes.append(box)
                         continue
 
-                    # Normalize box sizes by converting them to BoundingBox classes
-                    height, width, _, = np.shape(frame)
-                    filtered_boxes = [BoundingBox.fromTensorFlowBox(width, height, box) for box in filtered_boxes]
+                    # Get the largest contour
+                    contour = max(contours, key=cv2.contourArea)
+                    area = cv2.boundingRect(contour)
 
-                    # Crop all cups out of the image
-                    for index, box in enumerate(filtered_boxes):
-                        # Crop the subset of the image corresponding to the bounding box
-                        cropped = box.crop(frame)
-                        cropped_hsv = cv2.cvtColor(cropped, cv2.COLOR_BGR2HSV)
-
-                        # Get the colour value at the center of the bounding box
-                        crop_centre = box.get_centre()
-                        centre_colour_hsv = cropped_hsv[crop_centre[1], crop_centre[0]]
-
-                        # Get lower and upper bounds based on centre colour
-                        for i in range(3):
-                            lower_hsv_colour[i] = int(centre_colour_hsv[i] * (1 - TargetInfo.HSV_MAX_DEVIATION))
-                            upper_hsv_colour[i] = int(centre_colour_hsv[i] * (1 + TargetInfo.HSV_MAX_DEVIATION))
-
-                        # Mask colour with dynamically retrieved range
-                        crop_masked = cv2.inRange(cropped_hsv, lower_hsv_colour, upper_hsv_colour)
-
-                        # Create contours for all objects in the defined colorspace
-                        _, contours, _ = cv2.findContours(crop_masked.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
-                        # If no contours are found, we cann
-                        if len(contours) == 0:
-                            all_bounding_boxes.append(box)
-                            continue
-
-                        # Get the largest contour
-                        contour = max(contours, key=cv2.contourArea)
-                        area = cv2.boundingRect(contour)
-
-                        # Define a narrow bounding box and add it to the list of all boxes
-                        narrow_box = BoundingBox.fromNormalized(box.x_min + area[0], box.y_min + area[1], area[2],
-                                                                area[3])
-                        all_bounding_boxes.append(narrow_box)
-                        print(narrow_box)
+                    # Define a narrow bounding box and add it to the list of all boxes
+                    narrow_box = BoundingBox.fromNormalized(box.x_min + area[0], box.y_min + area[1], area[2],
+                                                            area[3])
+                    all_bounding_boxes.append(narrow_box)
 
         # If debugging is enabled draw all bounding boxes on the first frame and show the result
-        if self.debug and len(sample_data) > 0:
-            base_image = sample_data[0]
+        if self.debug:
             for box in all_bounding_boxes:
-                print(box)
-                box.draw_rectangle(base_image)
-            cv2.imwrite('debug.png', base_image)
+                box.draw_rectangle(frame)
+
+            cv2.imwrite('target_debug.png', frame)
 
         # Return the coordinate sets
         return all_bounding_boxes
 
-    def get_sample_data(self):
+    def capture_frame(self):
         """
-        get_sample_data(): uses the capture device to take a number
-            of fames, this number is provided through the class contructor.
+        capture_frame(): uses the capture device to capture a frame from the
+            capture device.
 
         retuns:
-            sample_data: a list of arrays each representing a captured frame.
+            frame: an image frame retrieved from the capture device.
 
         """
-        sample_data = []
+        return_value, frame = self._camera.read()
 
-        # Add x frames to the sample data collection
-        for i in range(0, self.sample_size):
-            return_value, frame = self._camera.read()
+        # Exits if no frame is returned from _camera.read() function
+        if not return_value:
+            raise Errors.CaptureDeviceUnavailableError()
 
-            # Should exit if the no pictures are returned from _camera.read() function
-            if not return_value:
-                raise Errors.CaptureDeviceUnavailableError()
-
-            sample_data.append(frame)
-
-        return sample_data
+        return frame
 
 
 t = TargetInfo()
