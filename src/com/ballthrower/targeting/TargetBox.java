@@ -21,6 +21,11 @@ public class TargetBox
         return _xPosition;
     }
 
+    public float getMiddleX()
+    {
+        return getXPosition() + getWidth() / 2;
+    }
+
     public TargetBox(short height, short width, short xPosition)
     {
         _height = height;

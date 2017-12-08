@@ -13,9 +13,19 @@ public class TargetContainer implements ITargetContainer
         this._targets = new TargetBox[targetCount];
     }
 
-    public TargetBox[] getTargets()
+    public TargetBox[] cloneTargets()
     {
-        return _targets;
+        return _targets.clone();
+    }
+
+    public void setTarget(byte index, TargetBox box)
+    {
+        _targets[index] = box;
+    }
+
+    public TargetBox getTarget(byte index)
+    {
+        return _targets[index];
     }
 
     public byte getTargetCount()

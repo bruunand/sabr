@@ -4,7 +4,10 @@ public interface ITargetContainer
 {
     byte getTargetCount();
 
-    TargetBox[] getTargets();
+    TargetBox[] cloneTargets();
+
+    TargetBox getTarget(byte index);
+    void setTarget(byte index, TargetBox target);
 
     short getFrameWidth();
     void setFrameWidth(short frameWidth);

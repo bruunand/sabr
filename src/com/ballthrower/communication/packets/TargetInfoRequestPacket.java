@@ -33,7 +33,7 @@ public class TargetInfoRequestPacket extends Packet
             short width = stream.readShort();
             short height = stream.readShort();
 
-            this._boxInfo.getTargets()[i] = new TargetBox(height, width, xPos);
+            this._boxInfo.setTarget(i, new TargetBox(height, width, xPos));
         }
     }
 
