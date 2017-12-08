@@ -1,5 +1,6 @@
 package com.ballthrower;
 import com.ballthrower.communication.ConnectionFactory;
+import com.ballthrower.targeting.policies.PolicyFactory;
 
 public class Main
 {

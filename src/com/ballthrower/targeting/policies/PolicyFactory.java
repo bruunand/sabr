@@ -26,7 +26,7 @@ public final class PolicyFactory
         return null;
     }
 
-    enum PolicyType
+    public enum PolicyType
     {
         random,
         left_first,
