@@ -12,7 +12,7 @@ public class DirectionCalculator implements IDirectionCalculateable
      * in order to face the target. Return value can be both
      * negative and positive in order to describe the direction
      * of the turn. */
-    public float calculateDirection(ITargetBoxInfo target)
+    public float calculateDirection(ITargetContainer target)
     {
         return calculateMeanPixelDistance(target) * _degreesPerPixel;
     }
@@ -20,11 +20,11 @@ public class DirectionCalculator implements IDirectionCalculateable
     /** From all the sample target boxes passed as argument, calculates
      * the mean of the distance from the target boxes to the middle of
      * the frame. Output value is given in number of pixels. */
-    public float calculateMeanPixelDistance(ITargetBoxInfo targets)
+    public float calculateMeanPixelDistance(ITargetContainer targets)
     {
         /* Iterate over all targets. If there are no targets, return
          * value cannot be calculated. */
-        byte iterations = targets.getSampleCount();
+        byte iterations = targets.getTargetCount();
         if (iterations == 0)
             return Float.POSITIVE_INFINITY;
 

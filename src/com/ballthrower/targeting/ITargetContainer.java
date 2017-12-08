@@ -1,8 +1,8 @@
 package com.ballthrower.targeting;
 
-public interface ITargetBoxInfo
+public interface ITargetContainer
 {
-    byte getSampleCount();
+    byte getTargetCount();
 
     TargetBox[] getTargets();
 

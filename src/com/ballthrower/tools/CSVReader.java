@@ -1,7 +1,7 @@
 package com.ballthrower.tools;
 
 import com.ballthrower.targeting.TargetBox;
-import com.ballthrower.targeting.TargetBoxInfo;
+import com.ballthrower.targeting.TargetContainer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Used for reading TargetBoxInfo data for unit tests
+ * Used for reading TargetContainer data for unit tests
  */
 public class CSVReader
 {
@@ -36,7 +36,7 @@ public class CSVReader
 
     private TestTargetBoxInfo TargetBoxFromData(List<String> objects)
     {
-        TargetBoxInfo tbi = new TargetBoxInfo( (byte)objSize );
+        TargetContainer tbi = new TargetContainer( (byte)objSize );
         float realHeight = (split(objects.get(0), ",")[0] != "") ?
                             0 : Float.parseFloat(split(objects.get(0), ",")[0]);
 

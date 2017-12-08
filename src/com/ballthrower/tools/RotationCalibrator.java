@@ -6,7 +6,7 @@ import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
 import com.ballthrower.movement.aiming.Rotator;
 import com.ballthrower.targeting.DirectionCalculator;
-import com.ballthrower.targeting.ITargetBoxInfo;
+import com.ballthrower.targeting.ITargetContainer;
 import lejos.nxt.LCD;
 import lejos.nxt.MotorPort;
 
@@ -22,7 +22,7 @@ public class RotationCalibrator
         this._connection = connection;
     }
 
-    private ITargetBoxInfo getTargetInformation()
+    private ITargetContainer getTargetInformation()
     {
         // Request packet
         _connection.sendPacket(new TargetInfoRequestPacket());

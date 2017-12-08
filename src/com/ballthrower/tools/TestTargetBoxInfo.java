@@ -1,6 +1,6 @@
 package com.ballthrower.tools;
 
-import com.ballthrower.targeting.TargetBoxInfo;
+import com.ballthrower.targeting.TargetContainer;
 
 /**
  * Normal TBI with real distance
@@ -10,12 +10,12 @@ public class TestTargetBoxInfo
     private float _realDistance;
     public float getRealDistance() {return _realDistance;}
 
-    private TargetBoxInfo _targetBoxInfo;
-    public TargetBoxInfo getTargetBoxInfo() { return _targetBoxInfo; }
+    private TargetContainer _targetContainer;
+    public TargetContainer getTargetBoxInfo() { return _targetContainer; }
 
-    public TestTargetBoxInfo(TargetBoxInfo targetBoxInfo, float realDistance)
+    public TestTargetBoxInfo(TargetContainer targetContainer, float realDistance)
     {
-        _targetBoxInfo = targetBoxInfo;
+        _targetContainer = targetContainer;
         _realDistance = realDistance;
     }
 

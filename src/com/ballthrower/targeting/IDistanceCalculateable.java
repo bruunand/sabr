@@ -2,5 +2,5 @@ package com.ballthrower.targeting;
 
 public interface IDistanceCalculateable
 {
-    float calculateDistance(ITargetBoxInfo target);
+    float calculateDistance(ITargetContainer target);
 }

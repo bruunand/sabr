@@ -16,7 +16,7 @@ import com.ballthrower.movement.shooting.IShooter;
 import com.ballthrower.movement.shooting.Shooter;
 import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
-import com.ballthrower.targeting.ITargetBoxInfo;
+import com.ballthrower.targeting.ITargetContainer;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.MotorPort;
@@ -65,7 +65,7 @@ public class Robot implements IAbortable
     {
         while (true)
         {
-            ITargetBoxInfo targetInformation = receiveTargetInformation();
+            ITargetContainer targetInformation = receiveTargetInformation();
 
             // Calculate the angle to the target object.
             float directionAngle = _directionCalculator.calculateDirection(targetInformation);
@@ -91,7 +91,7 @@ public class Robot implements IAbortable
         }
     }
 
-    private ITargetBoxInfo receiveTargetInformation()
+    private ITargetContainer receiveTargetInformation()
     {
         // Request target information
         this._connection.sendPacket(new TargetInfoRequestPacket());

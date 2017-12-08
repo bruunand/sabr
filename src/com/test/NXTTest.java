@@ -2,7 +2,7 @@ package com.test;
 
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
-import com.ballthrower.targeting.TargetBoxInfo;
+import com.ballthrower.targeting.TargetContainer;
 import com.test.communication.TargetInfoRequestPacketTest;
 import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
@@ -43,8 +43,8 @@ public class NXTTest
             LCD.drawString("All tests passed!", 0, 0);
     }
 
-    public static TargetBoxInfo getTestTargetBox() {
-        TargetBoxInfo toReturn = new TargetBoxInfo((byte)6);
+    public static TargetContainer getTestTargetBox() {
+        TargetContainer toReturn = new TargetContainer((byte)6);
 
         toReturn.getTargets()[0] = new TargetBox(60F, 44F, (short)278);
         toReturn.getTargets()[1] = new TargetBox(60F, 42F, (short)279);
