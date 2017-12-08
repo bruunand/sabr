@@ -7,7 +7,7 @@ import java.util.*;
 
 public class BiggestClusterPolicy extends Policy
 {
-    public static final Random Random = new Random();
+    private static final Random Random = new Random();
 
     private final static byte Centroids = 2;
     private final static int Iterations = 10;
@@ -98,7 +98,7 @@ public class BiggestClusterPolicy extends Policy
 
         Centroid(short frameWidth)
         {
-            this._x = (short) new Random().nextInt(frameWidth);
+            this._x = (short) Random.nextInt(frameWidth);
         }
 
         double distanceTo(TargetBox box)
@@ -133,7 +133,7 @@ public class BiggestClusterPolicy extends Policy
             if (this._assignedTargets.size() == 0)
                 return null;
 
-            return this._assignedTargets.get(BiggestClusterPolicy.Random.nextInt(this._assignedTargets.size()));
+            return this._assignedTargets.get(Random.nextInt(this._assignedTargets.size()));
         }
 
         int getTargetCount()
