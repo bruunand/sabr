@@ -39,17 +39,13 @@ public class DistanceCalculator implements IDistanceCalculateable
      *  - Calculate the distance using the focal length
      */
     @Override
-    public float calculateDistance(ITargetContainer target)
+    public float calculateDistance(TargetBox target)
     {
-        /* Iterate over all samples; if none exist, return */
-        if (target.getTargetCount() == 0)
-            return Float.POSITIVE_INFINITY;
 
         /* Calculate and return the distance.
          * See report for triangle similarity method calculation method. */
-        // TODO: Fix me when multi targets are implemented
 
-        return _focalLengthHeight * _targetHeight / 0;
+        return _focalLengthHeight * _targetHeight / target.getHeight();
     }
 
 }
