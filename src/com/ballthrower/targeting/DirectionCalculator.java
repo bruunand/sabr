@@ -7,21 +7,19 @@ public class DirectionCalculator implements IDirectionCalculateable
      * Describes how many pixels cover one degree of
      * vision on the horizontal axis. */
     private static final float _degreesPerPixel = 0.133F;
+    private float _frameMiddle;
+
+    public DirectionCalculator(ITargetContainer targetContainer) {
+        _frameMiddle = targetContainer.getFrameWidth() / 2;
+    }
 
     /** Returns the number of degrees that should be turned
      * in order to face the target. Return value can be both
      * negative and positive in order to describe the direction
      * of the turn. */
-    public float calculateDirection(ITargetContainer target)
+    public float calculateDirection(TargetBox target)
     {
-        return calculateMeanPixelDistance(target) * _degreesPerPixel;
-    }
-
-    /** From all the sample target boxes passed as argument, calculates
-     * the mean of the distance from the target boxes to the middle of
-     * the frame. Output value is given in number of pixels. */
-    public float calculateMeanPixelDistance(ITargetContainer targets)
-    {
-        return 0;
+        float boxOffset = target.getXPosition() + target.getWidth() / 2;
+        return (_frameMiddle - boxOffset) * _degreesPerPixel;
     }
 }
