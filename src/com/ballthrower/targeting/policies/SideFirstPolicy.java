@@ -25,8 +25,7 @@ public class SideFirstPolicy extends Policy
 
         /* This policy selects the left or rightmost target.
          * We use an absolute position comparator for this.
-         * Since it sorts in ascending order, we need to reverse the array if right side is chosen.
-         */
+         * Since it sorts in ascending order, we need to reverse the array if right side is chosen. */
         TargetBox[] clonedArray = targetContainer.cloneTargets();
         if (this._side == Side.Left)
             Arrays.sort(clonedArray, new AbsolutePositionComparator());

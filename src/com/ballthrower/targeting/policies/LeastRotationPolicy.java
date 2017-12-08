@@ -6,7 +6,7 @@ import com.ballthrower.targeting.TargetBox;
 import java.util.Arrays;
 import java.util.Comparator;
 
-public class ClosestDirectionPolicy extends Policy
+public class LeastRotationPolicy extends Policy
 {
     @Override
     public TargetBox selectTargetBox(ITargetContainer targetContainer)
@@ -17,8 +17,7 @@ public class ClosestDirectionPolicy extends Policy
             return targetContainer.getTarget((byte) 0);
 
         /* This policy sorts targets by their middle x-position.
-           We want the lowest of such values, as that is the target requiring the least rotation.
-         */
+           We want the lowest of such values, as that is the target requiring the least rotation. */
         TargetBox[] clonedArray = targetContainer.cloneTargets();
         Arrays.sort(clonedArray, new RelativeDistanceComparator(targetContainer));
 

@@ -21,8 +21,8 @@ public class BiggestClusterPolicy extends Policy
             return null;
         else if (targetContainer.getTargetCount() <= 2)
             /* If there are only two targets, it makes no sense to use clustering.
-            *  In that case, we default to the ClosestDirectionPolicy. */
-            return new ClosestDirectionPolicy().selectTargetBox(targetContainer);
+            *  In that case, we default to the LeastRotationPolicy. */
+            return new LeastRotationPolicy().selectTargetBox(targetContainer);
 
         /* Automatically generate centroids. */
         for (byte i = 0; i < Centroids; i++)
