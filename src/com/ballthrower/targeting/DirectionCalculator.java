@@ -2,15 +2,25 @@ package com.ballthrower.targeting;
 
 public class DirectionCalculator implements IDirectionCalculateable
 {
-    /** Dependant on the type of camera.
+    /**
+     * Dependant on the type of camera.
      * Currently using: Logitech
-     * Describes how many pixels cover one degree of
-     * vision on the horizontal axis. */
-    private static final float _degreesPerPixel = 0.133F;
+     * Is the angle from the center point of the camera,
+     * to the egde of the cameras field og view.
+     */
+    private static final float _maxAngle = 26.725F;
+
     private float _frameMiddle;
+
+    /**
+     * Dependent on the max angle
+     */
+    private float _degreesPerPixel;
 
     public DirectionCalculator(ITargetContainer targetContainer) {
         _frameMiddle = targetContainer.getFrameWidth() / 2;
+
+        _degreesPerPixel = _maxAngle / _frameMiddle;
     }
 
     /** Returns the number of degrees that should be turned
