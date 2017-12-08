@@ -17,6 +17,7 @@ public class Shooter extends MotorController implements IShooter
     private static final int DEPARTURE_ANGLE = 51;
     private static final float FACTOR = 9.7095f;
     private static final int OFFSET = -415;
+    private static final float cameraHeight = 52.7f;
     private RegulatedMotor regMotor;
 
     /* DEBUGGING */
@@ -51,6 +52,21 @@ public class Shooter extends MotorController implements IShooter
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
         double compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
         return (int)(((distance / 1.039) - 37.43) * compensationFactor);
+    }
+
+    /** Calculates the horizontal distance from the camera to the target. */
+    private float getHorizontalDistance(float distanceFromCamera)
+    {
+        /* Pythagoras: a^2 + b^2 = c^2 */
+        /* a = distance between camera and ground
+         * c = approximated distance from host
+         */
+
+        double a2 = Math.pow(cameraHeight, 2);
+        double c2 = Math.pow(distanceFromCamera, 2);
+        double b2 = c2-a2;
+
+        return (float)b2;
     }
 
     private int getPowerLogarithmic(float distance)
