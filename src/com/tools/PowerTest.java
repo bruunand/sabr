@@ -1,23 +1,20 @@
 package com.tools;
 
-import java.lang.Math;
-
 import com.ballthrower.exceptions.OutOfRangeException;
 import com.ballthrower.movement.shooting.Shooter;
 import lejos.nxt.*;
-import lejos.robotics.RegulatedMotor;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
  */
 
-public class ShootDistTest
+public class PowerTest
 {
-    private static int distance = 100;
+    private static int power = 100;
     private static Shooter shooter;
 
 
-    public static void main(String[] options)
+    private static void main(String[] options)
     {
         shooter = new Shooter(new MotorPort[] {MotorPort.A, MotorPort.B});
 
@@ -25,13 +22,13 @@ public class ShootDistTest
         {
             public void buttonPressed(Button b)
             {
-                if (distance <= 130)
+                if (power <= 95)
                 {
-                    distance += 5;
+                    power += 5;
                 }
                 else
                 {
-                    distance = 135;
+                    power = 100;
                 };
             }
 
@@ -44,13 +41,13 @@ public class ShootDistTest
         {
             public void buttonPressed(Button b)
             {
-                if (distance >= 90)
+                if (power >= 55)
                 {
-                    distance -= 5;
+                    power -= 5;
                 }
                 else
                 {
-                    distance = 85;
+                    power = 50;
                 }
             }
 
@@ -81,10 +78,9 @@ public class ShootDistTest
         {
             while (!Button.ESCAPE.isDown())
             {
-                LCD.drawString("Distance: " + distance + " cm", 0, 0);
-                LCD.drawString("Power: " + shooter.rawPower, 0, 1);
-                LCD.drawString("Comp. Power: " + shooter.compPower, 0, 2);
-                LCD.drawString("Comp. Factor: " + shooter.compFactor, 0, 3);
+                LCD.drawString("Power: " + power + " %", 0, 0);
+                LCD.drawString("Comp. Power: " + shooter.CompensatedPower + " %", 0, 1);
+                LCD.drawString("C. Factor: " + shooter.CompensationFactor + " %", 0, 2);
 
                 Thread.sleep(50);
             }
@@ -98,6 +94,6 @@ public class ShootDistTest
 
     private static void shoot() throws OutOfRangeException
     {
-        shooter.shootDistance(distance);
+        shooter.shootAtPower(power);
     }
 }

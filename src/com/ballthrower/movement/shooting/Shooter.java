@@ -19,6 +19,11 @@ public class Shooter extends MotorController implements IShooter
     private static final int OFFSET = -415;
     private RegulatedMotor regMotor;
 
+    /* DEBUGGING */
+    public float rawPower = 0;
+    public float compPower = 0;
+    public float compFactor = 0;
+
     //private static final byte Gears = 3;
     private final boolean Direction = false;
     //private static final int[] gearSizes = {40, 24};
@@ -48,6 +53,27 @@ public class Shooter extends MotorController implements IShooter
         return (int)(((distance / 1.039) - 37.43) * compensationFactor);
     }
 
+    private int getPowerLogarithmic(float distance)
+    {
+        /* distance = 201.16 + 79.544 * ln(power)
+         *                <=>
+         * power = e^( (distance+201.16) / 79.544)
+         *
+         */
+
+        float exponent = (distance + 201.16f) / 79.544f;
+        float power = (float)Math.pow(Math.E, exponent);
+
+        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
+        float compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
+
+        rawPower = power;
+        compFactor = compensationFactor;
+        compPower = power * compensationFactor;
+
+        return (int)(power * compensationFactor);
+    }
+
     /**
      *
      * @return
@@ -59,7 +85,7 @@ public class Shooter extends MotorController implements IShooter
 
     public void shootDistance(float distance)throws OutOfRangeException
     {
-        int power = getPowerLinear(distance);
+        int power = getPowerLogarithmic(distance);
 
         if (power > 100)
         {
