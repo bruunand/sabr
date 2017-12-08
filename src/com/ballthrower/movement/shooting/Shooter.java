@@ -55,13 +55,14 @@ public class Shooter extends MotorController implements IShooter
 
     private int getPowerLogarithmic(float distance)
     {
-        /* distance = 201.16 + 79.544 * ln(power)
+        /*
+         * distance = 201.16 + 79.544 * ln(power)
          *                <=>
          * power = e^( (distance+201.16) / 79.544)
          *
          */
-
-        float exponent = (distance + 201.16f) / 79.544f;
+        float correctedDistance = distance + 4.5f; /* radius of the cups */
+        float exponent = (correctedDistance + 201.16f) / 79.544f;
         float power = (float)Math.pow(Math.E, exponent);
 
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
@@ -91,7 +92,7 @@ public class Shooter extends MotorController implements IShooter
         {
             throw new OutOfRangeException("Target out of range: Too far.");
         }
-        else if (power < 50)
+        else if (power < 20)
         {
             throw new OutOfRangeException("Target out of range: Too close.");
         }

@@ -25,13 +25,13 @@ public class ShootDistTest
         {
             public void buttonPressed(Button b)
             {
-                if (distance <= 130)
+                if (distance <= 160)
                 {
                     distance += 5;
                 }
                 else
                 {
-                    distance = 135;
+                    distance = 165;
                 };
             }
 
@@ -72,7 +72,7 @@ public class ShootDistTest
                 }
                 catch (OutOfRangeException e)
                 {
-
+                    LCD.drawString("OoR!", 0, 5);
                 }
             }
         });
