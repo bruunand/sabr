@@ -46,14 +46,12 @@ public class DistanceCalculator implements IDistanceCalculateable
             return Float.POSITIVE_INFINITY;
 
         /* Store heights in an array */
-        float[] heights = new float[target.getSampleCount()];
+        short[] heights = new short[target.getSampleCount()];
         for (int i = 0; i < target.getSampleCount(); i++)
-        {
             heights[i] = target.getTargets()[i].getHeight();
-        }
 
         /* Calculate median */
-        float median = getMedian(heights);
+        short median = getMedian(heights);
 
         /* Remove outliers from the list of heights given
          * the current median */
@@ -67,11 +65,10 @@ public class DistanceCalculator implements IDistanceCalculateable
         /* Recalculate median based on refined heights */
         median = getMedian(refinedHeightList);
 
-        /* Calculate the distance.
+        /* Calculate and return the distance.
          * See report for triangle similarity method calculation method. */
-        float distanceToObject = _focalLengthHeight * _targetHeight / median;
 
-        return distanceToObject;
+        return _focalLengthHeight * _targetHeight / median;
     }
 
     /** Utility method for converting an ArrayList
@@ -80,7 +77,8 @@ public class DistanceCalculator implements IDistanceCalculateable
     {
         float[] newArray = new float[arr.size()];
         int iterations = arr.size();
-        for(int i = 0; i < iterations; i++) {
+        for(int i = 0; i < iterations; i++)
+        {
             newArray[i] = arr.get(i);
         }
         return newArray;
@@ -95,7 +93,7 @@ public class DistanceCalculator implements IDistanceCalculateable
         int arrayLength = arr.length;
 
         Arrays.sort(arr);
-        if (arrayLength  % 2 == 0)
+        if (arrayLength % 2 == 0)
             median = (arr[arrayLength  / 2] + arr[arrayLength  / 2 - 1]) / 2;
         else
             median = arr[arrayLength  / 2];

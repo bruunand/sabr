@@ -30,8 +30,8 @@ public class TargetInfoRequestPacket extends Packet
         {
             // read info from data stream
             short xPos = stream.readShort();
-            float width = stream.readFloat();
-            float height = stream.readFloat();
+            short width = stream.readShort();
+            short height = stream.readShort();
 
             this._boxInfo.getTargets()[i] = new TargetBox(height, width, xPos);
         }
