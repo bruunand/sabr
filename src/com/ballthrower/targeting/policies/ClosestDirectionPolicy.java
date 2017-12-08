@@ -9,27 +9,28 @@ import java.util.Comparator;
 public class ClosestDirectionPolicy extends Policy
 {
     @Override
-    public TargetBox getTargetBox(ITargetContainer targetContainer)
+    public TargetBox selectTargetBox(ITargetContainer targetContainer)
     {
         if (targetContainer.getTargetCount() == 0)
             return null;
-
-        /* We are not allowed to directly access the array of targets, so we clone the array. */
-        TargetBox[] clonedArray = targetContainer.cloneTargets();
+        else if (targetContainer.getTargetCount() == 1)
+            return targetContainer.getTarget((byte) 0);
 
         /* This policy sorts targets by their middle x-position.
            We want the lowest of such values, as that is the target requiring the least rotation.
          */
-        Arrays.sort(clonedArray, new DistanceComparator(targetContainer));
+        TargetBox[] clonedArray = targetContainer.cloneTargets();
+        Arrays.sort(clonedArray, new RelativeDistanceComparator(targetContainer));
 
         return clonedArray[0];
     }
 
-    class DistanceComparator implements Comparator<TargetBox>
+    /* Comparator for measuring the distance relative to the middle. */
+    class RelativeDistanceComparator implements Comparator<TargetBox>
     {
         private final float _frameMiddle;
 
-        DistanceComparator(ITargetContainer container)
+        RelativeDistanceComparator(ITargetContainer container)
         {
             this._frameMiddle = container.getFrameWidth() / 2;
         }

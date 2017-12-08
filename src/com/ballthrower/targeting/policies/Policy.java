@@ -5,5 +5,5 @@ import com.ballthrower.targeting.TargetBox;
 
 public abstract class Policy
 {
-    public abstract TargetBox getTargetBox(ITargetContainer targetContainer);
+    public abstract TargetBox selectTargetBox(ITargetContainer targetContainer);
 }

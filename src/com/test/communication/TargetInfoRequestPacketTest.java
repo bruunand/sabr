@@ -30,14 +30,12 @@ public class TargetInfoRequestPacketTest implements IAbortable
         catch (IOException e)
         {
             /* Force success */
-            test.assertThat(true, "")
-                    .isTrue();
+            test.assertThat(true, "").isTrue();
             return;
         }
 
         /* Force failure */
-        test.assertThat(true, "")
-                .isFalse();
+        test.assertThat(true, "").isFalse();
 
     }
 

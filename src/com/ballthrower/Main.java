@@ -1,7 +1,5 @@
-import com.ballthrower.Robot;
+package com.ballthrower;
 import com.ballthrower.communication.ConnectionFactory;
-import com.test.NXTTest;
-import lejos.nxt.LCD;
 
 public class Main
 {
@@ -13,14 +11,13 @@ public class Main
 
 	    while(true);
 
-
 		//runTests();
 		//while (true){}
     }
 
-    public static void runTests()
+    /*public static void runTests()
 	{
 		NXTTest tests = new NXTTest();
 		tests.runAllTests();
-	}
+	}*/
 }
