@@ -17,7 +17,7 @@ public class ShootDistTest
     private static Shooter shooter;
 
 
-    private static void main(String[] options)
+    public static void main(String[] options)
     {
         shooter = new Shooter(new MotorPort[] {MotorPort.A, MotorPort.B});
 
@@ -83,7 +83,7 @@ public class ShootDistTest
             {
                 LCD.drawString("Distance: " + distance + " cm", 0, 0);
                 LCD.drawString("Power: " + shooter.rawPower, 0, 1);
-                LCD.drawString("Comp. Power: " + shooter.compensatedPower, 0, 2);
+                LCD.drawString("Comp. Power: " + shooter.compPower, 0, 2);
                 LCD.drawString("Comp. Factor: " + shooter.compFactor, 0, 3);
 
                 Thread.sleep(50);
