@@ -1,4 +1,5 @@
 package com.ballthrower;
+
 import com.ballthrower.communication.ConnectionFactory;
 import com.ballthrower.targeting.policies.PolicyFactory;
 
@@ -8,6 +9,7 @@ public class Main
 	{
 	    Robot robot = Robot.getInstance();
 	    robot.addButtonListeners();
+	    robot.setTargetingPolicy(PolicyType.BiggestCluster);
 	    robot.awaitConnection(new ConnectionFactory());
 
 	    while(true);

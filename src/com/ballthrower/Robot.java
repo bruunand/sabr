@@ -37,6 +37,8 @@ public class Robot implements IAbortable
     private final IShooter _shooter;
     private final IRotator _rotator;
 
+    private TargetingPolicyType _targetingPolicyType = TargetingPolicyType.Nearest;
+
     private Connection _connection;
 
     public static Robot getInstance()
@@ -121,6 +123,11 @@ public class Robot implements IAbortable
         // Instantiate the connection and await the connection from
         this._connection = connectionFactory.createInstance(ConnectionFactory.ConnectionType.Bluetooth, this);
         this._connection.awaitConnection();
+    }
+
+    public void setTargetingPolicy(TargetingPolicyType policyType)
+    {
+        this._targetingPolicyType = policyType;
     }
 
     public void abort(AbortCode code)

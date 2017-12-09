@@ -2,7 +2,7 @@ package com.ballthrower.targeting.policies;
 
 public final class PolicyFactory
 {
-    public static Policy getPolicy(PolicyType type)
+    public static Policy getPolicy(TargetingPolicyType type)
     {
         switch (type)
         {
@@ -22,7 +22,7 @@ public final class PolicyFactory
         return null;
     }
 
-    public enum PolicyType
+    public enum TargetingPolicyType
     {
         Random,
         LeftFirst,
