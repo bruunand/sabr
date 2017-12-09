@@ -2,25 +2,21 @@ package com.ballthrower.targeting.policies;
 
 public final class PolicyFactory
 {
-
-    private PolicyFactory()
-    {
-
-    }
-
     public static Policy getPolicy(PolicyType type)
     {
-
         switch (type)
         {
-            case random:
+            case Random:
                 return new DualPolicy();
-            case left_first:
+            case LeftFirst:
                 return new SideFirstPolicy(SideFirstPolicy.Side.Left);
-            case right_first:
+            case RightFirst:
                 return new SideFirstPolicy(SideFirstPolicy.Side.Right);
-            case biggest_cluster:
+            case BiggestCluster:
+				// TODO: Should return dual policy
                 return new BiggestClusterPolicy();
+			case Nearest:
+				return new LeastRotationPolicy();
         }
 
         return null;
@@ -28,10 +24,10 @@ public final class PolicyFactory
 
     public enum PolicyType
     {
-        random,
-        left_first,
-        right_first,
-        biggest_cluster
+        Random,
+        LeftFirst,
+        RightFirst,
+        BiggestCluster,
+		Nearest
     }
-
 }
