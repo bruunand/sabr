@@ -25,6 +25,7 @@ public class BiggestClusterPolicy extends Policy
             return new LeastRotationPolicy().selectTargetBox(targetContainer);
 
         /* Automatically generate centroids. */
+        /* TODO: Sort targets and take leftmost + rightmost as initial guesses? */
         for (byte i = 0; i < Centroids; i++)
             _centroids[i] = (new Centroid(targetContainer.getFrameWidth()));
 
@@ -41,14 +42,11 @@ public class BiggestClusterPolicy extends Policy
             {
                 TargetBox target = targetContainer.getTarget(targetIndex);
 
-                /* For each target, we need a local list of centroids to sort. */
-                Centroid[] localCentroids = this._centroids.clone();
-
-                /* We then sort the array of centroids. */
-                Arrays.sort(localCentroids, new CentroidDistanceComparator(target));
+                /* For each target, sort the array of centoids using the centroid distance comparator. */
+                Arrays.sort(this._centroids, new CentroidDistanceComparator(target));
 
                 /* The first element in the sorted array is the centroid that this target is closest to. */
-                localCentroids[0].assignTarget(target);
+                this._centroids[0].assignTarget(target);
             }
 
             /* Now all targets are assigned. We need to update all centroids. */
@@ -132,7 +130,7 @@ public class BiggestClusterPolicy extends Policy
         {
             if (this._assignedTargets.size() == 0)
                 return null;
-
+.lk
             return this._assignedTargets.get(Random.nextInt(this._assignedTargets.size()));
         }
 
