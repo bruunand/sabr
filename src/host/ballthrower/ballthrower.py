@@ -7,6 +7,7 @@ from ballthrower.target_info import TargetInfo
 class BallThrower(object):
     def __init__(self, host_name):
         self.host_name = host_name
+        self.target_info = None
 
     def handle_target_request(self, packet):
         print("Information requested")
@@ -27,11 +28,11 @@ class BallThrower(object):
     id_handler_map = {PacketIds.TARGET_INFO_REQUEST: handle_target_request}
 
     # Query the id_handler_map for the appropriate method to run.
-    def handle_packet(packet):
+    def handle_packet(self, packet):
         if not BallThrower.id_handler_map.__contains__(packet.get_id()):
             raise NoPacketHandlerError(packet.get_id())
         else:
-            BallThrower.id_handler_map[packet.get_id()](packet)
+            BallThrower.id_handler_map[packet.get_id()](self, packet)
 
     def connect(self):
         self.connection = BluetoothConnection()
@@ -39,7 +40,7 @@ class BallThrower(object):
 
     def handle_packets(self):
         # When connected, initialize targetinfo
-        target_info = TargetInfo(capture_device=1, debug=True)
+        self.target_info = TargetInfo(capture_device=1, debug=True)
 
         # Receive packets in a loop
         while True:

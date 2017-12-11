@@ -9,7 +9,8 @@ public class Main
 	{
 	    Robot robot = Robot.getInstance();
 	    robot.addButtonListeners();
-	    robot.setTargetingPolicy(PolicyFactory.TargetingPolicyType.BiggestCluster);
+	    robot.setTargetingPolicyType(PolicyFactory.TargetingPolicyType.BiggestCluster);
+	    robot.setConnectionType(ConnectionFactory.ConnectionType.Bluetooth);
 	    robot.awaitConnection(new ConnectionFactory());
 
 	    while(true);

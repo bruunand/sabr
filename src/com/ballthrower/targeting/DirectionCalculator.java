@@ -17,7 +17,8 @@ public class DirectionCalculator implements IDirectionCalculateable
      */
     private float _degreesPerPixel;
 
-    public DirectionCalculator(ITargetContainer targetContainer) {
+    public DirectionCalculator(ITargetContainer targetContainer)
+    {
         _frameMiddle = targetContainer.getFrameWidth() / 2;
 
         _degreesPerPixel = _maxAngle / _frameMiddle;
