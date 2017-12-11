@@ -18,6 +18,8 @@ public class DistanceCalculator implements IDistanceCalculateable
     /** Real distance in centimeters */
     private static final float _knownRealDistance = 110.2f;
 
+    private static final float _cameraElevation = 66f;
+
     /** Focal length is the distance between the image plane and lens of the camera
       * Used for calculating the distance to an object */
     private static final float _focalLengthHeight = _knownHeight * _knownRealDistance / _targetHeight;
@@ -45,7 +47,19 @@ public class DistanceCalculator implements IDistanceCalculateable
         /* Calculate and return the distance.
          * See report for triangle similarity method calculation method. */
 
-        return _focalLengthHeight * _targetHeight / target.getHeight();
+        /* The direct distance from the camera to the target */
+        float directDistance = _focalLengthHeight * _targetHeight / target.getHeight();
+
+        /* Using Pythagoras, find the horizontal distance to the target
+         *
+         * a^2 + b^2 = c^2
+         * height^2 + horizontal^2 = direct^2
+         * direct^2 - height^2 = horizontal^2
+         *
+         */
+
+        float horizontalSquared = (float)(Math.pow(directDistance, 2) - Math.pow(_cameraElevation, 2));
+        return (float)Math.sqrt(horizontalSquared);
     }
 
 }
