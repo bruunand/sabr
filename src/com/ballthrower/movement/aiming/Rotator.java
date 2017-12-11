@@ -3,6 +3,8 @@ package com.ballthrower.movement.aiming;
 import com.ballthrower.movement.MotorController;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTMotor;
+import lejos.nxt.Sound;
+import lejos.nxt.LCD;
 
 public class Rotator extends MotorController implements IRotator
 {
@@ -27,10 +29,16 @@ public class Rotator extends MotorController implements IRotator
     {
         int actualDegrees = (int)(degrees * getGearRatio());
 
+        LCD.clear();
+        LCD.drawString("Turn: " + degrees, 0, 1);
+        LCD.drawString("GearRatio:" + getGearRatio(), 0, 2);
+        
         super.resetTacho();
 
+        Sound.beep();
         super.startMotors(MOTOR_POWER, degrees > 0);
         super.waitWhileTurning(actualDegrees);
+        Sound.buzz();
         super.stopMotors();
 
         currentHeading += actualDegrees;

@@ -43,23 +43,7 @@ public class DistanceCalculator implements IDistanceCalculateable
     @Override
     public float calculateDistance(TargetBox target)
     {
-
-        /* Calculate and return the distance.
-         * See report for triangle similarity method calculation method. */
-
-        /* The direct distance from the camera to the target */
-        float directDistance = _focalLengthHeight * _targetHeight / target.getHeight();
-
-        /* Using Pythagoras, find the horizontal distance to the target
-         *
-         * a^2 + b^2 = c^2
-         * height^2 + horizontal^2 = direct^2
-         * direct^2 - height^2 = horizontal^2
-         *
-         */
-
-        float horizontalSquared = (float)(Math.pow(directDistance, 2) - Math.pow(_cameraElevation, 2));
-        return (float)Math.sqrt(horizontalSquared);
+        return (_focalLengthHeight * _targetHeight / target.getHeight());
     }
 
 }

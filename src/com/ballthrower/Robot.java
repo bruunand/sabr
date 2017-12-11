@@ -30,7 +30,7 @@ public class Robot implements IAbortable
 {
     private static Robot _robotInstance = new Robot();
 
-    private static final float TARGET_ANGLE_THRESHOLD = 3.0f;
+    private static final float TARGET_ANGLE_THRESHOLD = 0.5f;
 
     private static final Button EXIT_BUTTON = Button.ESCAPE;
     private static final Button SHOOT_BUTTON = Button.ENTER;

@@ -63,7 +63,7 @@ class TargetInfo(ITargetInfo):
 
     # Maximum deviation used in determining
     # which HSV lower and upper bounds to be used.
-    HSV_MAX_DEVIATION = 0.4
+    HSV_MAX_DEVIATION = 0.2
 
     # Path to folder where the neural network object
     # detection model resides.
@@ -93,9 +93,9 @@ class TargetInfo(ITargetInfo):
     category_index = label_map_util.create_category_index(categories)
 
 
-    # Initialize TargetInfo with default capture device set to 3.
-    def __init__(self, capture_device=3, debug=True):
-        self._camera = cv2.VideoCapture(capture_device)
+    # Initialize TargetInfo with default capture device set to 1.
+    def __init__(self, capture_device=1, debug=True):
+        self.capture_device=capture_device
         self.debug = debug
 
         # Load frozen graph
@@ -236,9 +236,11 @@ class TargetInfo(ITargetInfo):
     # Use the capture device to capture a frame/image.
     def get_frame(self):
 
-        return_value, frame = self._camera.read()
+        camera = cv2.VideoCapture(self.capture_device)
+        return_value, frame = camera.read()
+        camera.release()
 
-        # Exits if no frame is returned from _camera.read() function.
+        # Exits if no frame is returned from camera.read() function.
         if not return_value:
             raise CaptureDeviceUnavailableError()
 
