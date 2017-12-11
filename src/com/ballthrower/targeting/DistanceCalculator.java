@@ -13,10 +13,10 @@ public class DistanceCalculator implements IDistanceCalculateable
     private static final float _targetHeight = 11.5f;
 
     /** Pixel height at distance = _knownRealDistance */
-    private static final float _knownHeight = 118.0f;
+    private static final float _knownHeight = 40.0f;
 
     /** Real distance in centimeters */
-    private static final float _knownRealDistance = 120.0f;
+    private static final float _knownRealDistance = 115.0f;
 
     private static final float _cameraElevation = 66f;
 
