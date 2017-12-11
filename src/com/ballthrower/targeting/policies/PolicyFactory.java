@@ -7,14 +7,13 @@ public final class PolicyFactory
         switch (type)
         {
             case Random:
-                return new DualPolicy();
+                return new DualPolicy(new RandomPolicy());
             case LeftFirst:
                 return new SideFirstPolicy(SideFirstPolicy.Side.Left);
             case RightFirst:
                 return new SideFirstPolicy(SideFirstPolicy.Side.Right);
             case BiggestCluster:
-				// TODO: Should return dual policy
-                return new BiggestClusterPolicy();
+                return new DualPolicy(new BiggestClusterPolicy());
 			case Nearest:
 				return new LeastRotationPolicy();
         }

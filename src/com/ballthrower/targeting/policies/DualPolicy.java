@@ -5,8 +5,13 @@ import com.ballthrower.targeting.TargetBox;
 
 public class DualPolicy extends Policy
 {
-
+    private Policy _internalPolicy;
     private boolean _passed = false;
+
+    DualPolicy(Policy initialPolicy)
+    {
+        this._internalPolicy = initialPolicy;
+    }
 
     @Override
     public TargetBox selectTargetBox(ITargetContainer targetContainer)
@@ -20,13 +25,15 @@ public class DualPolicy extends Policy
         /* This policy selects a random target on first pass and then calibrates the aim on the
             following passes by selecting the closest target.
          */
-
-        if(_passed == false)
+        if(!_passed)
         {
             _passed = true;
-            return new BiggestClusterPolicy().selectTargetBox(targetContainer);
+
+            TargetBox box = _internalPolicy.selectTargetBox(targetContainer);
+            _internalPolicy = new LeastRotationPolicy();
+            return box;
         }
 
-        return new ClosestDirectionPolicy().selectTargetBox(targetContainer);
+        return _internalPolicy.selectTargetBox(targetContainer);
     }
 }
