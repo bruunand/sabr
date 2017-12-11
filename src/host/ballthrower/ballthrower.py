@@ -34,7 +34,8 @@ class BallThrower(object):
 
 
     # Mapping from Packet IDs to handler-methods
-    # Handshake has no handler as it is handled by connector. 
+    # Handshake has no handler as it is handled by 
+    # 'BluetoothConnection.perform_handshake()'. 
     id_handler_map = {PacketIds.TARGET_INFO_REQUEST: handle_target_request}
 
     # When receiving a packet, verify the Packet ID, and
