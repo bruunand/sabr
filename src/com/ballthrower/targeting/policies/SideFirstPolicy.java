@@ -35,15 +35,6 @@ public class SideFirstPolicy extends Policy
         return clonedArray[0];
     }
 
-    class AbsolutePositionComparator implements Comparator<TargetBox>
-    {
-        @Override
-        public int compare(TargetBox first, TargetBox second)
-        {
-            return ((Float) first.getMiddleX()).compareTo(second.getMiddleX());
-        }
-    }
-
     enum Side
     {
         Left,

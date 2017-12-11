@@ -24,10 +24,12 @@ public class BiggestClusterPolicy extends Policy
             *  In that case, we default to the LeastRotationPolicy. */
             return new LeastRotationPolicy().selectTargetBox(targetContainer);
 
-        /* Automatically generate centroids. */
-        /* TODO: Sort targets and take leftmost + rightmost as initial guesses? */
-        for (byte i = 0; i < Centroids; i++)
-            _centroids[i] = (new Centroid(targetContainer.getFrameWidth()));
+
+        /* Select initial guesses. As k = 2, choose the left- and rightmost data points. */
+        TargetBox[] targets = targetContainer.cloneTargets();
+        Arrays.sort(targets, new AbsolutePositionComparator());
+        _centroids[0] = new Centroid(targets[0].getXPosition());
+        _centroids[1] = new Centroid(targets[targets.length - 1].getXPosition());
 
         /* Run clustering for preset amount of iterations. */
         for (int iteration = 0; iteration < Iterations; iteration++)
@@ -94,9 +96,9 @@ public class BiggestClusterPolicy extends Policy
         private short _x;
         private List<TargetBox> _assignedTargets = new ArrayList<>();
 
-        Centroid(short frameWidth)
+        Centroid(short x)
         {
-            this._x = (short) Random.nextInt(frameWidth);
+            this._x = x;
         }
 
         double distanceTo(TargetBox box)
@@ -130,7 +132,7 @@ public class BiggestClusterPolicy extends Policy
         {
             if (this._assignedTargets.size() == 0)
                 return null;
-.lk
+
             return this._assignedTargets.get(Random.nextInt(this._assignedTargets.size()));
         }
 

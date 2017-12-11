@@ -10,6 +10,6 @@ public class RandomPolicy extends Policy
     @Override
     public TargetBox selectTargetBox(ITargetContainer targetContainer)
     {
-        return targetContainer.getTarget((byte) new Random().nextInt(targetContainer.getTargetCount()))
+        return targetContainer.getTarget((byte) new Random().nextInt(targetContainer.getTargetCount()));
     }
 }
