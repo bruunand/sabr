@@ -17,7 +17,13 @@ public class Shooter extends MotorController implements IShooter
     private static final int DEPARTURE_ANGLE = 51;
     private static final float FACTOR = 9.7095f;
     private static final int OFFSET = -415;
+    private static final float cameraHeight = 52.7f;
     private RegulatedMotor regMotor;
+
+    /* DEBUGGING */
+    public float rawPower = 0;
+    public float compPower = 0;
+    public float compFactor = 0;
 
     //private static final byte Gears = 3;
     private final boolean Direction = false;
@@ -30,14 +36,59 @@ public class Shooter extends MotorController implements IShooter
     }
 
     /**
-     * Calculate the power needed to shoot a specific distance, defined by battery power. Assume linear relation between distance and motor power required.
+     * Calculate the power needed to shoot a specific distance, defined by battery power.
+     * Assume linear relation between distance and motor power required.
      * @param distance the distance to shoot.
      * @return the motor power needed.
      */
     private int getPowerLinear(float distance)
     {
-        double compensationFactor = 800 / regMotor.getMaxSpeed();
-        return (int)(((distance * 429.7)/6.668) * compensationFactor);
+        /*
+        * Distance = 1.039 * Power + 37.43 (r^2 = 0.9948)
+        *                   <=>
+        * Power = (Distance / 1.039) - 37.43
+        *
+        * */
+        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
+        double compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
+        return (int)(((distance / 1.039) - 37.43) * compensationFactor);
+    }
+
+    /** Calculates the horizontal distance from the camera to the target. */
+    private float getHorizontalDistance(float distanceFromCamera)
+    {
+        /* Pythagoras: a^2 + b^2 = c^2 */
+        /* a = distance between camera and ground
+         * c = approximated distance from host
+         */
+
+        double a2 = Math.pow(cameraHeight, 2);
+        double c2 = Math.pow(distanceFromCamera, 2);
+        double b2 = c2-a2;
+
+        return (float)b2;
+    }
+
+    private int getPowerLogarithmic(float distance)
+    {
+        /*
+         * distance = 201.16 + 79.544 * ln(power)
+         *                <=>
+         * power = e^( (distance+201.16) / 79.544)
+         *
+         */
+        float correctedDistance = distance + 4.5f; /* radius of the cups */
+        float exponent = (correctedDistance + 201.16f) / 79.544f;
+        float power = (float)Math.pow(Math.E, exponent);
+
+        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
+        float compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
+
+        rawPower = power;
+        compFactor = compensationFactor;
+        compPower = power * compensationFactor;
+
+        return (int)(power * compensationFactor);
     }
 
     /**
@@ -51,28 +102,22 @@ public class Shooter extends MotorController implements IShooter
 
     public void shootDistance(float distance)throws OutOfRangeException
     {
-        /*
-        double initialVelocity = getInitialVelocity(distance);
-        int power = getPower(initialVelocity);
-        */
-        int power = getPowerLinear(distance);
+        int power = getPowerLogarithmic(distance);
 
         if (power > 100)
         {
             throw new OutOfRangeException("Target out of range: Too far.");
         }
-        else if (power < 70)
+        else if (power < 20)
         {
             throw new OutOfRangeException("Target out of range: Too close.");
         }
 
-        int degrees = (int)((1.5*360) / getGearRatio());
+        int degrees = (int)((180) / getGearRatio());
 
         super.startMotors(power, Direction);
         super.waitWhileTurning(degrees);
-        super.stopMotors();
-
-        super.waitMiliseconds(1000);
+        super.resetTacho();
 
         resetMotors();
     }
@@ -82,10 +127,14 @@ public class Shooter extends MotorController implements IShooter
      */
     private void resetMotors()
     {
-        super.startMotors(15, Direction);
-        super.waitMiliseconds(2500);
-        super.stopMotors();
+        /* Move in opposite direction */
+        super.startMotors(15, !Direction);
 
+        /* 180 degrees should be enough */
+        waitWhileTurning((int)(180 / getGearRatio()));
+
+        /* Stop motors, reset tacho count */
+        super.stopMotors();
         super.resetTacho();
     }
 

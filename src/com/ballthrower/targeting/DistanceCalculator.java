@@ -10,13 +10,13 @@ import static java.lang.Math.abs;
 public class DistanceCalculator implements IDistanceCalculateable
 {
     /** Physical height, manually measured */
-    private static final float _targetHeight = 10.2f;
+    private static final float _targetHeight = 11.5f;
 
     /** Pixel height at distance = _knownRealDistance */
-    private static final float _knownHeight = 52.0f;
+    private static final float _knownHeight = 120.0f;
 
     /** Real distance in centimeters */
-    private static final float _knownRealDistance = 100.0f;
+    private static final float _knownRealDistance = 110.2f;
 
     /** Focal length is the distance between the image plane and lens of the camera
       * Used for calculating the distance to an object */
