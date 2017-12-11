@@ -17,6 +17,9 @@ import com.ballthrower.movement.shooting.Shooter;
 import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetContainer;
+import com.ballthrower.targeting.TargetBox;
+import com.ballthrower.targeting.policies.Policy;
+import com.ballthrower.targeting.policies.PolicyFactory;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.MotorPort;
@@ -32,12 +35,12 @@ public class Robot implements IAbortable
     private static final Button EXIT_BUTTON = Button.ESCAPE;
     private static final Button SHOOT_BUTTON = Button.ENTER;
 
-    private final DistanceCalculator _distanceCalculator;
-    private final DirectionCalculator _directionCalculator;
+    private DistanceCalculator _distanceCalculator;
+    private DirectionCalculator _directionCalculator;
     private final IShooter _shooter;
     private final IRotator _rotator;
 
-    private TargetingPolicyType _targetingPolicyType = TargetingPolicyType.Nearest;
+    private PolicyFactory.TargetingPolicyType _targetingPolicyType = PolicyFactory.TargetingPolicyType.Nearest;
 
     private Connection _connection;
 
@@ -48,10 +51,6 @@ public class Robot implements IAbortable
 
     private Robot()
     {
-        // Set up distance and direction calculator instances.
-        this._distanceCalculator = new DistanceCalculator();
-        this._directionCalculator = new DirectionCalculator();
-
         // Set up movement controllers with desired motors.
         this._rotator = new Rotator(MotorPort.C);
         this._shooter = new Shooter(new MotorPort[]{MotorPort.A, MotorPort.B});
@@ -65,12 +64,23 @@ public class Robot implements IAbortable
 
     public void locateAndShoot()
     {
+        /* Choose a policy using the policy factory. */
+        Policy chosenPolicy = PolicyFactory.getPolicy(_targetingPolicyType);
+
         while (true)
         {
-            ITargetContainer targetInformation = receiveTargetInformation();
+            ITargetContainer targetContainer = receiveTargetInformation();
+
+            // Set up distance and direction calculator instances.
+            /* TODO: Bad for memory to do this all the time. Unless GC works well. But we need to init direction calc. */
+            this._distanceCalculator = new DistanceCalculator();
+            this._directionCalculator = new DirectionCalculator(targetContainer);
+
+            /* Get suggested target using the chosen policy. */
+            TargetBox target = chosenPolicy.selectTargetBox(targetContainer);
 
             // Calculate the angle to the target object.
-            float directionAngle = _directionCalculator.calculateDirection(targetInformation);
+            float directionAngle = _directionCalculator.calculateDirection(target);
             if (Math.abs(directionAngle) > TARGET_ANGLE_THRESHOLD)
             {
                 // We are not facing the target, so we must rotate towards it first.
@@ -82,7 +92,7 @@ public class Robot implements IAbortable
                 Sound.beep(); // TODO: Debug, remove me
                 try
                 {
-                    _shooter.shootDistance(_distanceCalculator.calculateDistance(targetInformation));
+                    _shooter.shootDistance(_distanceCalculator.calculateDistance(target));
                 }
                 catch (OutOfRangeException ex)
                 {
@@ -125,7 +135,7 @@ public class Robot implements IAbortable
         this._connection.awaitConnection();
     }
 
-    public void setTargetingPolicy(TargetingPolicyType policyType)
+    public void setTargetingPolicy(PolicyFactory.TargetingPolicyType policyType)
     {
         this._targetingPolicyType = policyType;
     }

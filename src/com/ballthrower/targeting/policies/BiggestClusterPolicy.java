@@ -2,6 +2,7 @@ package com.ballthrower.targeting.policies;
 
 import com.ballthrower.targeting.ITargetContainer;
 import com.ballthrower.targeting.TargetBox;
+import com.ballthrower.utilities.ArrayUtil;
 
 import java.util.*;
 
@@ -27,7 +28,7 @@ public class BiggestClusterPolicy extends Policy
 
         /* Select initial guesses. As k = 2, choose the left- and rightmost data points. */
         TargetBox[] targets = targetContainer.cloneTargets();
-        Arrays.sort(targets, new AbsolutePositionComparator());
+        ArrayUtil.sort(targets, new AbsolutePositionComparator());
         _centroids[0] = new Centroid(targets[0].getXPosition());
         _centroids[1] = new Centroid(targets[targets.length - 1].getXPosition());
 
@@ -45,7 +46,7 @@ public class BiggestClusterPolicy extends Policy
                 TargetBox target = targetContainer.getTarget(targetIndex);
 
                 /* For each target, sort the array of centoids using the centroid distance comparator. */
-                Arrays.sort(this._centroids, new CentroidDistanceComparator(target));
+                ArrayUtil.sort(this._centroids, new CentroidDistanceComparator(target));
 
                 /* The first element in the sorted array is the centroid that this target is closest to. */
                 this._centroids[0].assignTarget(target);
@@ -57,10 +58,10 @@ public class BiggestClusterPolicy extends Policy
         }
 
         /* Sort clusters by those with the most amount.
-        *  We have reversed its order (making it descending), so the first element has the most targets. */
-        Arrays.sort(this._centroids, new CentroidSizeComparator().reversed());
+        *  The last element has the most targets. */
+        ArrayUtil.sort(this._centroids, new CentroidSizeComparator());
 
-        return this._centroids[0].getRandomTarget();
+        return this._centroids[this._centroids.length - 1].getRandomTarget();
     }
 
     class CentroidSizeComparator implements Comparator<Centroid>

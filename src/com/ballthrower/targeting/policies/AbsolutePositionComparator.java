@@ -1,6 +1,7 @@
 package com.ballthrower.targeting.policies;
 
 import com.ballthrower.targeting.TargetBox;
+
 import java.util.Comparator;
 
 public class AbsolutePositionComparator implements Comparator<TargetBox>

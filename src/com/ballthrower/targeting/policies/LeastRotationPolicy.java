@@ -2,6 +2,7 @@ package com.ballthrower.targeting.policies;
 
 import com.ballthrower.targeting.ITargetContainer;
 import com.ballthrower.targeting.TargetBox;
+import com.ballthrower.utilities.ArrayUtil;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -19,7 +20,7 @@ public class LeastRotationPolicy extends Policy
         /* This policy sorts targets by their middle x-position.
            We want the lowest of such values, as that is the target requiring the least rotation. */
         TargetBox[] clonedArray = targetContainer.cloneTargets();
-        Arrays.sort(clonedArray, new RelativeDistanceComparator(targetContainer));
+        ArrayUtil.sort(clonedArray, new RelativeDistanceComparator(targetContainer));
 
         return clonedArray[0];
     }

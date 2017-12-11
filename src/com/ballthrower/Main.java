@@ -9,7 +9,7 @@ public class Main
 	{
 	    Robot robot = Robot.getInstance();
 	    robot.addButtonListeners();
-	    robot.setTargetingPolicy(PolicyType.BiggestCluster);
+	    robot.setTargetingPolicy(PolicyFactory.TargetingPolicyType.BiggestCluster);
 	    robot.awaitConnection(new ConnectionFactory());
 
 	    while(true);

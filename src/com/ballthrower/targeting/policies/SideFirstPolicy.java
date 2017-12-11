@@ -2,9 +2,9 @@ package com.ballthrower.targeting.policies;
 
 import com.ballthrower.targeting.ITargetContainer;
 import com.ballthrower.targeting.TargetBox;
+import com.ballthrower.utilities.ArrayUtil;
 
 import java.util.Arrays;
-import java.util.Comparator;
 
 public class SideFirstPolicy extends Policy
 {
@@ -23,16 +23,14 @@ public class SideFirstPolicy extends Policy
         else if (targetContainer.getTargetCount() == 1)
             return targetContainer.getTarget((byte) 0);
 
-        /* This policy selects the left or rightmost target.
-         * We use an absolute position comparator for this.
-         * Since it sorts in ascending order, we need to reverse the array if right side is chosen. */
+        /* This policy selects the left or rightmost target. */
         TargetBox[] clonedArray = targetContainer.cloneTargets();
-        if (this._side == Side.Left)
-            Arrays.sort(clonedArray, new AbsolutePositionComparator());
-        else
-            Arrays.sort(clonedArray, new AbsolutePositionComparator().reversed());
+        ArrayUtil.sort(clonedArray, new AbsolutePositionComparator());
 
-        return clonedArray[0];
+        if (this._side == Side.Left)
+            return clonedArray[0];
+        else
+            return clonedArray[clonedArray.length - 1];
     }
 
     enum Side
