@@ -19,7 +19,6 @@ public class NXTAssert
 
     public NXTAssert()
     {
-
     }
 
     public NXTAssert isTrue() throws AssertException

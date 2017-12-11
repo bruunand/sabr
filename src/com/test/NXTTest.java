@@ -19,10 +19,10 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
-        DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
-        ShooterTest shooter = new ShooterTest();
-        TargetInfoRequestPacketTest requestPacket = new TargetInfoRequestPacketTest();
+        Test disCalc = new DistanceCalculatorTest();
+        Test dirCalc = new DirectionCalculatorTest();
+        Test shooter = new ShooterTest();
+        Test requestPacket = new TargetInfoRequestPacketTest();
 
         try
         {
@@ -43,7 +43,8 @@ public class NXTTest
             LCD.drawString("All tests passed!", 0, 0);
     }
 
-    public static TargetContainer getTestTargetBox() {
+    public static TargetContainer getTestTargetBox()
+    {
         TargetContainer toReturn = new TargetContainer((byte)6);
 
         toReturn.getTargets()[0] = new TargetBox(60F, 44F, (short)278);

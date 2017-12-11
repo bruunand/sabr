@@ -5,8 +5,9 @@ import com.ballthrower.targeting.TargetContainer;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
+import com.test.Test;
 
-public class DistanceCalculatorTest
+public class DistanceCalculatorTest extends Test
 {
     private DistanceCalculator dc;
     private TargetContainer tbi;
@@ -97,6 +98,7 @@ public class DistanceCalculatorTest
                 .isEqualTo(unevenLengthMedian);
     }
 
+    @Override
     public void runAllTests() throws AssertException
     {
         setUp();
