@@ -2,11 +2,7 @@ package com.test;
 
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
-import com.ballthrower.targeting.TargetBoxInfo;
-import com.test.communication.TargetInfoRequestPacketTest;
-import com.test.movement.shooting.ShooterTest;
-import com.test.targeting.DirectionCalculatorTest;
-import com.test.targeting.DistanceCalculatorTest;
+import com.ballthrower.targeting.TargetContainer;
 import lejos.nxt.*;
 
 /**
@@ -19,17 +15,17 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
-        DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
-        ShooterTest shooter = new ShooterTest();
-        TargetInfoRequestPacketTest requestPacket = new TargetInfoRequestPacketTest();
+        /*Test disCalc = new DistanceCalculatorTest();
+        Test dirCalc = new DirectionCalculatorTest();
+        Test shooter = new ShooterTest();
+        Test requestPacket = new TargetInfoRequestPacketTest();*/
 
         try
         {
-            disCalc.runAllTests();
+            /*disCalc.runAllTests();
             dirCalc.runAllTests();
             shooter.runAllTests();
-            requestPacket.runAllTests();
+            requestPacket.runAllTests();*/
         }
         catch (AssertException e)
         {
@@ -43,15 +39,16 @@ public class NXTTest
             LCD.drawString("All tests passed!", 0, 0);
     }
 
-    public static TargetBoxInfo getTestTargetBox() {
-        TargetBoxInfo toReturn = new TargetBoxInfo((byte)6);
+    public static TargetContainer getTestTargetBox()
+    {
+        TargetContainer toReturn = new TargetContainer((byte) 6);
 
-        toReturn.getTargets()[0] = new TargetBox(60F, 44F, (short)278);
-        toReturn.getTargets()[1] = new TargetBox(60F, 42F, (short)279);
-        toReturn.getTargets()[2] = new TargetBox(59F, 41F, (short)280);
-        toReturn.getTargets()[3] = new TargetBox(59F, 40F, (short)280);
-        toReturn.getTargets()[4] = new TargetBox(62F, 42F, (short)279);
-        toReturn.getTargets()[5] = new TargetBox(49F, 33F, (short)286);
+        toReturn.setTarget((byte) 0, new TargetBox((short) 60, (short) 44, (short) 278));
+        toReturn.setTarget((byte) 1, new TargetBox((short) 60, (short) 42, (short) 279));
+        toReturn.setTarget((byte) 2, new TargetBox((short) 59, (short) 41, (short) 280));
+        toReturn.setTarget((byte) 3, new TargetBox((short) 59, (short) 40, (short) 280));
+        toReturn.setTarget((byte) 4, new TargetBox((short) 62, (short) 42, (short) 279));
+        toReturn.setTarget((byte) 5, new TargetBox((short) 49, (short) 33, (short) 286));
 
         return toReturn;
     }

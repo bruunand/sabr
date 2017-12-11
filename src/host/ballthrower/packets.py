@@ -74,8 +74,8 @@ class TargetInfoRequestPacket(Packet):
         for i in range(len(self.x_values)):
             connection.send_short(self.x_values[i])
 
-            connection.send_float(self.width_values[i])
-            connection.send_float(self.height_values[i])
+            connection.send_short(self.width_values[i])
+            connection.send_short(self.height_values[i])
 
     def construct_from_connection(self, connection):
         pass

@@ -2,16 +2,16 @@ package com.ballthrower.targeting;
 
 public class TargetBox
 {
-    private float _height;
-    private float _width;
+    private short _height;
+    private short _width;
     private short _xPosition;
 
-    public float getHeight()
+    public short getHeight()
     {
         return _height;
     }
 
-    public float getWidth()
+    public short getWidth()
     {
         return _width;
     }
@@ -21,7 +21,12 @@ public class TargetBox
         return _xPosition;
     }
 
-    public TargetBox(float height, float width, short xPosition)
+    public float getMiddleX()
+    {
+        return getXPosition() + getWidth() / 2;
+    }
+
+    public TargetBox(short height, short width, short xPosition)
     {
         _height = height;
         _width = width;

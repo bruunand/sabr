@@ -6,5 +6,6 @@ public enum AbortCode
     UNKNOWN_PACKET,
     CONNECTION_RESET,
     INVALID_HANDSHAKE,
-    GENERIC
+    GENERIC,
+    TARGET_NULL
 }

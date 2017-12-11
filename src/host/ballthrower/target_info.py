@@ -39,7 +39,7 @@ class BoundingBox():
     # Visualizes the bounding box. Used for live testing
     # debugging. 
     def draw_rectangle(self, source_image):
-        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 3)
+        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 1)
 
     # TensorFlow describes bounding boxes with values between 0 and 1. 
     # Construct and return a bounding box with these values scaled 

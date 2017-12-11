@@ -1,15 +1,16 @@
 package com.test.targeting;
 
 import com.ballthrower.targeting.DistanceCalculator;
-import com.ballthrower.targeting.TargetBoxInfo;
+import com.ballthrower.targeting.TargetContainer;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
+import com.test.Test;
 
-public class DistanceCalculatorTest
+public class DistanceCalculatorTest extends Test
 {
     private DistanceCalculator dc;
-    private TargetBoxInfo tbi;
+    private TargetContainer tbi;
 
     // physical height manually measured
     private static final float _targetHeight = 10.2f;
@@ -40,7 +41,7 @@ public class DistanceCalculatorTest
     public void zeroSampleCountTest() throws AssertException
     {
         NXTAssert test = new NXTAssert();
-        TargetBoxInfo zeroSample = new TargetBoxInfo((byte)0);
+        TargetContainer zeroSample = new TargetContainer((byte)0);
 
         test.assertThat(dc.calculateDistance(zeroSample), "DistanceCalculator:zeroSampleCountTest")
                 .isEqualTo(Float.POSITIVE_INFINITY);
@@ -52,8 +53,8 @@ public class DistanceCalculatorTest
         NXTAssert test = new NXTAssert();
 
         /* Instantiate heights */
-        float[] heights = new float[tbi.getSampleCount()];
-        for (int i = 0; i < tbi.getSampleCount(); i++)
+        float[] heights = new float[tbi.getTargetCount()];
+        for (int i = 0; i < tbi.getTargetCount(); i++)
         {
             heights[i] = tbi.getTargets()[i].getHeight();
         }
@@ -97,6 +98,7 @@ public class DistanceCalculatorTest
                 .isEqualTo(unevenLengthMedian);
     }
 
+    @Override
     public void runAllTests() throws AssertException
     {
         setUp();
