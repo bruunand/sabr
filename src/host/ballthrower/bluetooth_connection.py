@@ -14,7 +14,7 @@ def find_device(target_name):
     candidates = []
 
     # Check available devices - if name matches, add to candidates.
-    for address, name in bluetooth.discover_devices(lookup_names=True):
+    for address, name in bluetooth.discover_devices(duration=4,lookup_names=True):
         if name == target_name:
             candidates.append(address)
 
