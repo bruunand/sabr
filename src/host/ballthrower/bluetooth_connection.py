@@ -3,6 +3,7 @@ from ballthrower.interfaces import Connection
 from ballthrower.packets import PacketIds, Packet
 from ballthrower.type_converter import *
 import bluetooth
+import time
 
 
 def find_device(target_name):
@@ -39,6 +40,10 @@ class BluetoothConnection(Connection):
             raise FaultyHandshakeError(packet.get_id())
 
     def connect(self, host_name=None):
+        start_delay = 0.05
+        delay = start_delay
+        start_time = time.time()
+
         # Search for a candidate. Keep searching until a candidate is found
         while True:
             self.remote_address = find_device(host_name)
@@ -46,7 +51,13 @@ class BluetoothConnection(Connection):
             if self.remote_address is not None:
                 break
             else:
-                print("Failed to find device, retrying...")
+                if time.time() - start_time < 30:
+                    print("Failed to find device, retrying...")
+                else:
+                    print("Failed to find device within 30 seconds. Now exiting.")
+                    exit()
+
+        start_time = time.time()
 
         # Attempt to connect to host
         while True:
@@ -57,7 +68,14 @@ class BluetoothConnection(Connection):
                 self.perform_handshake()
                 break
             except bluetooth.btcommon.BluetoothError as error:
-                print("Failed to connect to device, retrying... (Bluetooth error %d)" % error.errno)
+                if time.time() - start_time < 30:
+                    print("Failed to connect to device, retrying... (Bluetooth error %d)" % error.errno)
+                    time.sleep(delay)
+                    delay = delay * 1.5
+                else:
+                    print("Failed to connect to device with in 30 seconds. Now exiting.")
+                    exit()
+
 
     def receive_packet(self):
         packet_id = self.remote_connection.recv(1)[0]
