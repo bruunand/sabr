@@ -30,7 +30,7 @@ class BoundingBox():
                                                                   self.width, self.height)
 
     def draw_rectangle(self, source_image):
-        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 3)
+        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 1)
 
     def fromTensorFlowBox(source_width, source_height, box_array):
         y_min = floor(box_array[0] * source_height)
