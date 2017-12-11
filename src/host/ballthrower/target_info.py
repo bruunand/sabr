@@ -9,8 +9,12 @@ from ballthrower.interfaces import ITargetInfo
 from utils import label_map_util
 import tensorflow as tf
 
-
+# Class used for storing bounding box information. 
+# A bounding box defines the bounds of an identified
+# target.
 class BoundingBox():
+    # Receive values describing the coordinates for each
+    # corner of the bounding box. 
     def __init__(self, x_min, x_max, y_min, y_max, width, height):
         self.x_min = x_min
         self.y_min = y_min
@@ -19,19 +23,27 @@ class BoundingBox():
         self.width = width
         self.height = height
 
+    # Crop an image to the pixels contained by the bounding box.
     def crop(self, from_image):
         return from_image[self.y_min:self.y_max, self.x_min:self.x_max]
 
+    # Get the centre of the bounding box. 
     def get_centre(self):
         return (int(self.width / 2), int(self.height / 2))
 
+    # Pretty print
     def __str__(self):
         return "x: {}-{}, y: {}-{}, width: {}, height: {}".format(self.x_min, self.y_min, self.y_min, self.y_max,
                                                                   self.width, self.height)
 
+    # Visualizes the bounding box. Used for live testing
+    # debugging. 
     def draw_rectangle(self, source_image):
         cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 3)
 
+    # TensorFlow describes bounding boxes with values between 0 and 1. 
+    # Construct and return a bounding box with these values scaled 
+    # to the dimensions of the image.
     def fromTensorFlowBox(source_width, source_height, box_array):
         y_min = floor(box_array[0] * source_height)
         x_min = floor(box_array[1] * source_width)
@@ -40,52 +52,48 @@ class BoundingBox():
 
         return BoundingBox(x_min, x_max, y_min, y_max, x_max - x_min, y_max - y_min)
 
+    # If bounding box data has already been scaled to the image, 
+    # construct a bounding box and return it. 
     def fromNormalized(x_min, y_min, width, height):
         return BoundingBox(x_min, x_min + width, y_min, y_min + height, width, height)
 
-
+# This class is used for capturing frames of the environment
+# and provide target object information to an embedded system
 class TargetInfo(ITargetInfo):
-    """
-    This class is used for capturing frames of the environment
-    and provide target object information to an embedded system
 
-    Attributes:
-        HSV_MAX_DEVIATION (float): Maximum deviation used in determining
-            which HSV lower and upper bounds to be used.
-        MODEL_NAME (string): Path to folder where the neural network object
-            detection model resides.
-        PATH_TO_CKPT (string): Path to frozen detection graph.
-            This is the actual model that is used for the object detection.
-        PATH_TO_LABELS (string): Path to the list labels used to classify
-            detected objects.
-        NUM_CLASSES (integer): number of categories for classification.
-        detection_graph (object): a computation graph.
-        label_map (list): list of labels.
-        categories (list): list of dictionaries representing all possible categories.
-        category_index (dictionary): a dictionary of the same entries as categories but
-            the key value is a category id.
-
-    Todo:
-        *
-    """
+    # Maximum deviation used in determining
+    # which HSV lower and upper bounds to be used.
     HSV_MAX_DEVIATION = 0.4
 
+    # Path to folder where the neural network object
+    # detection model resides.
     MODEL_NAME = 'redcup_model'
 
+    # Path to frozen detection graph.
+    # This is the actual model that is used for the object detection. 
     PATH_TO_CKPT = os.path.join(os.path.join('res', MODEL_NAME), 'frozen_inference_graph.pb')
 
+    # Path to the list labels used to classify detected objects.
     PATH_TO_LABELS = os.path.join(os.path.join('res', MODEL_NAME), 'label_map.pbtxt')
 
+    # Number of categories for classification. 
     NUM_CLASSES = 1
 
+    # A computation graph. 
     detection_graph = tf.Graph()
 
+    # List of labels
     label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
+
+    # List of dictionaries representing all possible categories.
     categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES,
-                                                                use_display_name=True)
+                                                                           use_display_name=True)
+    # A dictionary of the same entries as categories but the 
+    # key value is a category ID. 
     category_index = label_map_util.create_category_index(categories)
 
-    # Initialize TargetInfo with default capture device set to 1 and sample size set to 10
+
+    # Initialize TargetInfo with default capture device set to 3. 
     def __init__(self, capture_device=3, debug=True):
         self._camera = cv2.VideoCapture(capture_device)
         self.debug = debug
@@ -98,32 +106,23 @@ class TargetInfo(ITargetInfo):
                 od_graph_def.ParseFromString(serialized_graph)
                 tf.import_graph_def(od_graph_def, name='')
 
+    # Gather the necessary data needed by the NXT to calculate
+    # the direction and/or distance. Returns a list of bounding
+    # boxes and an integer represeting the frame width. 
     def get_targets(self):
-        """
-        get_targets() gathers the necessary data need by the
-        embedded system to calculate the direction or distance.
 
-        args:
-
-        returns:
-            A tuple contaning a list of bounding boxes and
-            an integer representing the frame width
-
-        todo:
-            *
-        """
-
-        # Retrieve a list of sample data to be processed
+        # Retrieve a list of sample data to be processed.
         frame = self.get_frame()
 
-        # Get the width of a frame in the sample_data
+        # Get the width of a frame in the sample_data.
         frame_width = np.shape(frame)[1]
 
-        # Process the sample data to a list of bounding boxes (a bounding box / rectangle consists of four integers: x-coordinate, y-coordinate, width and height)
+        # Process the sample data to a list of bounding boxes.
         bounding_boxes = self.get_bounding_boxes(frame)
 
         return bounding_boxes, frame_width
 
+    # 
     def get_bounding_boxes(self, frame):
         """
         image_processing() processes a collection of frames.
@@ -149,7 +148,10 @@ class TargetInfo(ITargetInfo):
         upper_hsv_colour = np.array([0, 0, 0])
 
         with self.detection_graph.as_default():
+
+            # Start a new Tensorflow session with the initialized detection graph.
             with tf.Session(graph=self.detection_graph) as sess:
+
                 # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
                 image_np_expanded = np.expand_dims(frame, axis=0)
                 image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
@@ -230,18 +232,12 @@ class TargetInfo(ITargetInfo):
         # Return the coordinate sets
         return all_bounding_boxes
 
+    # Use the capture device to capture a frame/image.
     def get_frame(self):
-        """
-        capture_frame(): uses the capture device to capture a frame from the
-            capture device.
 
-        retuns:
-            frame: an image frame retrieved from the capture device.
-
-        """
         return_value, frame = self._camera.read()
 
-        # Exits if no frame is returned from _camera.read() function
+        # Exits if no frame is returned from _camera.read() function.
         if not return_value:
             raise CaptureDeviceUnavailableError()
 
