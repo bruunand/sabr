@@ -17,10 +17,6 @@ public class NXTAssert
         return this;
     }
 
-    public NXTAssert()
-    {
-    }
-
     public NXTAssert isTrue() throws AssertException
     {
         if (_obj != null &&
