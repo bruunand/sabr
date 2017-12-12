@@ -1,5 +1,6 @@
 package com.ballthrower.movement.aiming;
 
+import com.ballthrower.Robot;
 import com.ballthrower.movement.MotorController;
 import lejos.nxt.*;
 import lejos.robotics.RegulatedMotor;
@@ -19,10 +20,10 @@ public class Rotator extends MotorController implements IRotator
 
     public Rotator(MotorPort motor)
     {
-        super(new NXTMotor(motor), 1.5f);
+        super(new NXTMotor(motor), 5.625f);
         _regMotor = new NXTRegulatedMotor(MotorPort.C);
-        _regMotor.setSpeed(50); /* Degrees pr. second */
-        _regMotor.setAcceleration(3000); /* Degrees pr. second pr. second. Default is 6000 (fast acceleration) */
+        _regMotor.setSpeed(100); /* Degrees pr. second */
+        //_regMotor.setAcceleration(3000); /* Degrees pr. second pr. second. Default is 6000 (fast acceleration) */
     }
 
     /**
@@ -52,8 +53,9 @@ public class Rotator extends MotorController implements IRotator
     {
         int actualDegrees = (int)(degrees * getGearRatio());
 
-        LCD.drawString("Turn: " + degrees + "!", 0, 1);
-        LCD.drawString("Actual:" + actualDegrees + "!", 0, 2);
+        Robot robot = Robot.getInstance();
+        robot.sendDebugMessage("Turn: " + degrees);
+        robot.sendDebugMessage("Actual: " + actualDegrees);
 
         _regMotor.rotate(-actualDegrees);
 
