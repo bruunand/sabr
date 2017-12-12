@@ -75,3 +75,4 @@ hs_err_pid*
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
+src/host/target_debug\.png
