@@ -14,7 +14,7 @@ public class PowerTest
     private static Shooter shooter;
 
 
-    private static void main(String[] options)
+    public static void main(String[] options)
     {
         shooter = new Shooter(new MotorPort[] {MotorPort.A, MotorPort.B});
 
@@ -79,8 +79,8 @@ public class PowerTest
             while (!Button.ESCAPE.isDown())
             {
                 LCD.drawString("Power: " + power + " %", 0, 0);
-                LCD.drawString("Comp. Power: " + shooter.CompensatedPower + " %", 0, 1);
-                LCD.drawString("C. Factor: " + shooter.CompensationFactor + " %", 0, 2);
+                LCD.drawString("Comp. Power: " + shooter.compPower + " %", 0, 1);
+                LCD.drawString("C. Factor: " + shooter.compFactor + " %", 0, 2);
 
                 Thread.sleep(50);
             }

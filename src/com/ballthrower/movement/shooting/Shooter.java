@@ -97,4 +97,24 @@ public class Shooter extends MotorController implements IShooter
         super.resetTacho();
     }
 
+    /* ONLY FOR DEBUGGING -- REMOVE REMOVE REMOVE */
+    public void shootAtPower(int power)
+    {
+        rawPower = power;
+
+        float compensationFactor = 900 / regMotor.getMaxSpeed();
+        compFactor = compensationFactor;
+
+        int realPower = (int)(power * compensationFactor);
+        compPower = power * compensationFactor;
+
+        int degrees = (int)(180 / getGearRatio());
+
+        super.startMotors(power, Direction);
+        super.waitWhileTurning(degrees);
+        super.resetTacho();
+
+        resetMotors();
+    }
+
 }
