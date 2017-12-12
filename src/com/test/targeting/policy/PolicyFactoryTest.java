@@ -35,6 +35,15 @@ public class PolicyFactoryTest extends Test {
                 .isTrue();
     }
 
+    private void biggestClusterTest() throws AssertException
+    {
+        NXTAssert test = new NXTAssert();
+        test.assertThat(PolicyFactory.getPolicy
+                (PolicyFactory.TargetingPolicyType.BiggestCluster)
+                instanceof SideFirstPolicy, "PolicyFactory:biggestCluster")
+                .isTrue();
+    }
+
     @Override
     public void runAllTests() throws AssertException {
 
