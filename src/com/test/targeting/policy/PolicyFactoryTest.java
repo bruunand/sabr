@@ -6,6 +6,7 @@ import com.ballthrower.targeting.policies.PolicyFactory;
 import com.ballthrower.targeting.policies.SideFirstPolicy;
 import com.test.NXTAssert;
 import com.test.Test;
+import sun.misc.ASCIICaseInsensitiveComparator;
 
 /**
  * Created by Anders Brams on 12/12/2017.
@@ -46,6 +47,8 @@ public class PolicyFactoryTest extends Test {
 
     @Override
     public void runAllTests() throws AssertException {
-
+        sideFirstTest();
+        leastRotationTest();
+        biggestClusterTest();
     }
 }

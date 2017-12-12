@@ -8,9 +8,7 @@ import com.test.communication.TargetInfoRequestPacketTest;
 import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
-import com.test.targeting.policy.BiggestClusterPolicyTest;
-import com.test.targeting.policy.LeastRotationPolicyTest;
-import com.test.targeting.policy.SidePolicyTest;
+import com.test.targeting.policy.*;
 import lejos.nxt.*;
 
 import java.util.ArrayList;
@@ -34,6 +32,8 @@ public class NXTTest
                 new SidePolicyTest(),
                 new BiggestClusterPolicyTest(),
                 new LeastRotationPolicyTest(),
+                new RandomPolicyTest(),
+                new PolicyFactoryTest()
         };
 
 
