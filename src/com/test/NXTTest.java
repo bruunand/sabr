@@ -15,10 +15,7 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        /*Test disCalc = new DistanceCalculatorTest();
-        Test dirCalc = new DirectionCalculatorTest();
-        Test shooter = new ShooterTest();
-        Test requestPacket = new TargetInfoRequestPacketTest();*/
+        
 
         try
         {
@@ -45,6 +42,7 @@ public class NXTTest
 
                                                  /* x_pos, width_pixel, height_pixel */
         toReturn.setTarget((byte)0, new TargetBox((short) 60, (short) 44, (short) 278));
+        toReturn.setFrameWidth((short)800); /* Not the actual frame width! */
 
         return toReturn;
     }

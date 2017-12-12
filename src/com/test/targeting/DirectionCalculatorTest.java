@@ -12,41 +12,32 @@ public class DirectionCalculatorTest extends Test
 {
     private DirectionCalculator dc;
     private ITargetContainer tbi;
+    private TargetContainer testContainer;
 
     private void setUp()
     {
-        dc = new DirectionCalculator();
+        testContainer = NXTTest.getTestTargetBox();
+        dc = new DirectionCalculator(testContainer);
         tbi = NXTTest.getTestTargetBox();
     }
 
-    private void sampleCountZeroTest() throws AssertException
+    private void calculateDirectionTest() throws AssertException
     {
-        TargetContainer zeroSample = new TargetContainer((byte)0);
+        float maxAngle = 26.725F;
+        float frameMiddle = testContainer.getFrameWidth() / 2;
+        float degreesPerPixel = maxAngle / frameMiddle;
+        float degreesToTurn = testContainer.getTarget((byte)0).getMiddleX() * degreesPerPixel;
 
         NXTAssert test = new NXTAssert();
 
-        test.assertThat(dc.calculateMeanPixelDistance(zeroSample), "DirectionCalculator:sampleCountZeroTest")
-                .isEqualTo(Float.POSITIVE_INFINITY);
-    }
-
-    private void meanPixelDistanceTest() throws AssertException
-    {
-        /* Calculated beforehand */
-        float actualMeanPixelDistance = 499.5f;
-
-        tbi.setFrameWidth((short)1600);
-
-        NXTAssert test = new NXTAssert();
-
-        test.assertThat(dc.calculateMeanPixelDistance(tbi), "DirectionCalculator:meanPixelDistanceTest")
-                .isEqualTo(actualMeanPixelDistance);
+        test.assertThat(degreesToTurn, "CalculateDirection")
+                .isEqualTo(dc.calculateDirection(testContainer.getTarget((byte)0)));
     }
 
     public void runAllTests() throws AssertException
     {
         setUp();
-        sampleCountZeroTest();
-        meanPixelDistanceTest();
+        calculateDirectionTest();
     }
 }
 
