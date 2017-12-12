@@ -15,4 +15,6 @@ public abstract class Connection
 
     public abstract DataInputStream getInputStream();
     public abstract DataOutputStream getOutputStream();
+
+    public abstract boolean isConnected();
 }

@@ -3,7 +3,8 @@ package com.ballthrower.communication.packets;
 public enum PacketIds
 {
     Handshake((byte) 0x0),
-    TargetDirectionRequest((byte) 0x1);
+    TargetDirectionRequest((byte) 0x1),
+    Debug((byte) 0x2);
 
     private byte _id;
 

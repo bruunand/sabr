@@ -4,6 +4,7 @@ import com.ballthrower.abortion.AbortCode;
 import com.ballthrower.abortion.IAbortable;
 import com.ballthrower.communication.Connection;
 import com.ballthrower.communication.ConnectionFactory;
+import com.ballthrower.communication.packets.DebugPacket;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
@@ -18,6 +19,7 @@ import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetContainer;
 import com.ballthrower.targeting.TargetBox;
+import com.ballthrower.targeting.policies.BiggestClusterPolicy;
 import com.ballthrower.targeting.policies.Policy;
 import com.ballthrower.targeting.policies.PolicyFactory;
 import lejos.nxt.Button;
@@ -26,7 +28,6 @@ import lejos.nxt.MotorPort;
 import lejos.nxt.Sound;
 
 import java.io.File;
-import java.io.IOException;
 
 // The Robot class uses the singleton pattern, since only one robot can be used.
 public class Robot implements IAbortable
@@ -74,10 +75,11 @@ public class Robot implements IAbortable
 
     public void locateAndShoot()
     {
-        if (!this._isConnected)
+        /* Do not send packets if we are not connected. */
+        if (_connection == null || !_connection.isConnected())
             return;
 
-        lejos.nxt.Sound.playSample(new File(SEARCHING_SOUND));
+        Sound.playSample(new File(SEARCHING_SOUND));
 
         /* Choose a policy using the policy factory. */
         Policy chosenPolicy = PolicyFactory.getPolicy(_targetingPolicyType);
@@ -87,7 +89,7 @@ public class Robot implements IAbortable
             ITargetContainer targetContainer = receiveTargetInformation();
 
             /* If there are no targets, we cannot proceed. */
-            if (targetContainer == null || targetContainer.getTargetCount() == 0)
+            if (targetContainer.getTargetCount() == 0)
             {
                 this.warn("No targets found.");
                 return;
@@ -116,8 +118,7 @@ public class Robot implements IAbortable
                 }
                 catch (OutOfRangeException ex)
                 {
-                    Sound.buzz();
-                    //this.warn(ex.getMessage());
+                    this.warn(ex.getMessage());
                 }
 
                 return;
@@ -147,8 +148,18 @@ public class Robot implements IAbortable
         }
     }
 
+    public void sendDebugMessage(String message)
+    {
+        if (_connection == null || !_connection.isConnected())
+            return;
+
+        this._connection.sendPacket(new DebugPacket(message));
+    }
+
     public void awaitConnection(ConnectionFactory connectionFactory)
     {
+        LCD.drawString("Awaiting...", 0, 0);
+
         // Close any existing connection
         this.closeConnection();
 
@@ -157,8 +168,12 @@ public class Robot implements IAbortable
         this._connection.awaitConnection();
         this._isConnected = true;
 
+        // Write string to screen
+        LCD.clear();
+        LCD.drawString("Connected", 0, 0);
+
         // Play connected sound
-        lejos.nxt.Sound.playSample(new File(CONNECTED_SOUND));
+        Sound.playSample(new File(CONNECTED_SOUND));
     }
 
     public void setTargetingPolicyType(PolicyFactory.TargetingPolicyType policyType)
@@ -180,15 +195,20 @@ public class Robot implements IAbortable
     {
         if (code != AbortCode.MANUAL)
         {
-            lejos.nxt.Sound.playSample(new File(ERROR_SOUND));
+            Sound.playSample(new File(ERROR_SOUND));
 
             // Draw abort message
             LCD.clear();
-
             LCD.drawString("Robot abortion", 0, 0);
             LCD.drawString("Code: " + code, 0, 1);
             if (message != null && !message.isEmpty())
                 LCD.drawString(message, 0, 2);
+
+            // Send error to host
+            if (message == null)
+                this.sendDebugMessage(code.toString());
+            else
+                this.sendDebugMessage(message);
 
             // Await key press and exit system fully
             Button.waitForAnyPress();
@@ -199,13 +219,15 @@ public class Robot implements IAbortable
 
     public void warn(String message)
     {
-        Sound.beep();
+        Sound.buzz();
 
         // Draw warning message
         LCD.clear();
-
         LCD.drawString("Robot warning", 0, 0);
         LCD.drawString(message, 0, 1);
+
+        // Send warning to host
+        this.sendDebugMessage(message);
 
         Button.waitForAnyPress();
         LCD.clear();

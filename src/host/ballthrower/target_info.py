@@ -63,7 +63,7 @@ class TargetInfo(ITargetInfo):
 
     # Maximum deviation used in determining
     # which RGB lower and upper bounds to be used.
-    RGB_MAX_DEVIATION = 0.75
+    RGB_CONSTANT_DEVIATION = 25
 
     # Path to folder where the neural network object
     # detection model resides.
@@ -199,13 +199,8 @@ class TargetInfo(ITargetInfo):
 
                     # Get lower and upper bounds based on centre colour
                     for i in range(3):
-                        lower_rgb_colour[i] = int(centre_colour_rgb[i] * (1 - TargetInfo.RGB_MAX_DEVIATION))
-                        upper_rgb_colour[i] = int(centre_colour_rgb[i] * (1 + TargetInfo.RGB_MAX_DEVIATION))
-
-                    # If debug, print RGB range
-                    if self.debug:
-                        print("Lower RGB: ", lower_rgb_colour)
-                        print("Upper RGB: ", upper_rgb_colour)
+                        lower_rgb_colour[i] = int(centre_colour_rgb[i] - RGB_CONSTANT_DEVIATION)
+                        upper_rgb_colour[i] = int(centre_colour_rgb[i] + RGB_CONSTANT_DEVIATION)
 
                     # Mask colour with dynamically retrieved range
                     crop_masked = cv2.inRange(cropped_rgb, lower_rgb_colour, upper_rgb_colour)

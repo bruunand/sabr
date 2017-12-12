@@ -5,9 +5,9 @@ from ballthrower.type_converter import *
 import bluetooth
 import time
 
+
 # Find the nearest Bluetooth device with the given name.
 def find_device(target_name):
-
     # Even though we only need to return one candidate, we
     # need to store them in an array so we can yield a proper
     # error message if several units with the same name exist.
@@ -28,6 +28,7 @@ def find_device(target_name):
     else:
         # Return the NXT (hopefully).
         return candidates[0]
+
 
 # Main class for creating and maintaining a Bluetooth connection
 # between the PC and other Bluetooth devices.
@@ -93,7 +94,6 @@ class BluetoothConnection(Connection):
                     print("Failed to connect to device with in 30 seconds. Now exiting.")
                     exit()
 
-
     # Read the data from the input stream and categorize
     # it as a type of packet.
     def receive_packet(self):
@@ -125,8 +125,7 @@ class BluetoothConnection(Connection):
         # of their properties themselves.
         packet.send_to_connection(self)
 
-
-# -------- Utility functions for sending and receiving data ------- #
+    # -------- Utility functions for sending and receiving data ------- #
     def send_byte(self, value):
         self.remote_connection.send(bytes([value]))
 
@@ -136,6 +135,11 @@ class BluetoothConnection(Connection):
     def send_float(self, value):
         self.remote_connection.send(float_to_bytes(value))
 
+    def send_string(self, string):
+        encoded_string = string.encode("utf-8")
+        self.send_short(len(encoded_string))
+        self.remote_connection.send(encoded_string)
+
     def receive_byte(self):
         return self.remote_connection.recv(1)[0]
 
@@ -144,3 +148,14 @@ class BluetoothConnection(Connection):
 
     def receive_float(self):
         return bytes_to_float(self.remote_connection.recv(4))
+
+    def receive_string(self):
+        string_length = self.receive_short()
+        string_received = ""
+
+        # The following assumes that one character is one byte, which is the case with UTF-8
+        while len(string_received) != string_length:
+            buffer = self.remote_connection.recv(string_length - len(string_received))
+            string_received += buffer.decode("utf-8")
+
+        return string_received
