@@ -17,11 +17,6 @@ public class NXTAssert
         return this;
     }
 
-    public NXTAssert()
-    {
-
-    }
-
     public NXTAssert isTrue() throws AssertException
     {
         if (_obj != null &&
@@ -98,6 +93,21 @@ public class NXTAssert
                 throw new AssertException("Original collection did not contain following element: " + o,
                                           _methodName);
         }
+
+        return this;
+    }
+
+    public NXTAssert isIn(Object[] collection) throws AssertException
+    {
+        boolean isIn = false;
+        for (Object o : collection)
+        {
+            if (_obj.equals(o))
+                isIn = true;
+        }
+
+        if (!isIn)
+            throw new AssertException("Object is not in collection", _methodName);
 
         return this;
     }

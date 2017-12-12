@@ -2,5 +2,5 @@ package com.ballthrower.targeting;
 
 public interface IDirectionCalculateable
 {
-    float calculateDirection(ITargetBoxInfo target);
+    float calculateDirection(TargetBox target);
 }

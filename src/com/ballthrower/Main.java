@@ -1,7 +1,7 @@
-import com.ballthrower.Robot;
+package com.ballthrower;
+
 import com.ballthrower.communication.ConnectionFactory;
-import com.test.NXTTest;
-import lejos.nxt.LCD;
+import com.ballthrower.targeting.policies.PolicyFactory;
 
 public class Main
 {
@@ -9,18 +9,11 @@ public class Main
 	{
 	    Robot robot = Robot.getInstance();
 	    robot.addButtonListeners();
+	    robot.setTargetingPolicyType(PolicyFactory.TargetingPolicyType.Nearest);
+	    robot.setConnectionType(ConnectionFactory.ConnectionType.Bluetooth);
 	    robot.awaitConnection(new ConnectionFactory());
 
 	    while(true);
-
-
-		//runTests();
-		//while (true){}
     }
 
-    public static void runTests()
-	{
-		NXTTest tests = new NXTTest();
-		tests.runAllTests();
-	}
 }

@@ -74,22 +74,6 @@ public class MotorController
     }
 
     /**
-     * Waits an amount of miliseconds
-     * @param time number of miliseconds to wait
-     */
-    protected void waitMiliseconds(int time)
-    {
-        try
-        {
-            Thread.sleep(time);
-        }
-        catch (Exception e)
-        {
-            //TODO: Error handling
-        }
-    }
-
-    /**
      * Reset tachocounter for motors
      */
     protected void resetTacho()

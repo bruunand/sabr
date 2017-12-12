@@ -2,12 +2,16 @@ package com.test;
 
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
-import com.ballthrower.targeting.TargetBoxInfo;
+import com.ballthrower.targeting.TargetContainer;
+import com.test.communication.BluetoothConnectionTest;
 import com.test.communication.TargetInfoRequestPacketTest;
 import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
+import com.test.targeting.policy.*;
 import lejos.nxt.*;
+
+import java.util.ArrayList;
 
 /**
  * Assertions used for unit testing on the NXT
@@ -19,17 +23,26 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        DistanceCalculatorTest disCalc = new DistanceCalculatorTest();
-        DirectionCalculatorTest dirCalc = new DirectionCalculatorTest();
-        ShooterTest shooter = new ShooterTest();
-        TargetInfoRequestPacketTest requestPacket = new TargetInfoRequestPacketTest();
+        Test[] testSuites = new Test[] {
+                new DirectionCalculatorTest(),
+                new DistanceCalculatorTest(),
+                new BluetoothConnectionTest(),
+                new TargetInfoRequestPacketTest(),
+                new ShooterTest(),
+                new SidePolicyTest(),
+                new BiggestClusterPolicyTest(),
+                new LeastRotationPolicyTest(),
+                new RandomPolicyTest(),
+                new PolicyFactoryTest()
+        };
+
 
         try
         {
-            disCalc.runAllTests();
-            dirCalc.runAllTests();
-            shooter.runAllTests();
-            requestPacket.runAllTests();
+            for (Test testSuite : testSuites)
+            {
+                testSuite.runAllTests();
+            }
         }
         catch (AssertException e)
         {
@@ -43,15 +56,21 @@ public class NXTTest
             LCD.drawString("All tests passed!", 0, 0);
     }
 
-    public static TargetBoxInfo getTestTargetBox() {
-        TargetBoxInfo toReturn = new TargetBoxInfo((byte)6);
+    public static TargetContainer getTestTargetBox()
+    {
+        TargetContainer toReturn = new TargetContainer((byte) 1);
 
-        toReturn.getTargets()[0] = new TargetBox(60F, 44F, (short)278);
-        toReturn.getTargets()[1] = new TargetBox(60F, 42F, (short)279);
-        toReturn.getTargets()[2] = new TargetBox(59F, 41F, (short)280);
-        toReturn.getTargets()[3] = new TargetBox(59F, 40F, (short)280);
-        toReturn.getTargets()[4] = new TargetBox(62F, 42F, (short)279);
-        toReturn.getTargets()[5] = new TargetBox(49F, 33F, (short)286);
+                                                 /* x_pos, width_pixel, height_pixel */
+        /* For distance and direction */
+        toReturn.setTarget((byte)0, new TargetBox((short) 60, (short) 44, (short) 278));
+
+        /* For policy targeting, height is irrelevant */
+        toReturn.setTarget((byte)0, new TargetBox((short) 55, (short) 44, (short) 250));
+        toReturn.setTarget((byte)0, new TargetBox((short) 50, (short) 44, (short) 240));
+        toReturn.setTarget((byte)0, new TargetBox((short) 20, (short) 44, (short) 230));
+        toReturn.setTarget((byte)0, new TargetBox((short) 10, (short) 44, (short) 100));
+
+        toReturn.setFrameWidth((short)800); /* Not the actual frame width! */
 
         return toReturn;
     }

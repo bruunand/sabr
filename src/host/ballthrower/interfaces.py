@@ -1,7 +1,13 @@
 import abc
 
 
-class Connection(metaclass=abc.ABCMeta):  # Todo: Descriptions for this interface
+# ------ Interfaces are implemented as abstract classes. ------ #
+
+# Interface used for Bluetooth connections. 
+# Implements basic required methods for opening
+# and closing connections, and sending data 
+# of different formats and sizes.
+class Connection(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def connect(self, host_name=None):
         """
@@ -13,16 +19,25 @@ class Connection(metaclass=abc.ABCMeta):  # Todo: Descriptions for this interfac
     def disconnect(self):
         """
             Description:
-                Disconnect from remote
+                Disconnect from remote.
         """
         pass
 
     @abc.abstractmethod
     def receive_packet(self):
+        """
+            Description: 
+                Classify packet and deserialize data
+                appropriately.
+        """
         pass
 
     @abc.abstractmethod
     def send_packet(self, packet):
+        """
+            Description: 
+                Send packet data accross connection.
+        """
         pass
 
     @abc.abstractmethod
@@ -38,6 +53,10 @@ class Connection(metaclass=abc.ABCMeta):  # Todo: Descriptions for this interfac
         pass
 
     @abc.abstractmethod
+    def send_string(self, value):
+        pass
+
+    @abc.abstractmethod
     def receive_byte(self):
         pass
 
@@ -49,7 +68,14 @@ class Connection(metaclass=abc.ABCMeta):  # Todo: Descriptions for this interfac
     def receive_float(self):
         pass
 
+    @abc.abstractmethod
+    def receive_string(self):
+        pass
 
+
+# Interface used for implementing basic methods
+# for requesting and receiving target data from
+# the image recognition module.
 class ITargetInfo(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_targets(self):

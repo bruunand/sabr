@@ -25,9 +25,7 @@ public class Shooter extends MotorController implements IShooter
     public float compPower = 0;
     public float compFactor = 0;
 
-    //private static final byte Gears = 3;
     private final boolean Direction = false;
-    //private static final int[] gearSizes = {40, 24};
 
     public Shooter(MotorPort[] motors)
     {
@@ -36,39 +34,11 @@ public class Shooter extends MotorController implements IShooter
     }
 
     /**
-     * Calculate the power needed to shoot a specific distance, defined by battery power.
-     * Assume linear relation between distance and motor power required.
+     * Calculate the power needed to shoot a specific distance, account for battery power.
+     * Assume log relation between distance and motor power required.
      * @param distance the distance to shoot.
      * @return the motor power needed.
      */
-    private int getPowerLinear(float distance)
-    {
-        /*
-        * Distance = 1.039 * Power + 37.43 (r^2 = 0.9948)
-        *                   <=>
-        * Power = (Distance / 1.039) - 37.43
-        *
-        * */
-        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
-        double compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
-        return (int)(((distance / 1.039) - 37.43) * compensationFactor);
-    }
-
-    /** Calculates the horizontal distance from the camera to the target. */
-    private float getHorizontalDistance(float distanceFromCamera)
-    {
-        /* Pythagoras: a^2 + b^2 = c^2 */
-        /* a = distance between camera and ground
-         * c = approximated distance from host
-         */
-
-        double a2 = Math.pow(cameraHeight, 2);
-        double c2 = Math.pow(distanceFromCamera, 2);
-        double b2 = c2-a2;
-
-        return (float)b2;
-    }
-
     private int getPowerLogarithmic(float distance)
     {
         /*
@@ -91,29 +61,21 @@ public class Shooter extends MotorController implements IShooter
         return (int)(power * compensationFactor);
     }
 
-    /**
-     *
-     * @return
-     */
-    /*private double getGearFactor()
-    {
-        return Math.pow(gearSizes[0]/gearSizes[1], Gears);
-    }*/
 
     public void shootDistance(float distance)throws OutOfRangeException
     {
         int power = getPowerLogarithmic(distance);
+        LCD.drawString("Power:" + power, 0, 2);
+        LCD.drawString("Dist:" + distance, 0, 3);
 
+        // Check if target is out of range
         if (power > 100)
-        {
-            throw new OutOfRangeException("Target out of range: Too far.");
-        }
-        else if (power < 20)
-        {
-            throw new OutOfRangeException("Target out of range: Too close.");
-        }
+            throw new OutOfRangeException("Target too far.");
+        else if (power < 50)
+            throw new OutOfRangeException("Target too close.");
 
-        int degrees = (int)((180) / getGearRatio());
+        // Run motors
+        int degrees = (int)(180 / getGearRatio());
 
         super.startMotors(power, Direction);
         super.waitWhileTurning(degrees);
@@ -122,9 +84,6 @@ public class Shooter extends MotorController implements IShooter
         resetMotors();
     }
 
-    /**
-     * Run motor at a slow speed to stop at tension stick
-     */
     private void resetMotors()
     {
         /* Move in opposite direction */
@@ -138,56 +97,4 @@ public class Shooter extends MotorController implements IShooter
         super.resetTacho();
     }
 
-    private double getInitialVelocity(float distance)
-    {
-        // Calculate and return the required initial velocity given the target distance, GRAVITY and departure angle.
-        return Math.sqrt((distance * GRAVITY)/Math.sin(2*Math.toRadians(DEPARTURE_ANGLE)));
-    }
-
-    private int getPower(double velocity)
-    {
-        int power = (int)(((velocity) - OFFSET)/FACTOR);
-        LCD.drawString("Pow: "+ power, 0, 1);
-
-        double compensationFactor = 800 / regMotor.getMaxSpeed();
-        power = (int)(power * compensationFactor);
-
-        return power;
-    }
-
-     /*private static void runMotors(int power)
-    {
-        super.startMotors(power, Gears % 2 == 0);
-        // ready motors
-        motorA.setPower(power);
-        motorB.setPower(power);
-        // start motors.
-        if (Gears % 2 == 0)
-        {
-            motorA.forward();
-            motorB.forward();
-        }
-        else
-        {
-            motorA.backward();
-            motorB.backward();
-        }
-    }*/
-
-    /*private static void stopMotors()
-    {
-        motorA.stop();
-        motorB.stop();
-    }*/
-
-    /*private static void waitMs(long time)
-    {
-        try
-        {
-            Thread.sleep(time);
-        }
-        catch (Exception ex)
-        {
-        }
-    }*/
 }
