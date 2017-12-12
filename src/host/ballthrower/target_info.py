@@ -9,12 +9,12 @@ from ballthrower.interfaces import ITargetInfo
 from utils import label_map_util
 import tensorflow as tf
 
-# Class used for storing bounding box information. 
+# Class used for storing bounding box information.
 # A bounding box defines the bounds of an identified
 # target.
 class BoundingBox():
     # Receive values describing the coordinates for each
-    # corner of the bounding box. 
+    # corner of the bounding box.
     def __init__(self, x_min, x_max, y_min, y_max, width, height):
         self.x_min = x_min
         self.y_min = y_min
@@ -27,7 +27,7 @@ class BoundingBox():
     def crop(self, from_image):
         return from_image[self.y_min:self.y_max, self.x_min:self.x_max]
 
-    # Get the centre of the bounding box. 
+    # Get the centre of the bounding box.
     def get_centre(self):
         return (int(self.width / 2), int(self.height / 2))
 
@@ -37,12 +37,12 @@ class BoundingBox():
                                                                   self.width, self.height)
 
     # Visualizes the bounding box. Used for live testing
-    # debugging. 
+    # debugging.
     def draw_rectangle(self, source_image):
-        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 3)
+        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 1)
 
-    # TensorFlow describes bounding boxes with values between 0 and 1. 
-    # Construct and return a bounding box with these values scaled 
+    # TensorFlow describes bounding boxes with values between 0 and 1.
+    # Construct and return a bounding box with these values scaled
     # to the dimensions of the image.
     def fromTensorFlowBox(source_width, source_height, box_array):
         y_min = floor(box_array[0] * source_height)
@@ -52,8 +52,8 @@ class BoundingBox():
 
         return BoundingBox(x_min, x_max, y_min, y_max, x_max - x_min, y_max - y_min)
 
-    # If bounding box data has already been scaled to the image, 
-    # construct a bounding box and return it. 
+    # If bounding box data has already been scaled to the image,
+    # construct a bounding box and return it.
     def fromNormalized(x_min, y_min, width, height):
         return BoundingBox(x_min, x_min + width, y_min, y_min + height, width, height)
 
@@ -63,23 +63,23 @@ class TargetInfo(ITargetInfo):
 
     # Maximum deviation used in determining
     # which HSV lower and upper bounds to be used.
-    HSV_MAX_DEVIATION = 0.4
+    HSV_MAX_DEVIATION = 0.2
 
     # Path to folder where the neural network object
     # detection model resides.
     MODEL_NAME = 'redcup_model'
 
     # Path to frozen detection graph.
-    # This is the actual model that is used for the object detection. 
+    # This is the actual model that is used for the object detection.
     PATH_TO_CKPT = os.path.join(os.path.join('res', MODEL_NAME), 'frozen_inference_graph.pb')
 
     # Path to the list labels used to classify detected objects.
     PATH_TO_LABELS = os.path.join(os.path.join('res', MODEL_NAME), 'label_map.pbtxt')
 
-    # Number of categories for classification. 
+    # Number of categories for classification.
     NUM_CLASSES = 1
 
-    # A computation graph. 
+    # A computation graph.
     detection_graph = tf.Graph()
 
     # List of labels
@@ -88,14 +88,14 @@ class TargetInfo(ITargetInfo):
     # List of dictionaries representing all possible categories.
     categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES,
                                                                            use_display_name=True)
-    # A dictionary of the same entries as categories but the 
-    # key value is a category ID. 
+    # A dictionary of the same entries as categories but the
+    # key value is a category ID.
     category_index = label_map_util.create_category_index(categories)
 
 
-    # Initialize TargetInfo with default capture device set to 3. 
-    def __init__(self, capture_device=3, debug=True):
-        self._camera = cv2.VideoCapture(capture_device)
+    # Initialize TargetInfo with default capture device set to 1.
+    def __init__(self, capture_device=1, debug=True):
+        self.capture_device=capture_device
         self.debug = debug
 
         # Load frozen graph
@@ -108,7 +108,7 @@ class TargetInfo(ITargetInfo):
 
     # Gather the necessary data needed by the NXT to calculate
     # the direction and/or distance. Returns a list of bounding
-    # boxes and an integer represeting the frame width. 
+    # boxes and an integer represeting the frame width.
     def get_targets(self):
 
         # Retrieve a list of sample data to be processed.
@@ -122,7 +122,7 @@ class TargetInfo(ITargetInfo):
 
         return bounding_boxes, frame_width
 
-    # 
+    #
     def get_bounding_boxes(self, frame):
         """
         image_processing() processes a collection of frames.
@@ -225,6 +225,7 @@ class TargetInfo(ITargetInfo):
         # If debugging is enabled draw all bounding boxes on the first frame and show the result
         if self.debug:
             for box in all_bounding_boxes:
+                print(box)
                 box.draw_rectangle(frame)
 
             cv2.imwrite('target_debug.png', frame)
@@ -235,9 +236,11 @@ class TargetInfo(ITargetInfo):
     # Use the capture device to capture a frame/image.
     def get_frame(self):
 
-        return_value, frame = self._camera.read()
+        camera = cv2.VideoCapture(self.capture_device)
+        return_value, frame = camera.read()
+        camera.release()
 
-        # Exits if no frame is returned from _camera.read() function.
+        # Exits if no frame is returned from camera.read() function.
         if not return_value:
             raise CaptureDeviceUnavailableError()
 

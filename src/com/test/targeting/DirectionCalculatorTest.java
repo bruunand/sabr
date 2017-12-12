@@ -1,8 +1,8 @@
 package com.test.targeting;
 
 import com.ballthrower.targeting.DirectionCalculator;
-import com.ballthrower.targeting.ITargetBoxInfo;
-import com.ballthrower.targeting.TargetBoxInfo;
+import com.ballthrower.targeting.ITargetContainer;
+import com.ballthrower.targeting.TargetContainer;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
@@ -10,7 +10,7 @@ import com.test.NXTTest;
 public class DirectionCalculatorTest
 {
     private DirectionCalculator dc;
-    private ITargetBoxInfo tbi;
+    private ITargetContainer tbi;
 
     private void setUp()
     {
@@ -20,7 +20,7 @@ public class DirectionCalculatorTest
 
     private void sampleCountZeroTest() throws AssertException
     {
-        TargetBoxInfo zeroSample = new TargetBoxInfo((byte)0);
+        TargetContainer zeroSample = new TargetContainer((byte)0);
 
         NXTAssert test = new NXTAssert();
 

@@ -103,17 +103,17 @@ public class Shooter extends MotorController implements IShooter
     public void shootDistance(float distance)throws OutOfRangeException
     {
         int power = getPowerLogarithmic(distance);
+        LCD.drawString("Power:" + power, 0, 2);
+        LCD.drawString("Dist:" + distance, 0, 3);
 
+        /* Check if target is out of range. */
         if (power > 100)
-        {
-            throw new OutOfRangeException("Target out of range: Too far.");
-        }
-        else if (power < 20)
-        {
-            throw new OutOfRangeException("Target out of range: Too close.");
-        }
+            throw new OutOfRangeException("Target too far.");
+        else if (power < 50)
+            throw new OutOfRangeException("Target too close.");
 
-        int degrees = (int)((180) / getGearRatio());
+        /* Run motors. */
+        int degrees = (int)(180 / getGearRatio());
 
         super.startMotors(power, Direction);
         super.waitWhileTurning(degrees);
