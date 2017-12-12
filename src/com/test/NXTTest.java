@@ -3,7 +3,11 @@ package com.test;
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetContainer;
+import com.test.communication.BluetoothConnectionTest;
+import com.test.communication.TargetInfoRequestPacketTest;
+import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
+import com.test.targeting.DistanceCalculatorTest;
 import lejos.nxt.*;
 
 import java.util.ArrayList;
@@ -18,9 +22,14 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        ArrayList<Test> testSuites = new ArrayList<Test>();
+        Test[] testSuites = new Test[] {
+                new DirectionCalculatorTest(),
+                new DistanceCalculatorTest(),
+                new BluetoothConnectionTest(),
+                new TargetInfoRequestPacketTest(),
+                new ShooterTest(),
 
-        testSuites.add(new DirectionCalculatorTest());
+        };
 
 
         try
