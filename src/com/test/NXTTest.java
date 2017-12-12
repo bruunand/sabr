@@ -8,6 +8,7 @@ import com.test.communication.TargetInfoRequestPacketTest;
 import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
+import com.test.targeting.policy.SidePolicyTest;
 import lejos.nxt.*;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class NXTTest
                 new BluetoothConnectionTest(),
                 new TargetInfoRequestPacketTest(),
                 new ShooterTest(),
+                new SidePolicyTest(),
 
         };
 

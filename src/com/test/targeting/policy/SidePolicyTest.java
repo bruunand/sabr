@@ -43,10 +43,23 @@ public class SidePolicyTest extends Test
                 .isEqualTo(singleTarget.getTarget((byte)0));
     }
 
+    private void multipleTargetsTest() throws AssertException
+    {
+        NXTAssert test = new NXTAssert();
+        test.assertThat(policyLeft.selectTargetBox(testContainer), "SidePolicy:multipleTargets")
+                .isNotNull()
+                .isEqualTo(testContainer.getTarget((byte)4));
+
+        test.assertThat(policyRight.selectTargetBox(testContainer), "SidePolicy:multipleTargets")
+                .isNotNull()
+                .isEqualTo(testContainer.getTarget((byte)0));
+    }
+
     @Override
     public void runAllTests() throws AssertException {
         setUp();
         zeroSampleTest();
         singleTargetTest();
+        multipleTargetsTest();
     }
 }
