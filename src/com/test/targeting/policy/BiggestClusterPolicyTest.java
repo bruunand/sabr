@@ -27,6 +27,16 @@ public class BiggestClusterPolicyTest extends Test {
         };
     }
 
+    private void singleTargetTest() throws AssertException
+    {
+        TargetContainer singleTarget = new TargetContainer((byte)1);
+        singleTarget.setTarget((byte)0, new TargetBox((short)50, (short)50, (short)50));
+
+        NXTAssert test = new NXTAssert();
+        test.assertThat(policy.selectTargetBox(singleTarget), "BiggestCluster:SingleTarget")
+                .isEqualTo(singleTarget.getTarget((byte)0));
+    }
+
     private void biggestClusterTest() throws AssertException
     {
         TargetBox selectedTarget = policy.selectTargetBox(testContainer);
@@ -40,6 +50,7 @@ public class BiggestClusterPolicyTest extends Test {
     public void runAllTests() throws AssertException
     {
         setUp();
+        singleTargetTest();
         biggestClusterTest();
     }
 }
