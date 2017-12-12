@@ -19,6 +19,7 @@ import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetContainer;
 import com.ballthrower.targeting.TargetBox;
+import com.ballthrower.targeting.policies.BiggestClusterPolicy;
 import com.ballthrower.targeting.policies.Policy;
 import com.ballthrower.targeting.policies.PolicyFactory;
 import lejos.nxt.Button;
@@ -77,7 +78,7 @@ public class Robot implements IAbortable
         /* Do not send packets if we are not connected. */
         if (_connection == null || !_connection.isConnected())
             return;
-        
+
         Sound.playSample(new File(SEARCHING_SOUND));
 
         /* Choose a policy using the policy factory. */
@@ -88,7 +89,7 @@ public class Robot implements IAbortable
             ITargetContainer targetContainer = receiveTargetInformation();
 
             /* If there are no targets, we cannot proceed. */
-            if (targetContainer == null || targetContainer.getTargetCount() == 0)
+            if (targetContainer.getTargetCount() == 0)
             {
                 this.warn("No targets found.");
                 return;
@@ -117,8 +118,7 @@ public class Robot implements IAbortable
                 }
                 catch (OutOfRangeException ex)
                 {
-                    Sound.buzz();
-                    //this.warn(ex.getMessage());
+                    this.warn(ex.getMessage());
                 }
 
                 return;
@@ -204,6 +204,12 @@ public class Robot implements IAbortable
             if (message != null && !message.isEmpty())
                 LCD.drawString(message, 0, 2);
 
+            // Send error to host
+            if (message == null)
+                this.sendDebugMessage(code.toString());
+            else
+                this.sendDebugMessage(message);
+
             // Await key press and exit system fully
             Button.waitForAnyPress();
         }
@@ -213,13 +219,15 @@ public class Robot implements IAbortable
 
     public void warn(String message)
     {
-        Sound.beep();
+        Sound.buzz();
 
         // Draw warning message
         LCD.clear();
-
         LCD.drawString("Robot warning", 0, 0);
         LCD.drawString(message, 0, 1);
+
+        // Send warning to host
+        this.sendDebugMessage(message);
 
         Button.waitForAnyPress();
         LCD.clear();
