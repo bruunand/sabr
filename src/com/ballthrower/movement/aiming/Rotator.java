@@ -30,7 +30,7 @@ public class Rotator extends MotorController implements IRotator
         int actualDegrees = (int)(degrees * getGearRatio());
 
         LCD.drawString("Turn: " + degrees, 0, 1);
-        LCD.drawString("Maffs:" + actualDegrees, 0, 2);
+        LCD.drawString("Actual:" + actualDegrees, 0, 2);
 
         super.resetTacho();
 
