@@ -237,6 +237,8 @@ class TargetInfo(ITargetInfo):
     def get_frame(self):
 
         camera = cv2.VideoCapture(self.capture_device)
+        camera.set(3,1600)
+        camera.set(4,1200)
         return_value, frame = camera.read()
         camera.release()
 

@@ -9,7 +9,7 @@ import lejos.nxt.LCD;
 public class Rotator extends MotorController implements IRotator
 {
     /* getGearRatio = robot.numberOfGearTeeth / motor.numberOfGearTeeth. */
-    private static final int MOTOR_POWER = 40;
+    private static final int MOTOR_POWER = 20;
 
     /* Updates every time we turn so we can reset position. */
     private int currentHeading = 0;
@@ -29,10 +29,9 @@ public class Rotator extends MotorController implements IRotator
     {
         int actualDegrees = (int)(degrees * getGearRatio());
 
-        LCD.clear();
         LCD.drawString("Turn: " + degrees, 0, 1);
-        LCD.drawString("GearRatio:" + getGearRatio(), 0, 2);
-        
+        LCD.drawString("Maffs:" + actualDegrees, 0, 2);
+
         super.resetTacho();
 
         Sound.beep();
