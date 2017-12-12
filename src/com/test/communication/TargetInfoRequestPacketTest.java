@@ -7,10 +7,11 @@ import com.ballthrower.communication.ConnectionFactory;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
+import com.test.Test;
 
 import java.io.IOException;
 
-public class TargetInfoRequestPacketTest implements IAbortable
+public class TargetInfoRequestPacketTest extends Test implements IAbortable
 {
     TargetInfoRequestPacket rp;
 
@@ -52,6 +53,11 @@ public class TargetInfoRequestPacketTest implements IAbortable
 
     @Override
     public void abort(AbortCode code, String message) {
+
+    }
+
+    @Override
+    public void warn(String message) {
 
     }
 }

@@ -45,7 +45,7 @@ public class BiggestClusterPolicy extends Policy
             {
                 TargetBox target = targetContainer.getTarget(targetIndex);
 
-                /* For each target, sort the array of centoids using the centroid distance comparator. */
+                /* For each target, sort the array of centroids using the centroid distance comparator. */
                 ArrayUtil.sort(this._centroids, new CentroidDistanceComparator(target));
 
                 /* The first element in the sorted array is the centroid that this target is closest to. */

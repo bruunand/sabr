@@ -4,9 +4,10 @@ import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.exceptions.OutOfRangeException;
 import com.ballthrower.movement.shooting.Shooter;
 import com.test.NXTAssert;
+import com.test.Test;
 import lejos.nxt.MotorPort;
 
-public class ShooterTest
+public class ShooterTest extends Test
 {
     private Shooter _shooter;
 
