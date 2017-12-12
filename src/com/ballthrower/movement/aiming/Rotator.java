@@ -30,25 +30,6 @@ public class Rotator extends MotorController implements IRotator
      * Rotate a specific number of degrees
      * @param degrees number of degrees to rotate
      */
-    /*
-    public void turnDegrees(float degrees)
-    {
-        int actualDegrees = (int)(degrees * getGearRatio());
-
-        LCD.drawString("Turn: " + degrees, 0, 1);
-        LCD.drawString("Actual:" + actualDegrees, 0, 2);
-
-        super.resetTacho();
-
-        Sound.beep();
-        super.startMotors(MOTOR_POWER, degrees > 0);
-        super.waitWhileTurning(actualDegrees);
-        Sound.buzz();
-        super.stopMotors();
-
-        currentHeading += actualDegrees;
-    } */
-
     public void turnDegrees(float degrees)
     {
         int actualDegrees = (int)(degrees * getGearRatio());

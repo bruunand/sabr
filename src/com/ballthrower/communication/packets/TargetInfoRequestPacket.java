@@ -28,11 +28,12 @@ public class TargetInfoRequestPacket extends Packet
         // Get target box samples
         for (byte i = 0; i < numBoxSamples; i++)
         {
-            // read info from data stream
+            // Read info from data stream
             short xPos = stream.readShort();
             short width = stream.readShort();
             short height = stream.readShort();
 
+            // Instantiate the target box and add to target container
             this._boxInfo.setTarget(i, new TargetBox(height, width, xPos));
         }
     }

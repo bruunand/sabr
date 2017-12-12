@@ -14,14 +14,6 @@ public class Main
 	    robot.awaitConnection(new ConnectionFactory());
 
 	    while(true);
-
-		//runTests();
-		//while (true){}
     }
 
-    /*public static void runTests()
-	{
-		NXTTest tests = new NXTTest();
-		tests.runAllTests();
-	}*/
 }
