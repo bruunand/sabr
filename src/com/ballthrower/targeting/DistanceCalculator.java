@@ -1,10 +1,5 @@
 package com.ballthrower.targeting;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static java.lang.Math.abs;
-
 // Calculates the distance to the target object based on
 // triangle similarity using the height of the target object.
 public class DistanceCalculator implements IDistanceCalculateable
@@ -13,12 +8,10 @@ public class DistanceCalculator implements IDistanceCalculateable
     private static final float _targetHeight = 11.5f;
 
     /** Pixel height at distance = _knownRealDistance */
-    private static final float _knownHeight = 82.0f;
+    private static final float _knownHeight = 131.0f;
 
     /** Real distance in centimeters */
-    private static final float _knownRealDistance = 155.0f;
-
-    private static final float _cameraElevation = 66f;
+    private static final float _knownRealDistance = 113.0f;
 
     /** Focal length is the distance between the image plane and lens of the camera
       * Used for calculating the distance to an object */

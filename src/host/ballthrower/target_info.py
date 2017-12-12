@@ -199,8 +199,8 @@ class TargetInfo(ITargetInfo):
 
                     # Get lower and upper bounds based on centre colour
                     for i in range(3):
-                        lower_rgb_colour[i] = int(centre_colour_rgb[i] - RGB_CONSTANT_DEVIATION)
-                        upper_rgb_colour[i] = int(centre_colour_rgb[i] + RGB_CONSTANT_DEVIATION)
+                        lower_rgb_colour[i] = int(centre_colour_rgb[i] - TargetInfo.RGB_CONSTANT_DEVIATION)
+                        upper_rgb_colour[i] = int(centre_colour_rgb[i] + TargetInfo.RGB_CONSTANT_DEVIATION)
 
                     # Mask colour with dynamically retrieved range
                     crop_masked = cv2.inRange(cropped_rgb, lower_rgb_colour, upper_rgb_colour)
@@ -236,6 +236,7 @@ class TargetInfo(ITargetInfo):
 
             # Draw all boxes that are produced after colour/contouring
             for box in all_bounding_boxes:
+                print(box)
                 box.draw_rectangle(frame)
 
             cv2.imwrite('target_debug.png', frame)
