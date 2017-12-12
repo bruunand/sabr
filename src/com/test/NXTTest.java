@@ -41,14 +41,10 @@ public class NXTTest
 
     public static TargetContainer getTestTargetBox()
     {
-        TargetContainer toReturn = new TargetContainer((byte) 6);
+        TargetContainer toReturn = new TargetContainer((byte) 1);
 
-        toReturn.setTarget((byte) 0, new TargetBox((short) 60, (short) 44, (short) 278));
-        toReturn.setTarget((byte) 1, new TargetBox((short) 60, (short) 42, (short) 279));
-        toReturn.setTarget((byte) 2, new TargetBox((short) 59, (short) 41, (short) 280));
-        toReturn.setTarget((byte) 3, new TargetBox((short) 59, (short) 40, (short) 280));
-        toReturn.setTarget((byte) 4, new TargetBox((short) 62, (short) 42, (short) 279));
-        toReturn.setTarget((byte) 5, new TargetBox((short) 49, (short) 33, (short) 286));
+                                                 /* x_pos, width_pixel, height_pixel */
+        toReturn.setTarget((byte)0, new TargetBox((short) 60, (short) 44, (short) 278));
 
         return toReturn;
     }

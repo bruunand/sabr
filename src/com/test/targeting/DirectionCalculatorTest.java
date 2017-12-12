@@ -6,8 +6,9 @@ import com.ballthrower.targeting.TargetContainer;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
+import com.test.Test;
 
-public class DirectionCalculatorTest
+public class DirectionCalculatorTest extends Test
 {
     private DirectionCalculator dc;
     private ITargetContainer tbi;
