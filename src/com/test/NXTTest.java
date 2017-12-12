@@ -3,7 +3,15 @@ package com.test;
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetContainer;
+import com.test.communication.BluetoothConnectionTest;
+import com.test.communication.TargetInfoRequestPacketTest;
+import com.test.movement.shooting.ShooterTest;
+import com.test.targeting.DirectionCalculatorTest;
+import com.test.targeting.DistanceCalculatorTest;
+import com.test.targeting.policy.*;
 import lejos.nxt.*;
+
+import java.util.ArrayList;
 
 /**
  * Assertions used for unit testing on the NXT
@@ -15,17 +23,26 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        /*Test disCalc = new DistanceCalculatorTest();
-        Test dirCalc = new DirectionCalculatorTest();
-        Test shooter = new ShooterTest();
-        Test requestPacket = new TargetInfoRequestPacketTest();*/
+        Test[] testSuites = new Test[] {
+                new DirectionCalculatorTest(),
+                new DistanceCalculatorTest(),
+                new BluetoothConnectionTest(),
+                new TargetInfoRequestPacketTest(),
+                new ShooterTest(),
+                new SidePolicyTest(),
+                new BiggestClusterPolicyTest(),
+                new LeastRotationPolicyTest(),
+                new RandomPolicyTest(),
+                new PolicyFactoryTest()
+        };
+
 
         try
         {
-            /*disCalc.runAllTests();
-            dirCalc.runAllTests();
-            shooter.runAllTests();
-            requestPacket.runAllTests();*/
+            for (Test testSuite : testSuites)
+            {
+                testSuite.runAllTests();
+            }
         }
         catch (AssertException e)
         {
@@ -41,14 +58,19 @@ public class NXTTest
 
     public static TargetContainer getTestTargetBox()
     {
-        TargetContainer toReturn = new TargetContainer((byte) 6);
+        TargetContainer toReturn = new TargetContainer((byte) 1);
 
-        toReturn.setTarget((byte) 0, new TargetBox((short) 60, (short) 44, (short) 278));
-        toReturn.setTarget((byte) 1, new TargetBox((short) 60, (short) 42, (short) 279));
-        toReturn.setTarget((byte) 2, new TargetBox((short) 59, (short) 41, (short) 280));
-        toReturn.setTarget((byte) 3, new TargetBox((short) 59, (short) 40, (short) 280));
-        toReturn.setTarget((byte) 4, new TargetBox((short) 62, (short) 42, (short) 279));
-        toReturn.setTarget((byte) 5, new TargetBox((short) 49, (short) 33, (short) 286));
+                                                 /* x_pos, width_pixel, height_pixel */
+        /* For distance and direction */
+        toReturn.setTarget((byte)0, new TargetBox((short) 60, (short) 44, (short) 278));
+
+        /* For policy targeting, height is irrelevant */
+        toReturn.setTarget((byte)0, new TargetBox((short) 55, (short) 44, (short) 250));
+        toReturn.setTarget((byte)0, new TargetBox((short) 50, (short) 44, (short) 240));
+        toReturn.setTarget((byte)0, new TargetBox((short) 20, (short) 44, (short) 230));
+        toReturn.setTarget((byte)0, new TargetBox((short) 10, (short) 44, (short) 100));
+
+        toReturn.setFrameWidth((short)800); /* Not the actual frame width! */
 
         return toReturn;
     }

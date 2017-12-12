@@ -3,31 +3,32 @@ package com.test.targeting.policy;
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetContainer;
-import com.ballthrower.targeting.policies.SideFirstPolicy;
+import com.ballthrower.targeting.policies.LeastRotationPolicy;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 import com.test.Test;
 
-public class SidePolicyTest extends Test
+/**
+ * Created by Anders Brams on 12/12/2017.
+ */
+public class LeastRotationPolicyTest extends Test
 {
-    SideFirstPolicy policyLeft;
-    SideFirstPolicy policyRight;
     TargetContainer testContainer;
+    LeastRotationPolicy policy;
 
     private void setUp()
     {
-        policyLeft = new SideFirstPolicy(SideFirstPolicy.Side.Left);
-        policyRight = new SideFirstPolicy(SideFirstPolicy.Side.Right);
         testContainer = NXTTest.getTestTargetBox();
+        policy = new LeastRotationPolicy();
     }
+
     private void zeroSampleTest() throws AssertException
     {
         TargetContainer zeroSample = new TargetContainer((byte)0);
 
         NXTAssert test = new NXTAssert();
-        test.assertThat(policyLeft.selectTargetBox(zeroSample), "SidePolicy:zeroSample")
-                .isNull();
-        test.assertThat(policyRight.selectTargetBox(zeroSample), "SidePolicy:zeroSample")
+        test.assertThat(policy.selectTargetBox(zeroSample), "LeastRotationPolicy:zeroSample")
                 .isNull();
     }
 
@@ -37,29 +38,25 @@ public class SidePolicyTest extends Test
         singleTarget.setTarget((byte)0, new TargetBox((short)50, (short)50, (short)50));
 
         NXTAssert test = new NXTAssert();
-        test.assertThat(policyLeft.selectTargetBox(singleTarget), "SidePolicy:singleSample")
-                .isEqualTo(singleTarget.getTarget((byte)0));
-        test.assertThat(policyRight.selectTargetBox(singleTarget), "SidePolicy:singleSample")
+        test.assertThat(policy.selectTargetBox(singleTarget), "LeastRotationPolicy:singleSample")
                 .isEqualTo(singleTarget.getTarget((byte)0));
     }
 
     private void multipleTargetsTest() throws AssertException
     {
         NXTAssert test = new NXTAssert();
-        test.assertThat(policyLeft.selectTargetBox(testContainer), "SidePolicy:multipleTargets")
-                .isNotNull()
-                .isEqualTo(testContainer.getTarget((byte)4));
 
-        test.assertThat(policyRight.selectTargetBox(testContainer), "SidePolicy:multipleTargets")
-                .isNotNull()
+        /* Frame mid is 400; closest target is the first one with x = 60 */
+        test.assertThat(policy.selectTargetBox(testContainer), "LeastRotationPolicy:multipleTargets")
                 .isEqualTo(testContainer.getTarget((byte)0));
     }
 
     @Override
-    public void runAllTests() throws AssertException {
-        setUp();
+    public void runAllTests() throws AssertException
+    {
         zeroSampleTest();
         singleTargetTest();
         multipleTargetsTest();
+        setUp();
     }
 }

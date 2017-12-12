@@ -30,81 +30,16 @@ public class DistanceCalculatorTest extends Test
     public void calculateDistanceTest() throws AssertException
     {
         NXTAssert test = new NXTAssert();
-        /* Calculated beforehand */
-        float median = 60;
-        float realDistance = _focalLengthHeight * _targetHeight / median;
+        float realDistance = _focalLengthHeight * _targetHeight / 278;
 
-        test.assertThat(dc.calculateDistance(tbi), "DistanceCalculator:CalculateDistance")
+        test.assertThat(dc.calculateDistance(tbi.getTarget((byte)0)), "DistanceCalculator:CalculateDistance")
                 .isEqualTo(realDistance);
-    }
-
-    public void zeroSampleCountTest() throws AssertException
-    {
-        NXTAssert test = new NXTAssert();
-        TargetContainer zeroSample = new TargetContainer((byte)0);
-
-        test.assertThat(dc.calculateDistance(zeroSample), "DistanceCalculator:zeroSampleCountTest")
-                .isEqualTo(Float.POSITIVE_INFINITY);
-
-    }
-
-    public void removeOutliersTest() throws AssertException
-    {
-        NXTAssert test = new NXTAssert();
-
-        /* Instantiate heights */
-        float[] heights = new float[tbi.getTargetCount()];
-        for (int i = 0; i < tbi.getTargetCount(); i++)
-        {
-            heights[i] = tbi.getTargets()[i].getHeight();
-        }
-
-        /* Remove outliers, get median and maxDeviance */
-        float[] refinedHeights = dc.removeOutliers(heights, dc.getMedian(heights));
-        float median = dc.getMedian(refinedHeights);
-        float maxDeviance = median * 0.05f;
-
-        /* One outlier in test target box info */
-        test.assertThat(refinedHeights.length, "DistanceCalculator:removeOutliers")
-                .isEqualTo(heights.length - 1);
-
-        /* Test that no new elements were introduced */
-        test.assertThat(heights, "DistanceCalculator:removeOutliers")
-                .containsAll((refinedHeights));
-
-        /* Test that outliers were removed correctly (by 5% deviation) */
-        for (float height : refinedHeights)
-        {
-            test.assertThat(height, "DistanceCalculator:removeOutliers")
-                    .isNotNull()
-                    .isInRangeOf(median, maxDeviance);
-        }
-    }
-
-    public void getMedianTest() throws AssertException
-    {
-        NXTAssert test = new NXTAssert();
-
-        float[] evenLength = new float[] {20, 30, 40, 50, 60, 70};
-        float[] unevenLength = new float[] {20, 30, 40, 50, 60};
-        float evenLengthMedian = (40 + 50) / 2;
-
-        float unevenLengthMedian = 40;
-
-        test.assertThat(dc.getMedian(evenLength), "DistanceCalculator:getMedianTest")
-                .isEqualTo(evenLengthMedian);
-
-        test.assertThat(dc.getMedian(unevenLength), "DistanceCalculator:getMedianTest")
-                .isEqualTo(unevenLengthMedian);
     }
 
     @Override
     public void runAllTests() throws AssertException
     {
         setUp();
-        zeroSampleCountTest();
         calculateDistanceTest();
-        removeOutliersTest();
-        getMedianTest();
     }
 }

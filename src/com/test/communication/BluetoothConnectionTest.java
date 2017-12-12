@@ -6,13 +6,14 @@ import com.ballthrower.communication.Connection;
 import com.ballthrower.communication.ConnectionFactory;
 import com.ballthrower.exceptions.AssertException;
 import com.test.NXTAssert;
+import com.test.Test;
 import lejos.nxt.comm.NXTConnection;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class BluetoothConnectionTest implements IAbortable
+public class BluetoothConnectionTest extends Test implements IAbortable
 {
     private NXTConnection _socket;
     private DataInputStream _inputStream;
@@ -30,18 +31,24 @@ public class BluetoothConnectionTest implements IAbortable
         setUp();
     }
 
-    public void awaitConnectionTest() throws AssertException, IOException
+    public void awaitConnectionTest() throws AssertException
     {
-        _bc.awaitConnection();
-        NXTAssert test = new NXTAssert();
+        try {
+            _bc.awaitConnection();
+            NXTAssert test = new NXTAssert();
 
-        test.assertThat(_socket.available(0), "BluetoothConnection:awaitConnection")
-                .isTrue();
-        test.assertThat(_inputStream.available(), "BluetoothConnection:awaitConnection")
-                .isTrue();
+            test.assertThat(_socket.available(0), "BluetoothConnection:awaitConnection")
+                    .isTrue();
+            test.assertThat(_inputStream.available(), "BluetoothConnection:awaitConnection")
+                    .isTrue();
+        }
+        catch (IOException e)
+        {
+            /* Not relevant for testing... */
+        }
     }
 
-    public void runAllTests() throws AssertException, IOException
+    public void runAllTests() throws AssertException
     {
         awaitConnectionTest();
     }
@@ -53,6 +60,11 @@ public class BluetoothConnectionTest implements IAbortable
 
     @Override
     public void abort(AbortCode code, String message) {
+
+    }
+
+    @Override
+    public void warn(String message) {
 
     }
 }

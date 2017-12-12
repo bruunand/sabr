@@ -97,6 +97,21 @@ public class NXTAssert
         return this;
     }
 
+    public NXTAssert isIn(Object[] collection) throws AssertException
+    {
+        boolean isIn = false;
+        for (Object o : collection)
+        {
+            if (_obj.equals(o))
+                isIn = true;
+        }
+
+        if (!isIn)
+            throw new AssertException("Object is not in collection", _methodName);
+
+        return this;
+    }
+
     public NXTAssert isNotNull() throws AssertException
     {
         if (_obj == null)
