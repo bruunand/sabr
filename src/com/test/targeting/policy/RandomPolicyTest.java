@@ -21,6 +21,15 @@ public class RandomPolicyTest extends Test {
         policy = new RandomPolicy();
     }
 
+    private void zeroSampleTest() throws AssertException
+    {
+        TargetContainer zeroSamples = new TargetContainer((byte)0);
+
+        NXTAssert test = new NXTAssert();
+        test.assertThat(policy.selectTargetBox(zeroSamples), "RandomPolicy:zeroSamples")
+                .isNull();
+    }
+
     private void singleTargetTest() throws AssertException
     {
         TargetContainer singleTarget = new TargetContainer((byte)1);
@@ -31,9 +40,18 @@ public class RandomPolicyTest extends Test {
                 .isEqualTo(singleTarget.getTarget((byte)0));
     }
 
+    private void multipleTargetsTest() throws AssertException
+    {
+        NXTAssert test = new NXTAssert();
+        test.assertThat(policy.selectTargetBox(testContainer), "RandomPolicy:singleTarget")
+                .isIn(testContainer.cloneTargets());
+    }
+
     @Override
     public void runAllTests() throws AssertException {
         setUp();
+        zeroSampleTest();
         singleTargetTest();
+        multipleTargetsTest();
     }
 }
