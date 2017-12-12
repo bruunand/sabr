@@ -1,11 +1,13 @@
 import abc
+
+
 # ------ Interfaces are implemented as abstract classes. ------ #
 
 # Interface used for Bluetooth connections. 
 # Implements basic required methods for opening
 # and closing connections, and sending data 
 # of different formats and sizes.
-class Connection(metaclass=abc.ABCMeta):  
+class Connection(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def connect(self, host_name=None):
         """
@@ -51,6 +53,10 @@ class Connection(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
+    def send_string(self, value):
+        pass
+
+    @abc.abstractmethod
     def receive_byte(self):
         pass
 
@@ -60,6 +66,10 @@ class Connection(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     def receive_float(self):
+        pass
+
+    @abc.abstractmethod
+    def receive_string(self):
         pass
 
 

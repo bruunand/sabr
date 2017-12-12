@@ -12,7 +12,6 @@ class BallThrower(object):
         self.host_name = host_name
         self.target_info = None
 
-
     # When a TARGET_INFO_REQUEST packet is received, fetch
     # data from the targeting module, package it, and send 
     # accross the same connection. 
@@ -33,11 +32,14 @@ class BallThrower(object):
         # Send packet
         self.connection.send_packet(packet)
 
+    # Prints a debug string sent from the NXT
+    def handle_debug(self, packet):
+        print("Debug/NXT: {}".format(packet.message))
 
     # Mapping from Packet IDs to handler-methods
     # Handshake has no handler as it is handled by 
     # 'BluetoothConnection.perform_handshake()'. 
-    id_handler_map = {PacketIds.TARGET_INFO_REQUEST: handle_target_request}
+    id_handler_map = {PacketIds.TARGET_INFO_REQUEST: handle_target_request, PacketIds.DEBUG: handle_debug}
 
     # Query the id_handler_map for the appropriate method to run.
     def handle_packet(self, packet):
@@ -46,7 +48,7 @@ class BallThrower(object):
         else:
             BallThrower.id_handler_map[packet.get_id()](self, packet)
 
-    # Establish a bluetooth connection
+    # Establish a Bluetooth connection
     def connect(self):
         self.connection = BluetoothConnection()
         self.connection.connect(self.host_name)

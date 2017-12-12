@@ -5,6 +5,7 @@ from enum import IntEnum
 class PacketIds(IntEnum):
     HANDSHAKE = 0x0
     TARGET_INFO_REQUEST = 0x1
+    DEBUG = 0x2
 
 
 # Packet class - abstract, as only concrete packets can be sent
@@ -25,6 +26,7 @@ class Packet(ABC):
     def instantiate_from_id(packet_id):
         if packet_id == PacketIds.HANDSHAKE: return HandshakePacket()
         if packet_id == PacketIds.TARGET_INFO_REQUEST: return TargetInfoRequestPacket()
+        if packet_id == PacketIds.DEBUG: return DebugPacket()
 
         return None
 
@@ -82,3 +84,17 @@ class TargetInfoRequestPacket(Packet):
 
     def get_id(self):
         return PacketIds.TARGET_INFO_REQUEST
+
+
+class DebugPacket(Packet):
+    def __init__(self):
+        self.message = None
+
+    def send_to_connection(self, connection):
+        pass
+
+    def construct_from_connection(self, connection):
+        self.message = connection.receive_string()
+
+    def get_id(self):
+        return PacketIds.DEBUG

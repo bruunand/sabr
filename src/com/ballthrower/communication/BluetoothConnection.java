@@ -6,8 +6,6 @@ import com.ballthrower.communication.packets.HandshakePacket;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.exceptions.UnknownPacketException;
-import lejos.nxt.LCD;
-import lejos.nxt.Sound;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
@@ -22,6 +20,8 @@ public class BluetoothConnection extends Connection
     private DataOutputStream _outputStream;
 
     private final IAbortable _abortable;
+
+    private boolean _isConnected = false;
 
     public BluetoothConnection(IAbortable abortable)
     {
@@ -44,14 +44,10 @@ public class BluetoothConnection extends Connection
         sendPacket(new HandshakePacket());
 
         // Receive handshake and validate token
-        if (handshake.isValidReply(receivePacket()))
-        {
-            LCD.clear();
-            LCD.drawString("Connected", 0, 0);
-            Sound.beep();
-        }
-        else
+        if (!handshake.isValidReply(receivePacket()))
             _abortable.abort(AbortCode.INVALID_HANDSHAKE);
+        else
+            _isConnected = true;
     }
 
     @Override
@@ -63,6 +59,12 @@ public class BluetoothConnection extends Connection
     public DataOutputStream getOutputStream()
     {
         return this._outputStream;
+    }
+
+    @Override
+    public boolean isConnected()
+    {
+        return this._isConnected;
     }
 
     @Override
@@ -90,10 +92,14 @@ public class BluetoothConnection extends Connection
         }
         catch (IOException exception)
         {
+            this._isConnected = false;
+
             _abortable.abort(AbortCode.GENERIC, "I/O exception.");
         }
         catch (UnknownPacketException e)
         {
+            this._isConnected = false;
+
             _abortable.abort(AbortCode.UNKNOWN_PACKET);
         }
 
@@ -111,6 +117,8 @@ public class BluetoothConnection extends Connection
         }
         catch (IOException exception)
         {
+            this._isConnected = false;
+
             _abortable.abort(AbortCode.GENERIC, "I/O exception.");
         }
     }

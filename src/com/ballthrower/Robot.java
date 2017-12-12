@@ -4,6 +4,7 @@ import com.ballthrower.abortion.AbortCode;
 import com.ballthrower.abortion.IAbortable;
 import com.ballthrower.communication.Connection;
 import com.ballthrower.communication.ConnectionFactory;
+import com.ballthrower.communication.packets.DebugPacket;
 import com.ballthrower.communication.packets.Packet;
 import com.ballthrower.communication.packets.PacketIds;
 import com.ballthrower.communication.packets.TargetInfoRequestPacket;
@@ -26,7 +27,6 @@ import lejos.nxt.MotorPort;
 import lejos.nxt.Sound;
 
 import java.io.File;
-import java.io.IOException;
 
 // The Robot class uses the singleton pattern, since only one robot can be used.
 public class Robot implements IAbortable
@@ -74,10 +74,11 @@ public class Robot implements IAbortable
 
     public void locateAndShoot()
     {
-        if (!this._isConnected)
+        /* Do not send packets if we are not connected. */
+        if (_connection == null || !_connection.isConnected())
             return;
-
-        lejos.nxt.Sound.playSample(new File(SEARCHING_SOUND));
+        
+        Sound.playSample(new File(SEARCHING_SOUND));
 
         /* Choose a policy using the policy factory. */
         Policy chosenPolicy = PolicyFactory.getPolicy(_targetingPolicyType);
@@ -147,8 +148,18 @@ public class Robot implements IAbortable
         }
     }
 
+    public void sendDebugMessage(String message)
+    {
+        if (_connection == null || !_connection.isConnected())
+            return;
+
+        this._connection.sendPacket(new DebugPacket(message));
+    }
+
     public void awaitConnection(ConnectionFactory connectionFactory)
     {
+        LCD.drawString("Awaiting...", 0, 0);
+
         // Close any existing connection
         this.closeConnection();
 
@@ -157,8 +168,12 @@ public class Robot implements IAbortable
         this._connection.awaitConnection();
         this._isConnected = true;
 
+        // Write string to screen
+        LCD.clear();
+        LCD.drawString("Connected", 0, 0);
+
         // Play connected sound
-        lejos.nxt.Sound.playSample(new File(CONNECTED_SOUND));
+        Sound.playSample(new File(CONNECTED_SOUND));
     }
 
     public void setTargetingPolicyType(PolicyFactory.TargetingPolicyType policyType)
@@ -180,11 +195,10 @@ public class Robot implements IAbortable
     {
         if (code != AbortCode.MANUAL)
         {
-            lejos.nxt.Sound.playSample(new File(ERROR_SOUND));
+            Sound.playSample(new File(ERROR_SOUND));
 
             // Draw abort message
             LCD.clear();
-
             LCD.drawString("Robot abortion", 0, 0);
             LCD.drawString("Code: " + code, 0, 1);
             if (message != null && !message.isEmpty())
