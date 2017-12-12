@@ -38,8 +38,8 @@ class BoundingBox():
 
     # Visualizes the bounding box. Used for live testing
     # debugging.
-    def draw_rectangle(self, source_image):
-        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), (255, 0, 0), 1)
+    def draw_rectangle(self, source_image, color = (255, 0, 0)):
+        cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), color, 1)
 
     # TensorFlow describes bounding boxes with values between 0 and 1.
     # Construct and return a bounding box with these values scaled
@@ -62,8 +62,8 @@ class BoundingBox():
 class TargetInfo(ITargetInfo):
 
     # Maximum deviation used in determining
-    # which HSV lower and upper bounds to be used.
-    HSV_MAX_DEVIATION = 0.2
+    # which RGB lower and upper bounds to be used.
+    RGB_MAX_DEVIATION = 0.75
 
     # Path to folder where the neural network object
     # detection model resides.
@@ -144,8 +144,8 @@ class TargetInfo(ITargetInfo):
         all_bounding_boxes = []
 
         # Colour ranges for colour and contouring
-        lower_hsv_colour = np.array([0, 0, 0])
-        upper_hsv_colour = np.array([0, 0, 0])
+        lower_rgb_colour = np.array([0, 0, 0])
+        upper_rgb_colour = np.array([0, 0, 0])
 
         with self.detection_graph.as_default():
 
@@ -191,19 +191,24 @@ class TargetInfo(ITargetInfo):
                 for index, box in enumerate(filtered_boxes):
                     # Crop the subset of the image corresponding to the bounding box
                     cropped = box.crop(frame)
-                    cropped_hsv = cv2.cvtColor(cropped, cv2.COLOR_BGR2HSV)
+                    cropped_rgb = cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB)
 
                     # Get the colour value at the center of the bounding box
                     crop_centre = box.get_centre()
-                    centre_colour_hsv = cropped_hsv[crop_centre[1], crop_centre[0]]
+                    centre_colour_rgb = cropped_rgb[crop_centre[1], crop_centre[0]]
 
                     # Get lower and upper bounds based on centre colour
                     for i in range(3):
-                        lower_hsv_colour[i] = int(centre_colour_hsv[i] * (1 - TargetInfo.HSV_MAX_DEVIATION))
-                        upper_hsv_colour[i] = int(centre_colour_hsv[i] * (1 + TargetInfo.HSV_MAX_DEVIATION))
+                        lower_rgb_colour[i] = int(centre_colour_rgb[i] * (1 - TargetInfo.RGB_MAX_DEVIATION))
+                        upper_rgb_colour[i] = int(centre_colour_rgb[i] * (1 + TargetInfo.RGB_MAX_DEVIATION))
+
+                    # If debug, print RGB range
+                    if self.debug:
+                        print("Lower RGB: ", lower_rgb_colour)
+                        print("Upper RGB: ", upper_rgb_colour)
 
                     # Mask colour with dynamically retrieved range
-                    crop_masked = cv2.inRange(cropped_hsv, lower_hsv_colour, upper_hsv_colour)
+                    crop_masked = cv2.inRange(cropped_rgb, lower_rgb_colour, upper_rgb_colour)
 
                     # Create contours for all objects in the defined colorspace
                     _, contours, _ = cv2.findContours(crop_masked.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -222,10 +227,20 @@ class TargetInfo(ITargetInfo):
                                                             area[3])
                     all_bounding_boxes.append(narrow_box)
 
-        # If debugging is enabled draw all bounding boxes on the first frame and show the result
+                # Draw all rectangles for bounding boxes produced by NN
+
+                [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
+
+        # If debugging is enabled draw all bounding boxes on the frame and save the result
         if self.debug:
+            # Print amount of bounding boxes
+            print("{} boxes produced by neural network, {} boxes after colour/contouring".format(len(filtered_boxes), len(all_bounding_boxes)))
+
+            # Draw all rectangles for bounding boxes produced by NN
+            [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
+
+            # Draw all boxes that are produced after colour/contouring
             for box in all_bounding_boxes:
-                print(box)
                 box.draw_rectangle(frame)
 
             cv2.imwrite('target_debug.png', frame)
@@ -237,6 +252,8 @@ class TargetInfo(ITargetInfo):
     def get_frame(self):
 
         camera = cv2.VideoCapture(self.capture_device)
+        camera.set(3,1600)
+        camera.set(4,1200)
         return_value, frame = camera.read()
         camera.release()
 

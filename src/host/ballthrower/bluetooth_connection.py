@@ -23,7 +23,7 @@ def find_device(target_name):
         return None
 
     elif len(candidates) > 1:
-        # We can't be sure which one is the NXT - abort. 
+        # We can't be sure which one is the NXT - abort.
         raise (MultipleCandidatesError(len(candidates), target_name))
     else:
         # Return the NXT (hopefully).
@@ -37,7 +37,7 @@ class BluetoothConnection(Connection):
     # Verifies the established connection by confirming a
     # 'handshake' with the NXT. Mostly a formality here.
     def perform_handshake(self):
-        
+
         # The NXT sends the first handshake.
         packet = self.receive_packet()
 
@@ -51,7 +51,7 @@ class BluetoothConnection(Connection):
         else:
             raise FaultyHandshakeError(packet.get_id())
 
-    # Connect to a device with the given name. 
+    # Connect to a device with the given name.
     def connect(self, host_name=None):
         start_delay = 0.05
         delay = start_delay
@@ -75,11 +75,11 @@ class BluetoothConnection(Connection):
         # Attempt to connect to host
         while True:
             try:
-                # Instantiate a new connection object and try to connect it. 
+                # Instantiate a new connection object and try to connect it.
                 new_connection = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
                 new_connection.connect((self.remote_address, BluetoothConnection.BLUETOOTH_PORT))
 
-                # If succeeded, perform the handshake. 
+                # If succeeded, perform the handshake.
                 self.remote_connection = new_connection
                 self.perform_handshake()
                 break
@@ -97,8 +97,8 @@ class BluetoothConnection(Connection):
     # Read the data from the input stream and categorize
     # it as a type of packet.
     def receive_packet(self):
-        # The first bit (byte because of padding) of the 
-        # data stream is the packet ID. See report for 
+        # The first bit (byte because of padding) of the
+        # data stream is the packet ID. See report for
         # further details.
         packet_id = self.remote_connection.recv(1)[0]
 
@@ -106,23 +106,23 @@ class BluetoothConnection(Connection):
         packet = Packet.instantiate_from_id(packet_id)
 
         # Fill the packet with the rest of the information
-        # and return it. 
+        # and return it.
         packet.construct_from_connection(self)
         return packet
 
-    # Close the current connection. 
+    # Close the current connection.
     def disconnect(self):
         self.remote_connection.close()
 
     # Send packet data accross the established connection.
     def send_packet(self, packet):
 
-        # First bit (byte because of padding) of a packet is 
-        # the ID. 
+        # First bit (byte because of padding) of a packet is
+        # the ID.
         self.send_byte(packet.get_id())
 
         # Packets are responsible for transmitting the rest
-        # of their properties themselves. 
+        # of their properties themselves.
         packet.send_to_connection(self)
 
 
