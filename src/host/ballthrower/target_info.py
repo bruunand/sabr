@@ -143,8 +143,6 @@ class TargetInfo(ITargetInfo):
         """
         all_bounding_boxes = []
 
-        cv2.imwrite('target_debug_none.png', frame)
-
         # Colour ranges for colour and contouring
         lower_rgb_colour = np.array([0, 0, 0])
         upper_rgb_colour = np.array([0, 0, 0])
