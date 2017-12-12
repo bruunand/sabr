@@ -22,6 +22,7 @@ public class Rotator extends MotorController implements IRotator
         super(new NXTMotor(motor), 2.33f);
         _regMotor = new NXTRegulatedMotor(MotorPort.C);
         _regMotor.setSpeed(10); /* Degrees pr. second */
+        _regMotor.setAcceleration(1000); /* Degrees pr. second pr. second. Default is 6000 (fast acceleration) */
     }
 
     /**
