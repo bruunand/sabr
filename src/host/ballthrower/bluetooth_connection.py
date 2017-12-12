@@ -151,5 +151,11 @@ class BluetoothConnection(Connection):
 
     def receive_string(self):
         string_length = self.receive_short()
-        bytes = self.remote_connection.recv(string_length)
-        return bytes.decode("utf-8")
+        string_received = ""
+
+        # The following assumes that one character is one byte, which is the case with UTF-8
+        while len(string_received) != string_length:
+            buffer = self.remote_connection.recv(string_length - len(string_received))
+            string_received += buffer.decode("utf-8")
+
+        return string_received
