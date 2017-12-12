@@ -8,6 +8,8 @@ import com.test.communication.TargetInfoRequestPacketTest;
 import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
+import com.test.targeting.policy.BiggestClusterPolicyTest;
+import com.test.targeting.policy.LeastRotationPolicyTest;
 import com.test.targeting.policy.SidePolicyTest;
 import lejos.nxt.*;
 
@@ -30,7 +32,8 @@ public class NXTTest
                 new TargetInfoRequestPacketTest(),
                 new ShooterTest(),
                 new SidePolicyTest(),
-
+                new BiggestClusterPolicyTest(),
+                new LeastRotationPolicyTest(),
         };
 
 
