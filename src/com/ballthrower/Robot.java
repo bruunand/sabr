@@ -25,6 +25,7 @@ import lejos.nxt.LCD;
 import lejos.nxt.MotorPort;
 import lejos.nxt.Sound;
 
+import java.io.File;
 import java.io.IOException;
 
 // The Robot class uses the singleton pattern, since only one robot can be used.
@@ -51,6 +52,7 @@ public class Robot implements IAbortable
 
     private Connection _connection;
     private ConnectionFactory.ConnectionType _connectionType = ConnectionFactory.ConnectionType.Bluetooth;
+    private boolean _isConnected = false;
 
     public static Robot getInstance()
     {
@@ -72,7 +74,10 @@ public class Robot implements IAbortable
 
     public void locateAndShoot()
     {
-        Sound.playSoundFile(SEARCHING_SOUND);
+        if (!this._isConnected)
+            return;
+
+        lejos.nxt.Sound.playSample(new File(SEARCHING_SOUND));
 
         /* Choose a policy using the policy factory. */
         Policy chosenPolicy = PolicyFactory.getPolicy(_targetingPolicyType);
@@ -150,9 +155,10 @@ public class Robot implements IAbortable
         // Instantiate the connection and await the connection from
         this._connection = connectionFactory.createInstance(_connectionType, this);
         this._connection.awaitConnection();
+        this._isConnected = true;
 
         // Play connected sound
-        Sound.playSoundFile(CONNECTED_SOUND);
+        lejos.nxt.Sound.playSample(new File(CONNECTED_SOUND));
     }
 
     public void setTargetingPolicyType(PolicyFactory.TargetingPolicyType policyType)
@@ -174,7 +180,7 @@ public class Robot implements IAbortable
     {
         if (code != AbortCode.MANUAL)
         {
-            Sound.playSoundFile(ERROR_SOUND)
+            lejos.nxt.Sound.playSample(new File(ERROR_SOUND));
 
             // Draw abort message
             LCD.clear();

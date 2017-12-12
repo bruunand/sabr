@@ -63,7 +63,7 @@ class TargetInfo(ITargetInfo):
 
     # Maximum deviation used in determining
     # which RGB lower and upper bounds to be used.
-    RGB_MAX_DEVIATION = 0.65
+    RGB_MAX_DEVIATION = 0.75
 
     # Path to folder where the neural network object
     # detection model resides.

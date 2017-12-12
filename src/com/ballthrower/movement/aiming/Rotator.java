@@ -21,8 +21,8 @@ public class Rotator extends MotorController implements IRotator
     {
         super(new NXTMotor(motor), 1.5f);
         _regMotor = new NXTRegulatedMotor(MotorPort.C);
-        _regMotor.setSpeed(10); /* Degrees pr. second */
-        _regMotor.setAcceleration(1000); /* Degrees pr. second pr. second. Default is 6000 (fast acceleration) */
+        _regMotor.setSpeed(50); /* Degrees pr. second */
+        _regMotor.setAcceleration(3000); /* Degrees pr. second pr. second. Default is 6000 (fast acceleration) */
     }
 
     /**
@@ -55,7 +55,7 @@ public class Rotator extends MotorController implements IRotator
         LCD.drawString("Turn: " + degrees + "!", 0, 1);
         LCD.drawString("Actual:" + actualDegrees + "!", 0, 2);
 
-        _regMotor.rotate(actualDegrees);
+        _regMotor.rotate(-actualDegrees);
 
         currentHeading += actualDegrees;
     }
