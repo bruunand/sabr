@@ -18,6 +18,11 @@ public class PolicyFactoryTest extends Test {
                        (PolicyFactory.TargetingPolicyType.RightFirst)
                         instanceof SideFirstPolicy, "PolicyFactory:sideFirst")
                 .isTrue();
+
+        test.assertThat(PolicyFactory.getPolicy
+                (PolicyFactory.TargetingPolicyType.LeftFirst)
+                instanceof SideFirstPolicy, "PolicyFactory:sideFirst")
+                .isTrue();
     }
 
     @Override
