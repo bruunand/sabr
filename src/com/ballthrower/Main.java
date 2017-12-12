@@ -8,16 +8,17 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-	    Robot robot = Robot.getInstance();
+	    /*Robot robot = Robot.getInstance();
 	    robot.addButtonListeners();
 	    robot.setTargetingPolicyType(PolicyFactory.TargetingPolicyType.Nearest);
 	    robot.setConnectionType(ConnectionFactory.ConnectionType.Bluetooth);
 	    robot.awaitConnection(new ConnectionFactory());
 
-	    while(true);
+	    while(true);*/
+        powerTest();
     }
 
-    public void powerTest()
+    public static void powerTest()
 	{
 		PowerTest test = new PowerTest();
 		test.main(new String[] {});
