@@ -32,4 +32,10 @@ public class TargetBox
         _width = width;
         _xPosition = xPosition;
     }
+
+    @Override
+    public String toString()
+    {
+        return "X: " + this._xPosition + ", Width: " + this._width + ", Height: " + this._height;
+    }
 }
