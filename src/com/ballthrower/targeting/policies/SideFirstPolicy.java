@@ -33,7 +33,7 @@ public class SideFirstPolicy extends Policy
             return clonedArray[clonedArray.length - 1];
     }
 
-    enum Side
+    public enum Side
     {
         Left,
         Right

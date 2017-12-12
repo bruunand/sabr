@@ -56,7 +56,15 @@ public class NXTTest
         TargetContainer toReturn = new TargetContainer((byte) 1);
 
                                                  /* x_pos, width_pixel, height_pixel */
+        /* For distance and direction */
         toReturn.setTarget((byte)0, new TargetBox((short) 60, (short) 44, (short) 278));
+
+        /* For policy targeting, height is irrelevant */
+        toReturn.setTarget((byte)0, new TargetBox((short) 55, (short) 44, (short) 278));
+        toReturn.setTarget((byte)0, new TargetBox((short) 50, (short) 44, (short) 278));
+        toReturn.setTarget((byte)0, new TargetBox((short) 20, (short) 44, (short) 278));
+        toReturn.setTarget((byte)0, new TargetBox((short) 10, (short) 44, (short) 278));
+
         toReturn.setFrameWidth((short)800); /* Not the actual frame width! */
 
         return toReturn;
