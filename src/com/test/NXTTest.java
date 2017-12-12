@@ -62,10 +62,10 @@ public class NXTTest
         toReturn.setTarget((byte)0, new TargetBox((short) 60, (short) 44, (short) 278));
 
         /* For policy targeting, height is irrelevant */
-        toReturn.setTarget((byte)0, new TargetBox((short) 55, (short) 44, (short) 278));
-        toReturn.setTarget((byte)0, new TargetBox((short) 50, (short) 44, (short) 278));
-        toReturn.setTarget((byte)0, new TargetBox((short) 20, (short) 44, (short) 278));
-        toReturn.setTarget((byte)0, new TargetBox((short) 10, (short) 44, (short) 278));
+        toReturn.setTarget((byte)0, new TargetBox((short) 55, (short) 44, (short) 250));
+        toReturn.setTarget((byte)0, new TargetBox((short) 50, (short) 44, (short) 240));
+        toReturn.setTarget((byte)0, new TargetBox((short) 20, (short) 44, (short) 230));
+        toReturn.setTarget((byte)0, new TargetBox((short) 10, (short) 44, (short) 100));
 
         toReturn.setFrameWidth((short)800); /* Not the actual frame width! */
 
