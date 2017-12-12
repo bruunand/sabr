@@ -30,6 +30,10 @@ import java.io.IOException;
 // The Robot class uses the singleton pattern, since only one robot can be used.
 public class Robot implements IAbortable
 {
+    private static final String CONNECTED_SOUND = "connected.wav";
+    private static final String SEARCHING_SOUND = "searching.wav";
+    private static final String ERROR_SOUND = "error.wav";
+
     private static Robot _robotInstance = new Robot();
 
     private static final float TARGET_ANGLE_THRESHOLD = 0.75f;
@@ -68,6 +72,8 @@ public class Robot implements IAbortable
 
     public void locateAndShoot()
     {
+        Sound.playSoundFile(SEARCHING_SOUND);
+
         /* Choose a policy using the policy factory. */
         Policy chosenPolicy = PolicyFactory.getPolicy(_targetingPolicyType);
 
@@ -144,6 +150,9 @@ public class Robot implements IAbortable
         // Instantiate the connection and await the connection from
         this._connection = connectionFactory.createInstance(_connectionType, this);
         this._connection.awaitConnection();
+
+        // Play connected sound
+        Sound.playSoundFile(CONNECTED_SOUND);
     }
 
     public void setTargetingPolicyType(PolicyFactory.TargetingPolicyType policyType)
@@ -165,7 +174,7 @@ public class Robot implements IAbortable
     {
         if (code != AbortCode.MANUAL)
         {
-            Sound.buzz();
+            Sound.playSoundFile(ERROR_SOUND)
 
             // Draw abort message
             LCD.clear();
