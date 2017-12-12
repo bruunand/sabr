@@ -63,7 +63,7 @@ class TargetInfo(ITargetInfo):
 
     # Maximum deviation used in determining
     # which HSV lower and upper bounds to be used.
-    HSV_MAX_DEVIATION = 0.5
+    HSV_MAX_DEVIATION = 0.75
 
     # Path to folder where the neural network object
     # detection model resides.
@@ -202,6 +202,11 @@ class TargetInfo(ITargetInfo):
                         lower_hsv_colour[i] = int(centre_colour_hsv[i] * (1 - TargetInfo.HSV_MAX_DEVIATION))
                         upper_hsv_colour[i] = int(centre_colour_hsv[i] * (1 + TargetInfo.HSV_MAX_DEVIATION))
 
+                    # If debug, print HSV range
+                    if self.debug:
+                        print("Lower HSV: ", lower_hsv_colour)
+                        print("Upper HSV: ", upper_hsv_colour)
+
                     # Mask colour with dynamically retrieved range
                     crop_masked = cv2.inRange(cropped_hsv, lower_hsv_colour, upper_hsv_colour)
 
@@ -228,12 +233,14 @@ class TargetInfo(ITargetInfo):
 
         # If debugging is enabled draw all bounding boxes on the frame and save the result
         if self.debug:
+            # Print amount of bounding boxes
+            print("{} boxes produced by neural network, {} boxes after colour/contouring".format(len(filtered_boxes), len(all_bounding_boxes)))
+            
             # Draw all rectangles for bounding boxes produced by NN
             [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
 
             # Draw all boxes that are produced after colour/contouring
             for box in all_bounding_boxes:
-                print(box)
                 box.draw_rectangle(frame)
 
             cv2.imwrite('target_debug.png', frame)
