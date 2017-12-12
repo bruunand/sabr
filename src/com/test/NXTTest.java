@@ -3,7 +3,10 @@ package com.test;
 import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetContainer;
+import com.test.targeting.DirectionCalculatorTest;
 import lejos.nxt.*;
+
+import java.util.ArrayList;
 
 /**
  * Assertions used for unit testing on the NXT
@@ -15,14 +18,17 @@ public class NXTTest
     {
         int numErrors = 0;
 
-        
+        ArrayList<Test> testSuites = new ArrayList<Test>();
+
+        testSuites.add(new DirectionCalculatorTest());
+
 
         try
         {
-            /*disCalc.runAllTests();
-            dirCalc.runAllTests();
-            shooter.runAllTests();
-            requestPacket.runAllTests();*/
+            for (Test testSuite : testSuites)
+            {
+                testSuite.runAllTests();
+            }
         }
         catch (AssertException e)
         {
