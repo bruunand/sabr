@@ -125,7 +125,7 @@ public class Robot implements IAbortable
             {
                 try
                 {
-                    _shooter.shootDistance(_distanceCalculator.calculateDistance(target));
+                    _shooter.shootDistance(_distanceCalculator.calculateDistance(target) - 14f);
                 }
                 catch (OutOfRangeException ex)
                 {
