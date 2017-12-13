@@ -42,6 +42,7 @@ public class Robot implements IAbortable
 
     private static final Button EXIT_BUTTON = Button.ESCAPE;
     private static final Button SHOOT_BUTTON = Button.ENTER;
+    private static final Button CHANGE_POLICY_BUTTON = Button.RIGHT;
 
     private DistanceCalculator _distanceCalculator;
     private DirectionCalculator _directionCalculator;
@@ -125,7 +126,7 @@ public class Robot implements IAbortable
             {
                 try
                 {
-                    _shooter.shootDistance(_distanceCalculator.calculateDistance(target) - 14f);
+                    _shooter.shootDistance(_distanceCalculator.calculateDistance(target));
                 }
                 catch (OutOfRangeException ex)
                 {

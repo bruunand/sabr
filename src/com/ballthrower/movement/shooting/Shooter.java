@@ -69,7 +69,7 @@ public class Shooter extends MotorController implements IShooter
          * power = (distance - 78.102) / 0.802
          * */
 
-        float correctedDistance = distance + 4.5f; /* Radius of the cup */
+        float correctedDistance = distance + 3f; /* Add little less than radius, actual is 4.5 cm. */
         float rawPower = (correctedDistance - 78.102f) / 0.802f;
 
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
@@ -97,7 +97,7 @@ public class Shooter extends MotorController implements IShooter
             throw new OutOfRangeException("Target too close.");
 
         // Run motors
-        int degrees = (int)(180 / getGearRatio());
+        int degrees = (int) (180 / getGearRatio());
 
         super.startMotors(power, Direction);
         super.waitWhileTurning(degrees);
