@@ -18,8 +18,8 @@ class Client:
     def send_image(self, frame):
         encoded = cv2.imencode('.jpg', frame)[1].tobytes()
 
-        self.client_socket.send(uint_to_bytes(len(encoded)))
-        self.client_socket.send(encoded)
+        send_uint(self.client_socket, len(encoded))
+        self.client_socket.sendall(encoded)
 
     def handle_frame(self, frame=None):
         self.send_image(cv2.imread('test.jpg'))
