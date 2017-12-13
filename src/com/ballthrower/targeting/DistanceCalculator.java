@@ -5,13 +5,13 @@ package com.ballthrower.targeting;
 public class DistanceCalculator implements IDistanceCalculateable
 {
     /** Physical height, manually measured */
-    private static final float _targetHeight = 11.5f;
+    private static final float _targetHeight = 12.0f;
 
     /** Pixel height at distance = _knownRealDistance */
-    private static final float _knownHeight = 131.0f;
+    private static final float _knownHeight = 94.0f;
 
     /** Real distance in centimeters */
-    private static final float _knownRealDistance = 113.0f;
+    private static final float _knownRealDistance = 160.0f;
 
     /** Focal length is the distance between the image plane and lens of the camera
       * Used for calculating the distance to an object */

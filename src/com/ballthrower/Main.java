@@ -8,14 +8,15 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-	    /*Robot robot = Robot.getInstance();
+	    Robot robot = Robot.getInstance();
 	    robot.addButtonListeners();
 	    robot.setTargetingPolicyType(PolicyFactory.TargetingPolicyType.Nearest);
 	    robot.setConnectionType(ConnectionFactory.ConnectionType.Bluetooth);
+        robot.setDebug(true); /* Comment out to disable debugging. */
 	    robot.awaitConnection(new ConnectionFactory());
 
-	    while(true);*/
-        powerTest();
+	    while(true);
+        //powerTest();
     }
 
     public static void powerTest()

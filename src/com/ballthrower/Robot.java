@@ -53,7 +53,8 @@ public class Robot implements IAbortable
 
     private Connection _connection;
     private ConnectionFactory.ConnectionType _connectionType = ConnectionFactory.ConnectionType.Bluetooth;
-    private boolean _isConnected = false;
+
+    private boolean _debug = false;
 
     public static Robot getInstance()
     {
@@ -65,6 +66,16 @@ public class Robot implements IAbortable
         // Set up movement controllers with desired motors.
         this._rotator = new Rotator(MotorPort.C);
         this._shooter = new Shooter(new MotorPort[]{MotorPort.A, MotorPort.B});
+    }
+
+    public boolean isDebug()
+    {
+        return this._debug;
+    }
+
+    public void setDebug(boolean debug)
+    {
+        this._debug = debug;
     }
 
     public void addButtonListeners()
@@ -160,19 +171,19 @@ public class Robot implements IAbortable
     {
         LCD.drawString("Awaiting...", 0, 0);
 
-        // Close any existing connection
+        /* Close any existing connection. */
         this.closeConnection();
 
-        // Instantiate the connection and await the connection from
+        /* Instantiate the connection and await the connection from host. */
         this._connection = connectionFactory.createInstance(_connectionType, this);
         this._connection.awaitConnection();
-        this._isConnected = true;
 
-        // Write string to screen
         LCD.clear();
         LCD.drawString("Connected", 0, 0);
 
-        // Play connected sound
+        if (_debug)
+            this.sendDebugMessage("Connection established! Debugging is enabled.");
+
         Sound.playSample(new File(CONNECTED_SOUND));
     }
 
@@ -197,7 +208,6 @@ public class Robot implements IAbortable
         {
             Sound.playSample(new File(ERROR_SOUND));
 
-            // Draw abort message
             LCD.clear();
             LCD.drawString("Robot abortion", 0, 0);
             LCD.drawString("Code: " + code, 0, 1);
@@ -221,7 +231,6 @@ public class Robot implements IAbortable
     {
         Sound.buzz();
 
-        // Draw warning message
         LCD.clear();
         LCD.drawString("Robot warning", 0, 0);
         LCD.drawString(message, 0, 1);
