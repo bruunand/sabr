@@ -144,7 +144,7 @@ class TargetInfo(ITargetInfo):
             * (maybe) split this function into smaller functions.
 
         """
-        all_bounding_boxes = []
+        bounding_boxes = []
 
         # Colour ranges for colour and contouring
         lower_rgb_colour = np.array([0, 0, 0])
@@ -179,7 +179,7 @@ class TargetInfo(ITargetInfo):
 
         # If no boxes were found, return empty list
         if len(filtered_boxes) == 0:
-            return all_bounding_boxes
+            return bounding_boxes
 
         # Normalize box sizes by converting them to BoundingBox classes
         height, width, _, = np.shape(frame)
@@ -208,7 +208,7 @@ class TargetInfo(ITargetInfo):
 
             # If no contours are found, we cannot process further
             if len(contours) == 0:
-                all_bounding_boxes.append(box)
+                bounding_boxes.append(box)
                 continue
 
             # Get the largest contour
@@ -218,7 +218,7 @@ class TargetInfo(ITargetInfo):
             # Define a narrow bounding box and add it to the list of all boxes
             narrow_box = BoundingBox.fromNormalized(box.x_min + area[0], box.y_min + area[1], area[2],
                                                     area[3])
-            all_bounding_boxes.append(narrow_box)
+            bounding_boxes.append(narrow_box)
 
         # Draw all rectangles for bounding boxes produced by NN
         [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
@@ -227,21 +227,20 @@ class TargetInfo(ITargetInfo):
         if self.debug:
             # Print amount of bounding boxes
             print("{} boxes produced by neural network, {} boxes after colour/contouring".format(len(filtered_boxes),
-                                                                                                 len(
-                                                                                                     all_bounding_boxes)))
+                                                                                                 len(bounding_boxes)))
 
             # Draw all rectangles for bounding boxes produced by NN
             [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
 
             # Draw all boxes that are produced after colour/contouring
-            for box in all_bounding_boxes:
+            for box in bounding_boxes:
                 print(box)
                 box.draw_rectangle(frame)
 
             cv2.imwrite('target_debug.png', frame)
 
         # Return the coordinate sets
-        return all_bounding_boxes
+        return bounding_boxes
 
     # Use the capture device to capture a frame/image.
     def get_frame(self):

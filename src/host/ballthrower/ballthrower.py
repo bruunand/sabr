@@ -11,6 +11,7 @@ class BallThrower(object):
     def __init__(self, host_name):
         self.host_name = host_name
         self.target_info = None
+        self.connection = None
 
     # When a TARGET_INFO_REQUEST packet is received, fetch
     # data from the targeting module, package it, and send

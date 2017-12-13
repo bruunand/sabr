@@ -7,13 +7,15 @@ class MultipleCandidatesError(Exception):
     def __str__(self):
         return "Found %d candidates when searching for host %s." % (self.num_candidates, self.target_name)
 
-# Bad handshake. 
+
+# Bad handshake.
 class FaultyHandshakeError(Exception):
     def __init__(self, packet_id):
         self.packet_id = packet_id
 
     def __str__(self):
         return "Faulty handshake received, received packet id %d instead." % (self.packet_id)
+
 
 # Received a packet for which there exists
 # no handler.
@@ -23,6 +25,7 @@ class NoPacketHandlerError(Exception):
 
     def __str__(self):
         return "Packet with identifier %d has no handler." % self.packet_id
+
 
 # Camera is not available.
 class CaptureDeviceUnavailableError(Exception):
