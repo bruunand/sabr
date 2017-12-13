@@ -165,8 +165,7 @@ class TargetInfo(ITargetInfo):
 
         # Actual detection.
         (boxes, scores, classes, num_detections) = self.tensorflow_session.run([boxes, scores, classes, num_detections],
-                                                                               feed_dict={
-                                                                                   image_tensor: image_np_expanded})
+                                                                            feed_dict={image_tensor: image_np_expanded})
 
         # Squeeze score and box arrays as they are both single-dimensional arrays of arrays
         scores = np.squeeze(scores)
@@ -207,7 +206,7 @@ class TargetInfo(ITargetInfo):
             # Create contours for all objects in the defined colour space
             _, contours, _ = cv2.findContours(crop_masked.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-            # If no contours are found, we cann
+            # If no contours are found, we cannot process further
             if len(contours) == 0:
                 all_bounding_boxes.append(box)
                 continue
