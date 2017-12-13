@@ -17,3 +17,12 @@ def float_to_bytes(content):
 
 def bytes_to_float(content):
     return unpack(BYTE_ORDER + 'f', content)[0]
+
+
+def uint_to_bytes(content):
+    return pack(BYTE_ORDER + 'I', content)
+
+
+def bytes_to_uint(content):
+    return unpack(BYTE_ORDER + 'I', content)[0]
+

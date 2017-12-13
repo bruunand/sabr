@@ -2,6 +2,7 @@ from ballthrower.errors import MultipleCandidatesError, FaultyHandshakeError
 from ballthrower.interfaces import Connection
 from ballthrower.packets import PacketIds, Packet
 from ballthrower.type_converter import *
+from ballthrower.connection_helper import *
 import bluetooth
 import time
 
@@ -81,7 +82,7 @@ class BluetoothConnection(Connection):
                 new_connection.connect((self.remote_address, BluetoothConnection.BLUETOOTH_PORT))
 
                 # If succeeded, perform the handshake.
-                self.remote_connection = new_connection
+                self.socket = new_connection
                 self.perform_handshake()
                 break
 
@@ -100,7 +101,7 @@ class BluetoothConnection(Connection):
         # The first bit (byte because of padding) of the
         # data stream is the packet ID. See report for
         # further details.
-        packet_id = self.remote_connection.recv(1)[0]
+        packet_id = self.socket.recv(1)[0]
 
         # Instantiate a new empty packet from the ID.
         packet = Packet.instantiate_from_id(packet_id)
@@ -112,9 +113,9 @@ class BluetoothConnection(Connection):
 
     # Close the current connection.
     def disconnect(self):
-        self.remote_connection.close()
+        self.socket.close()
 
-    # Send packet data accross the established connection.
+    # Send packet data across the established connection.
     def send_packet(self, packet):
 
         # First bit (byte because of padding) of a packet is
@@ -125,39 +126,30 @@ class BluetoothConnection(Connection):
         # of their properties themselves.
         packet.send_to_connection(self)
 
-    # -------- Utility functions for sending and receiving data ------- #
+    # Utility functions for sending and receiving data
     def send_byte(self, value):
-        self.remote_connection.send(bytes([value]))
+        return send_byte(self.socket, value)
 
     def send_short(self, value):
-        self.remote_connection.send(short_to_bytes(value))
+        return send_short(self.socket, value)
 
     def send_float(self, value):
-        self.remote_connection.send(float_to_bytes(value))
+        return send_float(self.socket, value)
 
     def send_string(self, string):
-        encoded_string = string.encode("utf-8")
-        self.send_short(len(encoded_string))
-        self.remote_connection.send(encoded_string)
+        return send_string(self.socket, string)
 
     def receive_bytes(self, length):
-        bytes = bytearray()
-
-        while len(bytes) < length:
-            bytes.extend(self.remote_connection.recv(length - len(bytes)))
-
-        return bytes
+        return receive_bytes(self.socket, length)
 
     def receive_byte(self):
-        return self.receive_bytes(1)[0]
+        return receive_byte(self.socket)
 
     def receive_short(self):
-        return bytes_to_short(self.receive_bytes(2))
+        return receive_short(self.socket)
 
     def receive_float(self):
-        return bytes_to_float(self.receive_bytes(4))
+        return receive_float(self.socket)
 
     def receive_string(self):
-        string_length = self.receive_short()
-
-        return self.receive_bytes(string_length).decode("utf-8")
+        return receive_string(self.socket)

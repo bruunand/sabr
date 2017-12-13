@@ -55,7 +55,7 @@ class BallThrower(object):
     # Continuously check if packets are being received through
     # the Bluetooth connection. If they are, handle the packet.
     def handle_packets(self):
-        # When connected, initialize targetinfo
+        # When connected, initialize target information
         self.target_info = TargetInfo(capture_device=1, debug=True)
 
         # Receive packets in a loop

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import IntEnum
+from ballthrower.connection_helper import *
 
 
 class PacketIds(IntEnum):
@@ -33,7 +34,7 @@ class Packet(ABC):
 
 class HandshakePacket(Packet):
     def __init__(self):
-        pass
+        self.validation_token = None
 
     def send_to_connection(self, connection):
         connection.send_short(self.validation_token)
