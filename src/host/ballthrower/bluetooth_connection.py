@@ -140,22 +140,24 @@ class BluetoothConnection(Connection):
         self.send_short(len(encoded_string))
         self.remote_connection.send(encoded_string)
 
+    def receive_bytes(self, length):
+        bytes = bytearray()
+
+        while len(bytes) < length:
+            bytes.extend(self.remote_connection.recv(length - len(bytes)))
+
+        return bytes
+
     def receive_byte(self):
-        return self.remote_connection.recv(1)[0]
+        return self.receive_bytes(1)[0]
 
     def receive_short(self):
-        return bytes_to_short(self.remote_connection.recv(2))
+        return bytes_to_short(self.receive_bytes(2))
 
     def receive_float(self):
-        return bytes_to_float(self.remote_connection.recv(4))
+        return bytes_to_float(self.receive_bytes(4))
 
     def receive_string(self):
         string_length = self.receive_short()
-        string_received = ""
 
-        # The following assumes that one character is one byte, which is the case with UTF-8
-        while len(string_received) != string_length:
-            buffer = self.remote_connection.recv(string_length - len(string_received))
-            string_received += buffer.decode("utf-8")
-
-        return string_received
+        return self.receive_bytes(string_length).decode("utf-8")

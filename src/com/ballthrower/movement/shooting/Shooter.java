@@ -7,6 +7,7 @@ import com.ballthrower.exceptions.OutOfRangeException;
 import com.ballthrower.movement.MotorController;
 import lejos.nxt.*;
 import lejos.robotics.RegulatedMotor;
+import com.ballthrower.Robot;
 
 /**
  * Created by Thomas Buhl on 17/10/2017.
@@ -82,8 +83,13 @@ public class Shooter extends MotorController implements IShooter
     public void shootDistance(float distance)throws OutOfRangeException
     {
         int power = getPowerLinear(distance);
-        LCD.drawString("Power:" + power, 0, 2);
-        LCD.drawString("Dist:" + distance, 0, 3);
+
+        Robot robot = Robot.getInstance();
+        if (robot.isDebug())
+        {
+            robot.sendDebugMessage("Power: " + power);
+            robot.sendDebugMessage("Distance: " + distance);
+        }
 
         // Check if target is out of range
         if (power > 100)
@@ -112,6 +118,26 @@ public class Shooter extends MotorController implements IShooter
         /* Stop motors, reset tacho count */
         super.stopMotors();
         super.resetTacho();
+    }
+
+    /* ONLY FOR DEBUGGING -- REMOVE REMOVE REMOVE */
+    public void shootAtPower(int power)
+    {
+        rawPower = power;
+
+        float compensationFactor = 900 / regMotor.getMaxSpeed();
+        compFactor = compensationFactor;
+
+        int realPower = (int)(power * compensationFactor);
+        compPower = power * compensationFactor;
+
+        int degrees = (int)(180 / getGearRatio());
+
+        super.startMotors(power, Direction);
+        super.waitWhileTurning(degrees);
+        super.resetTacho();
+
+        resetMotors();
     }
 
 }

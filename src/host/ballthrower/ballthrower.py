@@ -5,19 +5,17 @@ from ballthrower.target_info import TargetInfo
 
 
 # Class used for making communication and target identification
-# work together. Similar in responsibility to the Robot class on 
-# the NXT. 
+# work together. Similar in responsibility to the Robot class on
+# the NXT.
 class BallThrower(object):
     def __init__(self, host_name):
         self.host_name = host_name
         self.target_info = None
 
     # When a TARGET_INFO_REQUEST packet is received, fetch
-    # data from the targeting module, package it, and send 
-    # accross the same connection. 
+    # data from the targeting module, package it, and send
+    # accross the same connection.
     def handle_target_request(self, packet):
-        print("Information requested")
-
         # Request target information from vision module
         bounding_boxes, frame_width = self.target_info.get_targets()
 
@@ -37,8 +35,8 @@ class BallThrower(object):
         print("Debug/NXT: {}".format(packet.message))
 
     # Mapping from Packet IDs to handler-methods
-    # Handshake has no handler as it is handled by 
-    # 'BluetoothConnection.perform_handshake()'. 
+    # Handshake has no handler as it is handled by
+    # 'BluetoothConnection.perform_handshake()'.
     id_handler_map = {PacketIds.TARGET_INFO_REQUEST: handle_target_request, PacketIds.DEBUG: handle_debug}
 
     # Query the id_handler_map for the appropriate method to run.

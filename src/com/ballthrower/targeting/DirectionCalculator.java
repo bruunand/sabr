@@ -1,6 +1,4 @@
 package com.ballthrower.targeting;
-import lejos.nxt.LCD;
-
 public class DirectionCalculator implements IDirectionCalculateable
 {
     /**
@@ -21,7 +19,6 @@ public class DirectionCalculator implements IDirectionCalculateable
     public DirectionCalculator(ITargetContainer targetContainer)
     {
         _frameMiddle = targetContainer.getFrameWidth() / 2;
-
         _degreesPerPixel = _maxAngle / _frameMiddle;
     }
 
@@ -32,8 +29,6 @@ public class DirectionCalculator implements IDirectionCalculateable
     public float calculateDirection(TargetBox target)
     {
         float boxOffset = target.getXPosition() + target.getWidth() / 2;
-
-        LCD.drawString("Pixels:" + (_frameMiddle - boxOffset), 0, 0);
         return (_frameMiddle - boxOffset) * _degreesPerPixel;
     }
 }
