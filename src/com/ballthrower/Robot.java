@@ -38,7 +38,7 @@ public class Robot implements IAbortable
 
     private static Robot _robotInstance = new Robot();
 
-    private static final float TARGET_ANGLE_THRESHOLD = 1.0f;
+    private static final float TARGET_ANGLE_MAX_DEVIATION = 0.5f;
 
     private static final Button EXIT_BUTTON = Button.ESCAPE;
     private static final Button SHOOT_BUTTON = Button.ENTER;
@@ -117,7 +117,7 @@ public class Robot implements IAbortable
 
             // Calculate the angle to the target object.
             float directionAngle = _directionCalculator.calculateDirection(target);
-            if (Math.abs(directionAngle) > TARGET_ANGLE_THRESHOLD)
+            if (Math.abs(directionAngle) > TARGET_ANGLE_MAX_DEVIATION)
             {
                 // We are not facing the target, so we must rotate towards it first.
                 _rotator.turnDegrees(directionAngle);
