@@ -9,6 +9,7 @@ from ballthrower.interfaces import ITargetInfo
 from utils import label_map_util
 import tensorflow as tf
 
+
 # Class used for storing bounding box information.
 # A bounding box defines the bounds of an identified
 # target.
@@ -38,7 +39,7 @@ class BoundingBox():
 
     # Visualizes the bounding box. Used for live testing
     # debugging.
-    def draw_rectangle(self, source_image, color = (255, 0, 0)):
+    def draw_rectangle(self, source_image, color=(255, 0, 0)):
         cv2.rectangle(source_image, (self.x_min, self.y_min), (self.x_max, self.y_max), color, 1)
 
     # TensorFlow describes bounding boxes with values between 0 and 1.
@@ -57,10 +58,10 @@ class BoundingBox():
     def fromNormalized(x_min, y_min, width, height):
         return BoundingBox(x_min, x_min + width, y_min, y_min + height, width, height)
 
+
 # This class is used for capturing frames of the environment
 # and provide target object information to an embedded system
 class TargetInfo(ITargetInfo):
-
     # Maximum deviation used in determining
     # which RGB lower and upper bounds to be used.
     RGB_CONSTANT_DEVIATION = 30
@@ -87,15 +88,14 @@ class TargetInfo(ITargetInfo):
 
     # List of dictionaries representing all possible categories.
     categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES,
-                                                                           use_display_name=True)
+                                                                use_display_name=True)
     # A dictionary of the same entries as categories but the
     # key value is a category ID.
     category_index = label_map_util.create_category_index(categories)
 
-
     # Initialize TargetInfo with default capture device set to 1.
     def __init__(self, capture_device=1, debug=True):
-        self.capture_device=capture_device
+        self.capture_device = capture_device
         self.debug = debug
 
         # Load frozen graph
@@ -106,9 +106,12 @@ class TargetInfo(ITargetInfo):
                 od_graph_def.ParseFromString(serialized_graph)
                 tf.import_graph_def(od_graph_def, name='')
 
+            # Start TensorFlow session
+            self.tensorflow_session = tf.Session(graph=self.detection_graph)
+
     # Gather the necessary data needed by the NXT to calculate
     # the direction and/or distance. Returns a list of bounding
-    # boxes and an integer represeting the frame width.
+    # boxes and an integer representing the frame width.
     def get_targets(self):
 
         # Retrieve a list of sample data to be processed.
@@ -147,89 +150,86 @@ class TargetInfo(ITargetInfo):
         lower_rgb_colour = np.array([0, 0, 0])
         upper_rgb_colour = np.array([0, 0, 0])
 
-        with self.detection_graph.as_default():
+        # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
+        image_np_expanded = np.expand_dims(frame, axis=0)
+        image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
 
-            # Start a new Tensorflow session with the initialized detection graph.
-            with tf.Session(graph=self.detection_graph) as sess:
+        # Each box represents a part of the image where a particular object was detected.
+        boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
 
-                # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-                image_np_expanded = np.expand_dims(frame, axis=0)
-                image_tensor = self.detection_graph.get_tensor_by_name('image_tensor:0')
+        # Each score represent how level of confidence for each of the objects.
+        # Score is shown on the result image, together with the class label.
+        scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
+        classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
+        num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
 
-                # Each box represents a part of the image where a particular object was detected.
-                boxes = self.detection_graph.get_tensor_by_name('detection_boxes:0')
+        # Actual detection.
+        (boxes, scores, classes, num_detections) = self.tensorflow_session.run([boxes, scores, classes, num_detections],
+                                                                               feed_dict={
+                                                                                   image_tensor: image_np_expanded})
 
-                # Each score represent how level of confidence for each of the objects.
-                # Score is shown on the result image, together with the class label.
-                scores = self.detection_graph.get_tensor_by_name('detection_scores:0')
-                classes = self.detection_graph.get_tensor_by_name('detection_classes:0')
-                num_detections = self.detection_graph.get_tensor_by_name('num_detections:0')
+        # Squeeze score and box arrays as they are both single-dimensional arrays of arrays
+        scores = np.squeeze(scores)
+        boxes = np.squeeze(boxes)
 
-                # Actual detection.
-                (boxes, scores, classes, num_detections) = sess.run([boxes, scores, classes, num_detections],
-                                                                    feed_dict={image_tensor: image_np_expanded})
+        # Iterate detections and filter based on score
+        filtered_boxes = []
+        for index, score in enumerate(scores):
+            if score >= 0.5:
+                filtered_boxes.append(boxes[index])
 
-                # Squeeze score and box arrays as they are both single-dimensional arrays of arrays
-                scores = np.squeeze(scores)
-                boxes = np.squeeze(boxes)
+        # If no boxes were found, return empty list
+        if len(filtered_boxes) == 0:
+            return all_bounding_boxes
 
-                # Iterate detections and filter based on score
-                filtered_boxes = []
-                for index, score in enumerate(scores):
-                    if score >= 0.5:
-                        filtered_boxes.append(boxes[index])
+        # Normalize box sizes by converting them to BoundingBox classes
+        height, width, _, = np.shape(frame)
+        filtered_boxes = [BoundingBox.fromTensorFlowBox(width, height, box) for box in filtered_boxes]
 
-                # If no boxes were found, return empty list
-                if len(filtered_boxes) == 0:
-                    return all_bounding_boxes
+        # Crop all cups out of the image
+        for index, box in enumerate(filtered_boxes):
+            # Crop the subset of the image corresponding to the bounding box
+            cropped = box.crop(frame)
+            cropped_rgb = cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB)
 
-                # Normalize box sizes by converting them to BoundingBox classes
-                height, width, _, = np.shape(frame)
-                filtered_boxes = [BoundingBox.fromTensorFlowBox(width, height, box) for box in filtered_boxes]
+            # Get the colour value at the center of the bounding box
+            crop_centre = box.get_centre()
+            centre_colour_rgb = cropped_rgb[crop_centre[1], crop_centre[0]]
 
-                # Crop all cups out of the image
-                for index, box in enumerate(filtered_boxes):
-                    # Crop the subset of the image corresponding to the bounding box
-                    cropped = box.crop(frame)
-                    cropped_rgb = cv2.cvtColor(cropped, cv2.COLOR_BGR2RGB)
+            # Get lower and upper bounds based on centre colour
+            for i in range(3):
+                lower_rgb_colour[i] = int(centre_colour_rgb[i] - TargetInfo.RGB_CONSTANT_DEVIATION)
+                upper_rgb_colour[i] = int(centre_colour_rgb[i] + TargetInfo.RGB_CONSTANT_DEVIATION)
 
-                    # Get the colour value at the center of the bounding box
-                    crop_centre = box.get_centre()
-                    centre_colour_rgb = cropped_rgb[crop_centre[1], crop_centre[0]]
+            # Mask colour with dynamically retrieved range
+            crop_masked = cv2.inRange(cropped_rgb, lower_rgb_colour, upper_rgb_colour)
 
-                    # Get lower and upper bounds based on centre colour
-                    for i in range(3):
-                        lower_rgb_colour[i] = int(centre_colour_rgb[i] - TargetInfo.RGB_CONSTANT_DEVIATION)
-                        upper_rgb_colour[i] = int(centre_colour_rgb[i] + TargetInfo.RGB_CONSTANT_DEVIATION)
+            # Create contours for all objects in the defined colour space
+            _, contours, _ = cv2.findContours(crop_masked.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-                    # Mask colour with dynamically retrieved range
-                    crop_masked = cv2.inRange(cropped_rgb, lower_rgb_colour, upper_rgb_colour)
+            # If no contours are found, we cann
+            if len(contours) == 0:
+                all_bounding_boxes.append(box)
+                continue
 
-                    # Create contours for all objects in the defined colorspace
-                    _, contours, _ = cv2.findContours(crop_masked.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+            # Get the largest contour
+            contour = max(contours, key=cv2.contourArea)
+            area = cv2.boundingRect(contour)
 
-                    # If no contours are found, we cann
-                    if len(contours) == 0:
-                        all_bounding_boxes.append(box)
-                        continue
+            # Define a narrow bounding box and add it to the list of all boxes
+            narrow_box = BoundingBox.fromNormalized(box.x_min + area[0], box.y_min + area[1], area[2],
+                                                    area[3])
+            all_bounding_boxes.append(narrow_box)
 
-                    # Get the largest contour
-                    contour = max(contours, key=cv2.contourArea)
-                    area = cv2.boundingRect(contour)
-
-                    # Define a narrow bounding box and add it to the list of all boxes
-                    narrow_box = BoundingBox.fromNormalized(box.x_min + area[0], box.y_min + area[1], area[2],
-                                                            area[3])
-                    all_bounding_boxes.append(narrow_box)
-
-                # Draw all rectangles for bounding boxes produced by NN
-
-                [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
+        # Draw all rectangles for bounding boxes produced by NN
+        [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
 
         # If debugging is enabled draw all bounding boxes on the frame and save the result
         if self.debug:
             # Print amount of bounding boxes
-            print("{} boxes produced by neural network, {} boxes after colour/contouring".format(len(filtered_boxes), len(all_bounding_boxes)))
+            print("{} boxes produced by neural network, {} boxes after colour/contouring".format(len(filtered_boxes),
+                                                                                                 len(
+                                                                                                     all_bounding_boxes)))
 
             # Draw all rectangles for bounding boxes produced by NN
             [box.draw_rectangle(frame, (0, 255, 0)) for box in filtered_boxes]
@@ -248,8 +248,8 @@ class TargetInfo(ITargetInfo):
     def get_frame(self):
 
         camera = cv2.VideoCapture(self.capture_device)
-        camera.set(3,1600)
-        camera.set(4,1200)
+        camera.set(3, 1600)
+        camera.set(4, 1200)
         return_value, frame = camera.read()
         camera.release()
 
