@@ -61,10 +61,26 @@ public class Shooter extends MotorController implements IShooter
         return (int)(power * compensationFactor);
     }
 
+    private int getPowerLinear(float distance)
+    {
+        /* distance=  78.102 + 0.807 * power
+         * giving...
+         * power = (distance - 78.102) / 0.802
+         * */
+
+        float correctedDistance = distance + 4.5f; /* Radius of the cup */
+        float rawPower = (correctedDistance - 78.102f) / 0.802f;
+
+        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
+        float compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
+
+        return (int)(rawPower * compensationFactor);
+    }
+
 
     public void shootDistance(float distance)throws OutOfRangeException
     {
-        int power = getPowerLogarithmic(distance);
+        int power = getPowerLinear(distance);
         LCD.drawString("Power:" + power, 0, 2);
         LCD.drawString("Dist:" + distance, 0, 3);
 
