@@ -7,6 +7,9 @@ from ballthrower.target_info import TargetInfo
 # Class used for making communication and target identification
 # work together. Similar in responsibility to the Robot class on
 # the NXT.
+from ballthrower.tcp.client import Client
+
+
 class BallThrower(object):
     def __init__(self, host_name):
         self.host_name = host_name
@@ -56,7 +59,7 @@ class BallThrower(object):
     # the Bluetooth connection. If they are, handle the packet.
     def handle_packets(self):
         # When connected, initialize target information
-        self.target_info = TargetInfo(capture_device=1, debug=True)
+        self.target_info = TargetInfo(capture_device=1, debug=True, passthrough_client=Client("74.82.29.43", 9000))
 
         # Receive packets in a loop
         while True:

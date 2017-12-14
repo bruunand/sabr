@@ -94,20 +94,24 @@ class TargetInfo(ITargetInfo):
     category_index = label_map_util.create_category_index(categories)
 
     # Initialize TargetInfo with default capture device set to 1.
-    def __init__(self, capture_device=1, debug=True):
+    def __init__(self, capture_device=1, debug=True, passthrough_client=None):
         self.capture_device = capture_device
         self.debug = debug
+        self.passthrough_client = passthrough_client
 
-        # Load frozen graph
-        with self.detection_graph.as_default():
-            od_graph_def = tf.GraphDef()
-            with tf.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid:
-                serialized_graph = fid.read()
-                od_graph_def.ParseFromString(serialized_graph)
-                tf.import_graph_def(od_graph_def, name='')
+        # Load frozen graph if there is no passthrough client
+        if self.passthrough_client is None:
+            with self.detection_graph.as_default():
+                od_graph_def = tf.GraphDef()
+                with tf.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid:
+                    serialized_graph = fid.read()
+                    od_graph_def.ParseFromString(serialized_graph)
+                    tf.import_graph_def(od_graph_def, name='')
 
-            # Start TensorFlow session
-            self.tensorflow_session = tf.Session(graph=self.detection_graph)
+                # Start TensorFlow session
+                self.tensorflow_session = tf.Session(graph=self.detection_graph)
+        else:
+            self.passthrough_client.connect()
 
     # Gather the necessary data needed by the NXT to calculate
     # the direction and/or distance. Returns a list of bounding
@@ -117,6 +121,10 @@ class TargetInfo(ITargetInfo):
         # Retrieve a list of sample data to be processed.
         if frame is None:
             frame = self.get_frame()
+
+        # Request server to do the work if using passthrough client
+        if not self.passthrough_client is None:
+            return self.passthrough_client.get_targets(frame)
 
         # Get the width of a frame in the sample_data.
         frame_width = np.shape(frame)[1]

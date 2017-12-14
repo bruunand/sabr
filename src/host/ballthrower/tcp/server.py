@@ -4,7 +4,7 @@ import numpy as np
 import cv2
 
 from ballthrower.target_info import TargetInfo
-from ballthrower.connection_helper import *
+from ballthrower.connection_utilities import *
 
 
 target_info = TargetInfo(capture_device=-1)
@@ -47,6 +47,8 @@ class Server:
         # Bind to all interfaces on specified port
         self.server_socket.bind(('', self.port))
         self.server_socket.listen(16)
+
+        print(f"Listening on port {self.port}")
 
         # Accept incoming connections
         while True:

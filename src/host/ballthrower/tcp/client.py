@@ -1,7 +1,7 @@
 import socket
 import cv2
 
-from ballthrower.connection_helper import *
+from ballthrower.connection_utilities import *
 from ballthrower.target_info import BoundingBox
 
 
@@ -15,26 +15,32 @@ class Client:
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client_socket.connect((self.host, self.port))
 
-    def send_image(self, frame):
+        print(f"Connected to {self.host}:{self.port}")
+
+    def send_frame(self, frame):
+        # Encode as a JPEG image
         encoded = cv2.imencode('.jpg', frame)[1].tobytes()
 
+        # Send the length of the frame and the frame buffer
         send_uint(self.client_socket, len(encoded))
         self.client_socket.sendall(encoded)
 
-    def handle_frame(self, frame=None):
-        self.send_image(cv2.imread('test.jpg'))
+    def get_targets(self, frame):
+        # Send frame to host
+        self.send_frame(frame)
 
-        # Receive target information
+        # Receive meta information
         frame_width = receive_short(self.client_socket)
         target_count = receive_short(self.client_socket)
-        boxes = []
 
+        # Construct targets
+        targets = []
         for i in range(target_count):
             x_min = receive_short(self.client_socket)
             y_min = receive_short(self.client_socket)
             width = receive_short(self.client_socket)
             height = receive_short(self.client_socket)
 
-            boxes.append(BoundingBox.from_normalized(x_min, y_min, width, height))
+            targets.append(BoundingBox.from_normalized(x_min, y_min, width, height))
 
-        return boxes, frame_width
+        return targets, frame_width

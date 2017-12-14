@@ -2,7 +2,7 @@ from ballthrower.errors import MultipleCandidatesError, FaultyHandshakeError
 from ballthrower.interfaces import Connection
 from ballthrower.packets import PacketIds, Packet
 from ballthrower.type_converter import *
-from ballthrower.connection_helper import *
+from ballthrower.connection_utilities import *
 import bluetooth
 import time
 

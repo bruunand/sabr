@@ -26,7 +26,7 @@ public class Shooter extends MotorController implements IShooter
     public float compPower = 0;
     public float compFactor = 0;
 
-    private final boolean Direction = false;
+    private final boolean _direction = false;
 
     public Shooter(MotorPort[] motors)
     {
@@ -69,7 +69,7 @@ public class Shooter extends MotorController implements IShooter
          * power = (distance - 78.102) / 0.802
          * */
 
-        float correctedDistance = distance + 3f; /* Add little less than radius, actual is 4.5 cm. */
+        float correctedDistance = distance + 2.0f;
         float rawPower = (correctedDistance - 78.102f) / 0.802f;
 
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
@@ -93,13 +93,13 @@ public class Shooter extends MotorController implements IShooter
         // Check if target is out of range
         if (power > 100)
             throw new OutOfRangeException("Target too far.");
-        else if (power < 50)
+        else if (power < 40)
             throw new OutOfRangeException("Target too close.");
 
         // Run motors
         int degrees = (int) (180 / getGearRatio());
 
-        super.startMotors(power, Direction);
+        super.startMotors(power, _direction);
         super.waitWhileTurning(degrees);
         super.resetTacho();
 
@@ -109,7 +109,7 @@ public class Shooter extends MotorController implements IShooter
     private void resetMotors()
     {
         /* Move in opposite direction */
-        super.startMotors(15, !Direction);
+        super.startMotors(15, !_direction);
 
         /* 180 degrees should be enough */
         waitWhileTurning((int)(180 / getGearRatio()));
@@ -132,7 +132,7 @@ public class Shooter extends MotorController implements IShooter
 
         int degrees = (int)(180 / getGearRatio());
 
-        super.startMotors(power, Direction);
+        super.startMotors(power, _direction);
         super.waitWhileTurning(degrees);
         super.resetTacho();
 
