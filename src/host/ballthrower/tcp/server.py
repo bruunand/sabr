@@ -25,16 +25,18 @@ def receive_image(client_socket):
 
 def client_handler(client_socket):
     while True:
-        boxes, width = target_info.get_targets(receive_image(client_socket))
+        targets, width = target_info.get_targets(receive_image(client_socket))
 
+        # Send meta information
         send_short(client_socket, width)
-        send_short(client_socket, len(boxes))
+        send_short(client_socket, len(targets))
 
-        for box in boxes:
-            send_short(client_socket, box.x_min)
-            send_short(client_socket, box.y_min)
-            send_short(client_socket, box.width)
-            send_short(client_socket, box.height)
+        # Send target dimensions
+        for target in targets:
+            send_short(client_socket, target.x_min)
+            send_short(client_socket, target.y_min)
+            send_short(client_socket, target.width)
+            send_short(client_socket, target.height)
 
 
 class Server:

@@ -117,7 +117,6 @@ class TargetInfo(ITargetInfo):
     # the direction and/or distance. Returns a list of bounding
     # boxes and an integer representing the frame width.
     def get_targets(self, frame=None):
-
         # Retrieve a list of sample data to be processed.
         if frame is None:
             frame = self.get_frame()
