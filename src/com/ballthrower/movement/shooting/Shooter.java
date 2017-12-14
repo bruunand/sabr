@@ -34,34 +34,6 @@ public class Shooter extends MotorController implements IShooter
         regMotor = new NXTRegulatedMotor(motors[0]);
     }
 
-    /**
-     * Calculate the power needed to shoot a specific distance, account for battery power.
-     * Assume log relation between distance and motor power required.
-     * @param distance the distance to shoot.
-     * @return the motor power needed.
-     */
-    private int getPowerLogarithmic(float distance)
-    {
-        /*
-         * distance = 201.16 + 79.544 * ln(power)
-         *                <=>
-         * power = e^( (distance+201.16) / 79.544)
-         *
-         */
-        float correctedDistance = distance + 4.5f; /* radius of the cups */
-        float exponent = (correctedDistance + 201.16f) / 79.544f;
-        float power = (float)Math.pow(Math.E, exponent);
-
-        int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
-        float compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
-
-        rawPower = power;
-        compFactor = compensationFactor;
-        compPower = power * compensationFactor;
-
-        return (int)(power * compensationFactor);
-    }
-
     private int getPowerLinear(float distance)
     {
         /* distance=  78.102 + 0.807 * power
@@ -91,7 +63,7 @@ public class Shooter extends MotorController implements IShooter
         }
 
         // Check if target is out of range
-        if (power > 100)
+        if (power > 105)
             throw new OutOfRangeException("Target too far.");
         else if (power < 40)
             throw new OutOfRangeException("Target too close.");

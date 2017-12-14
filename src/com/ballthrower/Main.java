@@ -10,9 +10,9 @@ public class Main
 	{
 	    Robot robot = Robot.getInstance();
 	    robot.addButtonListeners();
-	    robot.setTargetingPolicyType(PolicyFactory.TargetingPolicyType.Random);
+	    robot.setTargetingPolicyType(PolicyFactory.TargetingPolicyType.BiggestCluster);
 	    robot.setConnectionType(ConnectionFactory.ConnectionType.Bluetooth);
-        robot.setDebug(true); /* Comment out to disable debugging. */
+        robot.setDebug(true);
 	    robot.awaitConnection(new ConnectionFactory());
 
 	    while(true);

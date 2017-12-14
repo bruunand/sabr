@@ -218,7 +218,7 @@ public class Robot implements IAbortable
 
     public void warn(String message)
     {
-        Sound.buzz();
+        Sound.beepSequence();
 
         LCD.clear();
         LCD.drawString("Robot warning", 0, 0);

@@ -22,8 +22,8 @@ class BallThrower(object):
     def handle_target_request(self, packet):
         # Request target information from vision module
         bounding_boxes, frame_width = self.target_info.get_targets()
-        print(f"Found {len(bounding_boxes)} targets!")
-        
+        print(f"Found {len(bounding_boxes)} targets")
+
         # Instantiate packet
         packet = Packet.instantiate_from_id(PacketIds.TARGET_INFO_REQUEST)
 
@@ -37,7 +37,7 @@ class BallThrower(object):
 
     # Prints a debug string sent from the NXT
     def handle_debug(self, packet):
-        print("Debug/NXT: {}".format(packet.message))
+        print(f"[NXT/Debug] {packet.message}")
 
     # Mapping from Packet IDs to handler-methods
     # Handshake has no handler as it is handled by
