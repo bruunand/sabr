@@ -33,7 +33,6 @@ import java.io.File;
 public class Robot implements IAbortable
 {
     private static final String CONNECTED_SOUND = "connected.wav";
-    private static final String SEARCHING_SOUND = "searching.wav";
     private static final String ERROR_SOUND = "error.wav";
 
     private static Robot _robotInstance = new Robot();
@@ -42,10 +41,6 @@ public class Robot implements IAbortable
 
     private static final Button EXIT_BUTTON = Button.ESCAPE;
     private static final Button SHOOT_BUTTON = Button.ENTER;
-    private static final Button CHANGE_POLICY_BUTTON = Button.RIGHT;
-
-    private DistanceCalculator _distanceCalculator;
-    private DirectionCalculator _directionCalculator;
 
     private final IShooter _shooter;
     private final IRotator _rotator;
@@ -64,7 +59,7 @@ public class Robot implements IAbortable
 
     private Robot()
     {
-        // Set up movement controllers with desired motors.
+        /* Set up movement controllers with desired motors. */
         this._rotator = new Rotator(MotorPort.C);
         this._shooter = new Shooter(new MotorPort[]{MotorPort.A, MotorPort.B});
     }
@@ -91,8 +86,6 @@ public class Robot implements IAbortable
         if (_connection == null || !_connection.isConnected())
             return;
 
-        Sound.playSample(new File(SEARCHING_SOUND));
-
         /* Choose a policy using the policy factory. */
         Policy chosenPolicy = PolicyFactory.getPolicy(_targetingPolicyType);
 
@@ -107,26 +100,21 @@ public class Robot implements IAbortable
                 return;
             }
 
-            // Set up distance and direction calculator instances.
-            /* TODO: Bad for memory to do this all the time. Unless GC works well. But we need to init direction calc. */
-            this._distanceCalculator = new DistanceCalculator();
-            this._directionCalculator = new DirectionCalculator(targetContainer);
-
             /* Get suggested target using the chosen policy. */
             TargetBox target = chosenPolicy.selectTargetBox(targetContainer);
 
             // Calculate the angle to the target object.
-            float directionAngle = _directionCalculator.calculateDirection(target);
+            float directionAngle = DirectionCalculator.calculateDirection(targetContainer, target);
             if (Math.abs(directionAngle) > TARGET_ANGLE_MAX_DEVIATION)
             {
-                // We are not facing the target, so we must rotate towards it first.
+                /* We are not facing the target, so we must rotate towards it first. */
                 _rotator.turnDegrees(directionAngle);
             }
             else
             {
                 try
                 {
-                    _shooter.shootDistance(_distanceCalculator.calculateDistance(target));
+                    _shooter.shootDistance(DistanceCalculator.calculateDistance(target));
                 }
                 catch (OutOfRangeException ex)
                 {
@@ -140,10 +128,10 @@ public class Robot implements IAbortable
 
     private ITargetContainer receiveTargetInformation()
     {
-        // Request target information
+        /* Request target information. */
         this._connection.sendPacket(new TargetInfoRequestPacket());
 
-        // Receive packet with target information
+        /* Receive packet with target information. */
         Packet receivedPacket = this._connection.receivePacket();
         if (receivedPacket.getId() != PacketIds.TargetDirectionRequest)
             this.abort(AbortCode.UNKNOWN_PACKET, "Expected target information.");
@@ -215,13 +203,13 @@ public class Robot implements IAbortable
             if (message != null && !message.isEmpty())
                 LCD.drawString(message, 0, 2);
 
-            // Send error to host
+            /* Send error to host. */
             if (message == null)
                 this.sendDebugMessage(code.toString());
             else
                 this.sendDebugMessage(message);
 
-            // Await key press and exit system fully
+            /* Await key press and exit system fully. */
             Button.waitForAnyPress();
         }
 
@@ -236,7 +224,7 @@ public class Robot implements IAbortable
         LCD.drawString("Robot warning", 0, 0);
         LCD.drawString(message, 0, 1);
 
-        // Send warning to host
+        /* Send warning to host. */
         this.sendDebugMessage(message);
 
         Button.waitForAnyPress();

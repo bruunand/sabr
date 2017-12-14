@@ -1,6 +1,6 @@
 package com.ballthrower.targeting;
 
-public class TargetBox
+public class TargetBox implements ITargetBox
 {
     private short _height;
     private short _width;

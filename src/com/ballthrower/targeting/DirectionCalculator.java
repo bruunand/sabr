@@ -1,5 +1,6 @@
 package com.ballthrower.targeting;
-public class DirectionCalculator implements IDirectionCalculateable
+
+public class DirectionCalculator
 {
     /**
      * Dependant on the type of camera.
@@ -9,26 +10,20 @@ public class DirectionCalculator implements IDirectionCalculateable
      */
     private static final float _maxAngle = 26.725F;
 
-    private float _frameMiddle;
-
-    /**
-     * Dependent on the max angle
-     */
-    private float _degreesPerPixel;
-
-    public DirectionCalculator(ITargetContainer targetContainer)
-    {
-        _frameMiddle = targetContainer.getFrameWidth() / 2;
-        _degreesPerPixel = _maxAngle / _frameMiddle;
-    }
-
     /** Returns the number of degrees that should be turned
      * in order to face the target. Return value can be both
      * negative and positive in order to describe the direction
      * of the turn. */
-    public float calculateDirection(TargetBox target)
+    public static float calculateDirection(ITargetContainer targetContainer, ITargetBox target)
     {
+        /* Calculate frame middle and number of degrees per pixel. */
+        float frameMiddle = targetContainer.getFrameWidth() / 2;
+        float degreesPerPixel = _maxAngle / frameMiddle;
+
+        /* Measure how far the center of the target is from the middle of the frame. */
         float boxOffset = target.getXPosition() + target.getWidth() / 2;
-        return (_frameMiddle - boxOffset) * _degreesPerPixel;
+
+        /* Use the calculations to calculate the direction. */
+        return (frameMiddle - boxOffset) * degreesPerPixel;
     }
 }
