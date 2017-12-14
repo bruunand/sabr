@@ -13,7 +13,7 @@ import tensorflow as tf
 # Class used for storing bounding box information.
 # A bounding box defines the bounds of an identified
 # target.
-class BoundingBox():
+class BoundingBox:
     # Receive values describing the coordinates for each
     # corner of the bounding box.
     def __init__(self, x_min, x_max, y_min, y_max, width, height):
@@ -30,7 +30,7 @@ class BoundingBox():
 
     # Get the centre of the bounding box.
     def get_centre(self):
-        return (int(self.width / 2), int(self.height / 2))
+        return int(self.width / 2), int(self.height / 2)
 
     # Pretty print
     def __str__(self):
@@ -45,7 +45,7 @@ class BoundingBox():
     # TensorFlow describes bounding boxes with values between 0 and 1.
     # Construct and return a bounding box with these values scaled
     # to the dimensions of the image.
-    def fromTensorFlowBox(source_width, source_height, box_array):
+    def from_tensorflow_box(source_width, source_height, box_array):
         y_min = floor(box_array[0] * source_height)
         x_min = floor(box_array[1] * source_width)
         y_max = floor(box_array[2] * source_height)
@@ -55,7 +55,7 @@ class BoundingBox():
 
     # If bounding box data has already been scaled to the image,
     # construct a bounding box and return it.
-    def fromNormalized(x_min, y_min, width, height):
+    def from_normalized(x_min, y_min, width, height):
         return BoundingBox(x_min, x_min + width, y_min, y_min + height, width, height)
 
 
@@ -94,28 +94,36 @@ class TargetInfo(ITargetInfo):
     category_index = label_map_util.create_category_index(categories)
 
     # Initialize TargetInfo with default capture device set to 1.
-    def __init__(self, capture_device=1, debug=True):
+    def __init__(self, capture_device=1, debug=True, passthrough_client=None):
         self.capture_device = capture_device
         self.debug = debug
+        self.passthrough_client = passthrough_client
 
-        # Load frozen graph
-        with self.detection_graph.as_default():
-            od_graph_def = tf.GraphDef()
-            with tf.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid:
-                serialized_graph = fid.read()
-                od_graph_def.ParseFromString(serialized_graph)
-                tf.import_graph_def(od_graph_def, name='')
+        # Load frozen graph if there is no passthrough client
+        if self.passthrough_client is None:
+            with self.detection_graph.as_default():
+                od_graph_def = tf.GraphDef()
+                with tf.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid:
+                    serialized_graph = fid.read()
+                    od_graph_def.ParseFromString(serialized_graph)
+                    tf.import_graph_def(od_graph_def, name='')
 
-            # Start TensorFlow session
-            self.tensorflow_session = tf.Session(graph=self.detection_graph)
+                # Start TensorFlow session
+                self.tensorflow_session = tf.Session(graph=self.detection_graph)
+        else:
+            self.passthrough_client.connect()
 
     # Gather the necessary data needed by the NXT to calculate
     # the direction and/or distance. Returns a list of bounding
     # boxes and an integer representing the frame width.
-    def get_targets(self):
-
+    def get_targets(self, frame=None):
         # Retrieve a list of sample data to be processed.
-        frame = self.get_frame()
+        if frame is None:
+            frame = self.get_frame()
+
+        # Request server to do the work if using passthrough client
+        if not self.passthrough_client is None:
+            return self.passthrough_client.get_targets(frame)
 
         # Get the width of a frame in the sample_data.
         frame_width = np.shape(frame)[1]
@@ -183,7 +191,7 @@ class TargetInfo(ITargetInfo):
 
         # Normalize box sizes by converting them to BoundingBox classes
         height, width, _, = np.shape(frame)
-        filtered_boxes = [BoundingBox.fromTensorFlowBox(width, height, box) for box in filtered_boxes]
+        filtered_boxes = [BoundingBox.from_tensorflow_box(width, height, box) for box in filtered_boxes]
 
         # Crop all cups out of the image
         for index, box in enumerate(filtered_boxes):
@@ -216,8 +224,8 @@ class TargetInfo(ITargetInfo):
             area = cv2.boundingRect(contour)
 
             # Define a narrow bounding box and add it to the list of all boxes
-            narrow_box = BoundingBox.fromNormalized(box.x_min + area[0], box.y_min + area[1], area[2],
-                                                    area[3])
+            narrow_box = BoundingBox.from_normalized(box.x_min + area[0], box.y_min + area[1], area[2],
+                                                     area[3])
             bounding_boxes.append(narrow_box)
 
         # Draw all rectangles for bounding boxes produced by NN
