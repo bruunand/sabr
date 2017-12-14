@@ -22,7 +22,8 @@ class BallThrower(object):
     def handle_target_request(self, packet):
         # Request target information from vision module
         bounding_boxes, frame_width = self.target_info.get_targets()
-
+        print(f"Found {len(bounding_boxes)} targets!")
+        
         # Instantiate packet
         packet = Packet.instantiate_from_id(PacketIds.TARGET_INFO_REQUEST)
 
@@ -59,7 +60,7 @@ class BallThrower(object):
     # the Bluetooth connection. If they are, handle the packet.
     def handle_packets(self):
         # When connected, initialize target information
-        self.target_info = TargetInfo(capture_device=1, debug=True, passthrough_client=Client("74.82.29.43", 9000))
+        self.target_info = TargetInfo(capture_device=0, debug=True, passthrough_client=Client("74.82.29.43", 9000))
 
         # Receive packets in a loop
         while True:
