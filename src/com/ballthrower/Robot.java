@@ -59,7 +59,7 @@ public class Robot implements IAbortable
 
     private Robot()
     {
-        // Set up movement controllers with desired motors.
+        /* Set up movement controllers with desired motors. */
         this._rotator = new Rotator(MotorPort.C);
         this._shooter = new Shooter(new MotorPort[]{MotorPort.A, MotorPort.B});
     }
@@ -107,7 +107,7 @@ public class Robot implements IAbortable
             float directionAngle = DirectionCalculator.calculateDirection(targetContainer, target);
             if (Math.abs(directionAngle) > TARGET_ANGLE_MAX_DEVIATION)
             {
-                // We are not facing the target, so we must rotate towards it first.
+                /* We are not facing the target, so we must rotate towards it first. */
                 _rotator.turnDegrees(directionAngle);
             }
             else
@@ -128,10 +128,10 @@ public class Robot implements IAbortable
 
     private ITargetContainer receiveTargetInformation()
     {
-        // Request target information
+        /* Request target information. */
         this._connection.sendPacket(new TargetInfoRequestPacket());
 
-        // Receive packet with target information
+        /* Receive packet with target information. */
         Packet receivedPacket = this._connection.receivePacket();
         if (receivedPacket.getId() != PacketIds.TargetDirectionRequest)
             this.abort(AbortCode.UNKNOWN_PACKET, "Expected target information.");
@@ -203,13 +203,13 @@ public class Robot implements IAbortable
             if (message != null && !message.isEmpty())
                 LCD.drawString(message, 0, 2);
 
-            // Send error to host
+            /* Send error to host. */
             if (message == null)
                 this.sendDebugMessage(code.toString());
             else
                 this.sendDebugMessage(message);
 
-            // Await key press and exit system fully
+            /* Await key press and exit system fully. */
             Button.waitForAnyPress();
         }
 
@@ -224,7 +224,7 @@ public class Robot implements IAbortable
         LCD.drawString("Robot warning", 0, 0);
         LCD.drawString(message, 0, 1);
 
-        // Send warning to host
+        /* Send warning to host. */
         this.sendDebugMessage(message);
 
         Button.waitForAnyPress();
