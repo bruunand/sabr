@@ -9,7 +9,6 @@ import com.test.Test;
 
 public class DistanceCalculatorTest extends Test
 {
-    private DistanceCalculator dc;
     private TargetContainer tbi;
 
     // physical height manually measured
@@ -23,7 +22,6 @@ public class DistanceCalculatorTest extends Test
 
     private void setUp()
     {
-        dc = new DistanceCalculator();
         tbi = NXTTest.getTestTargetBox();
     }
 
@@ -32,7 +30,7 @@ public class DistanceCalculatorTest extends Test
         NXTAssert test = new NXTAssert();
         float realDistance = _focalLengthHeight * _targetHeight / 278;
 
-        test.assertThat(dc.calculateDistance(tbi.getTarget((byte)0)), "DistanceCalculator:CalculateDistance")
+        test.assertThat(DistanceCalculator.calculateDistance(tbi.getTarget((byte)0)), "DistanceCalculator:CalculateDistance")
                 .isEqualTo(realDistance);
     }
 

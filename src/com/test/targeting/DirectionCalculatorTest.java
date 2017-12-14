@@ -10,14 +10,12 @@ import com.test.Test;
 
 public class DirectionCalculatorTest extends Test
 {
-    private DirectionCalculator dc;
     private ITargetContainer tbi;
     private TargetContainer testContainer;
 
     private void setUp()
     {
         testContainer = NXTTest.getTestTargetBox();
-        dc = new DirectionCalculator(testContainer);
         tbi = NXTTest.getTestTargetBox();
     }
 
@@ -30,9 +28,8 @@ public class DirectionCalculatorTest extends Test
         float degreesToTurn = testContainer.getTarget((byte)0).getMiddleX() * degreesPerPixel;
 
         NXTAssert test = new NXTAssert();
-
         test.assertThat(degreesToTurn, "CalculateDirection")
-                .isEqualTo(dc.calculateDirection(testContainer.getTarget((byte)0)));
+                .isEqualTo(DirectionCalculator.calculateDirection(testContainer, testContainer.getTarget((byte)0)));
     }
 
     public void runAllTests() throws AssertException
