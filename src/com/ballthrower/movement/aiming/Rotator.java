@@ -22,7 +22,7 @@ public class Rotator extends MotorController implements IRotator
     {
         super(new NXTMotor(motor), 5.625f);
         _regMotor = new NXTRegulatedMotor(MotorPort.C);
-        _regMotor.setSpeed(500);
+        _regMotor.setSpeed(600);
     }
 
     /**
