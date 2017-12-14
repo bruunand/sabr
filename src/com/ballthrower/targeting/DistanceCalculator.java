@@ -2,7 +2,7 @@ package com.ballthrower.targeting;
 
 // Calculates the distance to the target object based on
 // triangle similarity using the height of the target object.
-public class DistanceCalculator implements IDistanceCalculateable
+public class DistanceCalculator
 {
     /** Physical height, manually measured */
     private static final float _targetHeight = 12.0f;
@@ -23,18 +23,12 @@ public class DistanceCalculator implements IDistanceCalculateable
      * of the image capturing device. For this reason rotation should
      * be performed before attempting to calculate the distance.
 
-     * Input: An instance of a class implementing ITargetContainer
-     * which contains sample data received from a data gathering
-     * device.
+     * Input: An instance of a class implementing ITargetBox
 
      * Computation:
-     *  - Find the median height from the sample list
-     *  - Remove samples deviating more than 5% from the median
-     *  - Get median from the sample list without outliers
      *  - Calculate the distance using the focal length
      */
-    @Override
-    public float calculateDistance(TargetBox target)
+    public static float calculateDistance(ITargetBox target)
     {
         return (_focalLengthHeight * _targetHeight / target.getHeight());
     }
