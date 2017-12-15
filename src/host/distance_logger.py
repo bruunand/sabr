@@ -16,12 +16,12 @@ def calculate_distance(target):
 target_info = TargetInfo(capture_device=1, passthrough_client=Client("74.82.29.43", 9000))
 
 
-def capture():
+def capture(input_distance):
     heights = []
     widths = []
     distances = []
 
-    for i in range(20):
+    for i in range(10):
         frame = target_info.get_frame()
         targets, width = target_info.get_targets(frame)
         if len(targets) != 1:
@@ -47,7 +47,7 @@ def capture():
         cv2.imwrite('test.jpg', frame)
 
     with open('distances_at_height.txt', 'a') as file:
-        file.writelines(f'{distance}\t{statistics.mean(distances)}\n')
+        file.writelines(f'{input_distance}\t{statistics.mean(distances)}\t{statistics.pvariance(distances)}\n')
 
     return statistics.pvariance(heights)
 
