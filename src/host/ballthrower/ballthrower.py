@@ -11,10 +11,16 @@ from ballthrower.tcp.client import Client
 
 
 class BallThrower(object):
-    def __init__(self, host_name):
+    def __init__(self, host_name, tcp_host = None):
         self.host_name = host_name
         self.target_info = None
         self.connection = None
+
+        # Set passthrough client
+        if tcp_host is None:
+            self.passthrough_client = None
+        else:
+            self.passthrough_client = Client(tcp_host[0], tcp_host[1])
 
     # When a TARGET_INFO_REQUEST packet is received, fetch
     # data from the targeting module, package it, and send
@@ -60,7 +66,7 @@ class BallThrower(object):
     # the Bluetooth connection. If they are, handle the packet.
     def handle_packets(self):
         # When connected, initialize target information
-        self.target_info = TargetInfo(capture_device=0, debug=True, passthrough_client=Client("74.82.29.43", 9000))
+        self.target_info = TargetInfo(capture_device=1, debug=True, passthrough_client=self.passthrough_client)
 
         # Receive packets in a loop
         while True:

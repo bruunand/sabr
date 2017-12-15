@@ -11,7 +11,7 @@ public class BiggestClusterPolicy extends Policy
     private static final Random Random = new Random();
 
     private final static byte Centroids = 2;
-    private final static int Iterations = 10;
+    private final static int Iterations = 30;
 
     private Centroid[] _centroids = new Centroid[Centroids];
 
