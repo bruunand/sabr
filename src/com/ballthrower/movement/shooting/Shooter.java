@@ -50,7 +50,6 @@ public class Shooter extends MotorController implements IShooter
         return (int) Math.round(rawPower * compensationFactor);
     }
 
-
     public void shootDistance(float distance)throws OutOfRangeException
     {
         int power = getPowerLinear(distance);
@@ -110,5 +109,4 @@ public class Shooter extends MotorController implements IShooter
 
         resetMotors();
     }
-
 }
