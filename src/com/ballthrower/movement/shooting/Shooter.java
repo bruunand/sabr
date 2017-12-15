@@ -41,13 +41,13 @@ public class Shooter extends MotorController implements IShooter
          * power = (distance - 78.102) / 0.802
          * */
 
-        float correctedDistance = distance + 0.75f;
+        float correctedDistance = distance + 8.0f;
         float rawPower = (correctedDistance - 78.102f) / 0.802f;
 
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
         float compensationFactor = theoreticalMaxSpeed / regMotor.getMaxSpeed();
 
-        return (int)(rawPower * compensationFactor);
+        return (int) Math.round(rawPower * compensationFactor);
     }
 
 
@@ -63,7 +63,7 @@ public class Shooter extends MotorController implements IShooter
         }
 
         // Check if target is out of range
-        if (power > 105)
+        if (power > 100)
             throw new OutOfRangeException("Target too far.");
         else if (power < 40)
             throw new OutOfRangeException("Target too close.");
@@ -99,10 +99,10 @@ public class Shooter extends MotorController implements IShooter
         float compensationFactor = 900 / regMotor.getMaxSpeed();
         compFactor = compensationFactor;
 
-        int realPower = (int)(power * compensationFactor);
+        int realPower = (int) Math.round(power * compensationFactor);
         compPower = power * compensationFactor;
 
-        int degrees = (int)(180 / getGearRatio());
+        int degrees = (int) Math.round(180 / getGearRatio());
 
         super.startMotors(power, _direction);
         super.waitWhileTurning(degrees);
