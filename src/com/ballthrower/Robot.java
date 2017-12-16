@@ -89,6 +89,7 @@ public class Robot implements IAbortable
         /* Choose a policy using the policy factory. */
         Policy chosenPolicy = PolicyFactory.getPolicy(_targetingPolicyType);
 
+        int numRotations = 0;
         while (true)
         {
             ITargetContainer targetContainer = receiveTargetInformation();
@@ -109,12 +110,17 @@ public class Robot implements IAbortable
             {
                 /* We are not facing the target, so we must rotate towards it first. */
                 _rotator.turnDegrees(directionAngle);
+                numRotations++;
             }
             else
             {
                 try
                 {
                     _shooter.shootDistance(DistanceCalculator.calculateDistance(target));
+
+                    /* If debugging, output final departure angle and number of rotations. */
+                    if (this._debug)
+                        this.sendDebugMessage("Projectile launches after " + numRotations + " rotations. Departure angle: " + directionAngle + ".");
                 }
                 catch (OutOfRangeException ex)
                 {

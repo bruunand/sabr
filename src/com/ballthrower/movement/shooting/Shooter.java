@@ -54,17 +54,10 @@ public class Shooter extends MotorController implements IShooter
     {
         int power = getPowerLinear(distance);
 
-        Robot robot = Robot.getInstance();
-        if (robot.isDebug())
-        {
-            robot.sendDebugMessage("Power: " + power);
-            robot.sendDebugMessage("Distance: " + distance);
-        }
-
         // Check if target is out of range
         if (power > 100)
             throw new OutOfRangeException("Target too far.");
-        else if (power < 40)
+        else if (power < 35)
             throw new OutOfRangeException("Target too close.");
 
         // Run motors

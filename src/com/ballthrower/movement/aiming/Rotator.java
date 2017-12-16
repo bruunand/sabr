@@ -33,13 +33,6 @@ public class Rotator extends MotorController implements IRotator
     {
         int actualDegrees = (int) (degrees * getGearRatio());
 
-        Robot robot = Robot.getInstance();
-        if (robot.isDebug())
-        {
-            robot.sendDebugMessage("Turn: " + degrees);
-            robot.sendDebugMessage("Actual: " + actualDegrees);
-        }
-
         _regMotor.rotate(-actualDegrees);
 
         currentHeading += actualDegrees;
