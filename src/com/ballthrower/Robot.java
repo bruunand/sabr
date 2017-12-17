@@ -116,11 +116,12 @@ public class Robot implements IAbortable
             {
                 try
                 {
-                    _shooter.shootDistance(DistanceCalculator.calculateDistance(target));
+                    float distance = DistanceCalculator.calculateDistance(target);
+                    _shooter.shootDistance(distance);
 
                     /* If debugging, output final departure angle and number of rotations. */
                     if (this._debug)
-                        this.sendDebugMessage("Projectile launches after " + numRotations + " rotations. Departure angle: " + directionAngle + ".");
+                        this.sendDebugMessage("r: " + numRotations + ", a: " + directionAngle + ", d: " + distance);
                 }
                 catch (OutOfRangeException ex)
                 {
