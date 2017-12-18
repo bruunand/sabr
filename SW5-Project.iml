@@ -10,7 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/host" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.6.1 (~/anaconda3/bin/python3.6)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="pc1" level="project" />
     <orderEntry type="library" name="nxt1" level="project" />

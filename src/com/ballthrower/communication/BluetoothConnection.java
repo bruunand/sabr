@@ -41,7 +41,7 @@ public class BluetoothConnection extends Connection
 
         // Send handshake
         HandshakePacket handshake = new HandshakePacket();
-        sendPacket(new HandshakePacket());
+        sendPacket(handshake);
 
         // Receive handshake and validate token
         if (!handshake.isValidReply(receivePacket()))

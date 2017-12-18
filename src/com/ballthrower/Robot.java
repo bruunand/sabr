@@ -19,13 +19,13 @@ import com.ballthrower.targeting.DirectionCalculator;
 import com.ballthrower.targeting.DistanceCalculator;
 import com.ballthrower.targeting.ITargetContainer;
 import com.ballthrower.targeting.TargetBox;
-import com.ballthrower.targeting.policies.BiggestClusterPolicy;
 import com.ballthrower.targeting.policies.Policy;
 import com.ballthrower.targeting.policies.PolicyFactory;
 import lejos.nxt.Button;
 import lejos.nxt.LCD;
 import lejos.nxt.MotorPort;
 import lejos.nxt.Sound;
+import java.util.Random;
 
 import java.io.File;
 
@@ -56,6 +56,8 @@ public class Robot implements IAbortable
     {
         return Robot._robotInstance;
     }
+
+    public final Random Random = new Random();
 
     private Robot()
     {

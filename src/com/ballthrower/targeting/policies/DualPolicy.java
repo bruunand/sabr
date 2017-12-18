@@ -25,7 +25,7 @@ public class DualPolicy extends Policy
         /* This policy selects a random target on first pass and then calibrates the aim on the
             following passes by selecting the closest target.
          */
-        if(!_passed)
+        if (!_passed)
         {
             _passed = true;
 

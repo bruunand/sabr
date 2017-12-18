@@ -1,5 +1,6 @@
 package com.ballthrower.targeting.policies;
 
+import com.ballthrower.Robot;
 import com.ballthrower.targeting.ITargetContainer;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.utilities.ArrayUtil;
@@ -134,7 +135,7 @@ public class BiggestClusterPolicy extends Policy
             if (this._assignedTargets.size() == 0)
                 return null;
 
-            return this._assignedTargets.get(Random.nextInt(this._assignedTargets.size()));
+            return this._assignedTargets.get(Robot.getInstance().Random.nextInt(this._assignedTargets.size()));
         }
 
         int getTargetCount()

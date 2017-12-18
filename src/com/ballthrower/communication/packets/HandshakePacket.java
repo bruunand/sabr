@@ -1,5 +1,6 @@
 package com.ballthrower.communication.packets;
 
+import com.ballthrower.Robot;
 import com.ballthrower.communication.Connection;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ public class HandshakePacket extends Packet
 
     public HandshakePacket()
     {
-        _validationToken = (short) new Random().nextInt(Short.MAX_VALUE);
+        _validationToken = (short) Robot.getInstance().Random.nextInt(Short.MAX_VALUE);
     }
 
     public short getValidationToken()

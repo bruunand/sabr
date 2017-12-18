@@ -7,7 +7,6 @@ from ballthrower.interfaces import ITargetInfo
 
 # TensorFlow imports
 from utils import label_map_util
-import tensorflow as tf
 
 
 # Class used for storing bounding box information.
@@ -80,9 +79,6 @@ class TargetInfo(ITargetInfo):
     # Number of categories for classification.
     NUM_CLASSES = 1
 
-    # A computation graph.
-    detection_graph = tf.Graph()
-
     # List of labels
     label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 
@@ -101,6 +97,9 @@ class TargetInfo(ITargetInfo):
 
         # Load frozen graph if there is no passthrough client
         if self.passthrough_client is None:
+            import tensorflow as tf
+            self.detection_graph = tf.Graph()
+
             with self.detection_graph.as_default():
                 od_graph_def = tf.GraphDef()
                 with tf.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid:
