@@ -5,9 +5,6 @@ from math import floor
 from ballthrower.errors import CaptureDeviceUnavailableError
 from ballthrower.interfaces import ITargetInfo
 
-# TensorFlow imports
-from utils import label_map_util
-
 
 # Class used for storing bounding box information.
 # A bounding box defines the bounds of an identified
@@ -65,50 +62,54 @@ class TargetInfo(ITargetInfo):
     # which RGB lower and upper bounds to be used.
     RGB_CONSTANT_DEVIATION = 40
 
-    # Path to folder where the neural network object
-    # detection model resides.
-    MODEL_NAME = 'redcup_model'
-
-    # Path to frozen detection graph.
-    # This is the actual model that is used for the object detection.
-    PATH_TO_CKPT = os.path.join(os.path.join('res', MODEL_NAME), 'frozen_inference_graph.pb')
-
-    # Path to the list labels used to classify detected objects.
-    PATH_TO_LABELS = os.path.join(os.path.join('res', MODEL_NAME), 'label_map.pbtxt')
-
-    # Number of categories for classification.
-    NUM_CLASSES = 1
-
-    # List of labels
-    label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
-
-    # List of dictionaries representing all possible categories.
-    categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES,
-                                                                use_display_name=True)
-    # A dictionary of the same entries as categories but the
-    # key value is a category ID.
-    category_index = label_map_util.create_category_index(categories)
-
     # Initialize TargetInfo with default capture device set to 1.
     def __init__(self, capture_device=1, debug=True, passthrough_client=None):
         self.capture_device = capture_device
         self.debug = debug
         self.passthrough_client = passthrough_client
 
-        # Load frozen graph if there is no passthrough client
+        # Initialize TensorFlow if there is no passthrough client
         if self.passthrough_client is None:
+            # TensorFlow imports
             import tensorflow as tf
+            from utils import label_map_util
+
+            # Path to folder where the neural network object
+            # detection model resides.
+            self.model_name = 'redcup_model'
+
+            # Path to frozen detection graph.
+            # This is the actual model that is used for the object detection.
+            self.path_to_ckpt = os.path.join(os.path.join('res', self.model_name), 'frozen_inference_graph.pb')
+
+            # Path to the list labels used to classify detected objects.
+            self.path_to_labels = os.path.join(os.path.join('res', self.model_name), 'label_map.pbtxt')
+
+            # Number of categories for classification.
+            self.num_classes = 1
+
+            # Get detection graph
             self.detection_graph = tf.Graph()
+
+            # List of labels
+            self.label_map = label_map_util.load_labelmap(self.path_to_labels)
+
+            # List of dictionaries representing all possible categories.
+            self.categories = label_map_util.convert_label_map_to_categories(self.label_map, max_num_classes=self.num_classes,
+                                                                             use_display_name=True)
+            # A dictionary of the same entries as categories but the
+            # key value is a category ID.
+            self.category_index = label_map_util.create_category_index(self.categories)
 
             with self.detection_graph.as_default():
                 od_graph_def = tf.GraphDef()
-                with tf.gfile.GFile(self.PATH_TO_CKPT, 'rb') as fid:
+                with tf.gfile.GFile(self.path_to_ckpt, 'rb') as fid:
                     serialized_graph = fid.read()
                     od_graph_def.ParseFromString(serialized_graph)
                     tf.import_graph_def(od_graph_def, name='')
 
-                # Start TensorFlow session
-                self.tensorflow_session = tf.Session(graph=self.detection_graph)
+            # Start TensorFlow session
+            self.tensorflow_session = tf.Session(graph=self.detection_graph)
         else:
             self.passthrough_client.connect()
 

@@ -36,6 +36,10 @@ def find_device(target_name):
 class BluetoothConnection(Connection):
     BLUETOOTH_PORT = 1
 
+    def __init__(self):
+        self.remote_address = None
+        self.socket = None
+
     # Verifies the established connection by confirming a
     # 'handshake' with the NXT. Mostly a formality here.
     def perform_handshake(self):
@@ -92,7 +96,7 @@ class BluetoothConnection(Connection):
                     time.sleep(delay)
                     delay = delay * 1.5
                 else:
-                    print("Failed to connect to device with in 30 seconds. Now exiting.")
+                    print("Failed to connect to device within 30 seconds. Now exiting.")
                     exit()
 
     # Read the data from the input stream and categorize
