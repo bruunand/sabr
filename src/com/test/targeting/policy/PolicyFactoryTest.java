@@ -3,6 +3,7 @@ package com.test.targeting.policy;
 import com.sabr.exceptions.AssertException;
 import com.sabr.targeting.policies.LeastRotationPolicy;
 import com.sabr.targeting.policies.PolicyFactory;
+import com.sabr.targeting.policies.DoublePolicy;
 import com.sabr.targeting.policies.SideFirstPolicy;
 import com.test.NXTAssert;
 import com.test.Test;

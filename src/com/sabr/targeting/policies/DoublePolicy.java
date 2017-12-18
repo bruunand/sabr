@@ -3,12 +3,12 @@ package com.sabr.targeting.policies;
 import com.sabr.targeting.ITargetContainer;
 import com.sabr.targeting.TargetBox;
 
-public class DualPolicy extends Policy
+public class DoublePolicy extends Policy
 {
     private Policy _internalPolicy;
     private boolean _passed = false;
 
-    DualPolicy(Policy initialPolicy)
+    DoublePolicy(Policy initialPolicy)
     {
         this._internalPolicy = initialPolicy;
     }
