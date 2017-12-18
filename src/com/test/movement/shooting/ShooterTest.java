@@ -14,7 +14,7 @@ public class ShooterTest extends Test
     private void shootDistanceOutOfRangeTest() throws AssertException
     {
         /* Targets above 1m should be ignored. */
-        float distance = 101f;
+        float distance = 900f;
         NXTAssert test = new NXTAssert();
         _shooter = new Shooter(
                 new MotorPort[] {MotorPort.A, MotorPort.B});
