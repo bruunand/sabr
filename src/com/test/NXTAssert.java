@@ -42,7 +42,7 @@ public class NXTAssert
 
     public NXTAssert isNull() throws AssertException
     {
-        if (_obj == null)
+        if (_obj != null)
             throw new AssertException("Object is null",
                                       _methodName);
 

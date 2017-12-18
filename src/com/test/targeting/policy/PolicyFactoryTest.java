@@ -37,7 +37,7 @@ public class PolicyFactoryTest extends Test
         NXTAssert test = new NXTAssert();
         test.assertThat(PolicyFactory.getPolicy
                 (PolicyFactory.TargetingPolicyType.BiggestCluster)
-                instanceof SideFirstPolicy, "PolicyFactory:biggestCluster")
+                instanceof DoublePolicy, "PolicyFactory:biggestCluster")
                 .isTrue();
     }
 

@@ -46,7 +46,8 @@ public class RandomPolicyTest extends Test
     }
 
     @Override
-    public void runAllTests() throws AssertException {
+    public void runAllTests() throws AssertException
+    {
         setUp();
         zeroSampleTest();
         singleTargetTest();

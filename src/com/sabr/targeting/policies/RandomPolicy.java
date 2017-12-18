@@ -9,6 +9,9 @@ public class RandomPolicy extends Policy
     @Override
     public TargetBox selectTargetBox(ITargetContainer targetContainer)
     {
+        if (targetContainer.getTargetCount() == 0)
+            return null;
+    
         return targetContainer.getTarget((byte) Robot.getInstance().Random.nextInt(targetContainer.getTargetCount()));
     }
 }

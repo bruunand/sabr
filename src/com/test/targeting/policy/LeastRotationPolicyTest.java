@@ -50,9 +50,9 @@ public class LeastRotationPolicyTest extends Test
     @Override
     public void runAllTests() throws AssertException
     {
+        setUp();
         zeroSampleTest();
         singleTargetTest();
         multipleTargetsTest();
-        setUp();
     }
 }
