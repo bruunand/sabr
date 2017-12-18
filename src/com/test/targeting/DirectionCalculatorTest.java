@@ -28,7 +28,7 @@ public class DirectionCalculatorTest extends Test
 
         NXTAssert test = new NXTAssert();
         test.assertThat(degreesToTurn, "CalculateDirection")
-                .isEqualTo(DirectionCalculator.calculateDirection(testContainer, testContainer.getTarget((byte)0)));
+                .isEqualToFloat(DirectionCalculator.calculateDirection(testContainer, testContainer.getTarget((byte)0)));
     }
 
     public void runAllTests() throws AssertException

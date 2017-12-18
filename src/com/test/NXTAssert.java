@@ -72,6 +72,16 @@ public class NXTAssert
         return this;
     }
 
+    public NXTAssert isEqualToFloat(float obj) throws AssertException
+    {
+        if ( (obj - (float)_obj) > 0.1 )
+        {
+            throw new AssertException("Floats are not equal", _methodName);
+        }
+
+        return this;
+    }
+
     public NXTAssert containsAll(float[] arr) throws AssertException
     {
         boolean foundEqual = false;

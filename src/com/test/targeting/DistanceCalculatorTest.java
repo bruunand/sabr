@@ -32,7 +32,7 @@ public class DistanceCalculatorTest extends Test
         float realDistance = _focalLengthHeight * _targetHeight / 278;
 
         test.assertThat(DistanceCalculator.calculateDistance(tbi.getTarget((byte)0)), "DistanceCalculator:CalculateDistance")
-                .isEqualTo(realDistance);
+                .isEqualToFloat(realDistance);
     }
 
     @Override
