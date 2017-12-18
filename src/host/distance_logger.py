@@ -1,5 +1,5 @@
-from ballthrower.target_info import TargetInfo
-from ballthrower.tcp.client import Client
+from sabr_host.target_info import TargetInfo
+from sabr_host.tcp.client import Client
 import statistics
 import cv2
 

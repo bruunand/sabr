@@ -2,8 +2,8 @@ import os
 import cv2
 import numpy as np
 from math import floor
-from ballthrower.errors import CaptureDeviceUnavailableError
-from ballthrower.interfaces import ITargetInfo
+from sabr_host.errors import CaptureDeviceUnavailableError
+from sabr_host.interfaces import ITargetInfo
 
 
 # Class used for storing bounding box information.

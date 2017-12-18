@@ -3,8 +3,8 @@ import threading
 import numpy as np
 import cv2
 
-from ballthrower.target_info import TargetInfo
-from ballthrower.connection_utilities import *
+from sabr_host.target_info import TargetInfo
+from sabr_host.connection_utilities import *
 
 
 target_info = TargetInfo(capture_device=-1)

@@ -1,4 +1,4 @@
-from ballthrower.type_converter import *
+from sabr_host.type_converter import *
 
 
 def send_byte(socket, value):

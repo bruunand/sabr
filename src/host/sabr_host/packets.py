@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from enum import IntEnum
-from ballthrower.connection_utilities import *
+from sabr_host.connection_utilities import *
 
 
 class PacketIds(IntEnum):

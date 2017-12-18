@@ -1,8 +1,8 @@
 import socket
 import cv2
 
-from ballthrower.connection_utilities import *
-from ballthrower.target_info import BoundingBox
+from sabr_host.connection_utilities import *
+from sabr_host.target_info import BoundingBox
 
 
 class Client:

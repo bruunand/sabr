@@ -1,18 +1,18 @@
-from ballthrower.packets import PacketIds, Packet
-from ballthrower.bluetooth_connection import BluetoothConnection
-from ballthrower.errors import NoPacketHandlerError
-from ballthrower.target_info import TargetInfo
+from sabr_host.packets import PacketIds, Packet
+from sabr_host.bluetooth_connection import BluetoothConnection
+from sabr_host.errors import NoPacketHandlerError
+from sabr_host.target_info import TargetInfo
 
 
 # Class used for making communication and target identification
 # work together. Similar in responsibility to the Robot class on
 # the NXT.
-from ballthrower.tcp.client import Client
+from sabr_host.tcp.client import Client
 
 
-class BallThrower(object):
-    def __init__(self, host_name, tcp_host = None):
-        self.host_name = host_name
+class Host(object):
+    def __init__(self, nxt_name, tcp_host = None):
+        self.host_name = nxt_name
         self.target_info = None
         self.connection = None
 
@@ -52,10 +52,10 @@ class BallThrower(object):
 
     # Query the id_handler_map for the appropriate method to run.
     def handle_packet(self, packet):
-        if not BallThrower.id_handler_map.__contains__(packet.get_id()):
+        if not Host.id_handler_map.__contains__(packet.get_id()):
             raise NoPacketHandlerError(packet.get_id())
         else:
-            BallThrower.id_handler_map[packet.get_id()](self, packet)
+            Host.id_handler_map[packet.get_id()](self, packet)
 
     # Establish a Bluetooth connection
     def connect(self):
