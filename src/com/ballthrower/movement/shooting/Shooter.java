@@ -41,7 +41,7 @@ public class Shooter extends MotorController implements IShooter
          * power = (distance - 78.102) / 0.802
          * */
 
-        float correctedDistance = distance;
+        float correctedDistance = distance + 3.5f;
         float rawPower = (correctedDistance - 78.102f) / 0.802f;
 
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
