@@ -4,9 +4,6 @@ import lejos.nxt.NXTMotor;
 
 import java.util.ArrayList;
 
-/**
- * Created by theis on 11/6/17.
- */
 public class MotorController
 {
     private ArrayList<NXTMotor> _motors = new ArrayList<>();

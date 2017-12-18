@@ -1,22 +1,16 @@
 package com.ballthrower.movement.aiming;
 
-import com.ballthrower.Robot;
 import com.ballthrower.movement.MotorController;
-import lejos.nxt.*;
-import lejos.robotics.RegulatedMotor;
+import lejos.nxt.MotorPort;
+import lejos.nxt.NXTMotor;
+import lejos.nxt.NXTRegulatedMotor;
 
 public class Rotator extends MotorController implements IRotator
 {
-    /* getGearRatio = robot.numberOfGearTeeth / motor.numberOfGearTeeth. */
-    private static final int MOTOR_POWER = 20;
-
-    NXTRegulatedMotor _regMotor;
-
+    private NXTRegulatedMotor _regMotor;
 
     /* Updates every time we turn so we can reset position. */
     private int currentHeading = 0;
-
-    //private NXTMotor _motor;
 
     public Rotator(MotorPort motor)
     {

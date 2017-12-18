@@ -4,14 +4,10 @@ import com.ballthrower.exceptions.AssertException;
 import com.ballthrower.targeting.TargetBox;
 import com.ballthrower.targeting.TargetContainer;
 import com.ballthrower.targeting.policies.LeastRotationPolicy;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 import com.test.Test;
 
-/**
- * Created by Anders Brams on 12/12/2017.
- */
 public class LeastRotationPolicyTest extends Test
 {
     TargetContainer testContainer;

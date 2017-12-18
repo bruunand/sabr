@@ -18,15 +18,14 @@ import java.util.ArrayList;
  */
 public class NXTTest
 {
-    /** Runs all tests and returns the number of failed tests. */
     public void runAllTests()
     {
         int numErrors = 0;
 
-        Test[] testSuites = new Test[] {
+        Test[] testSuites = new Test[]
+        {
                 new DirectionCalculatorTest(),
                 new DistanceCalculatorTest(),
-                new TargetInfoRequestPacketTest(),
                 new ShooterTest(),
                 new SidePolicyTest(),
                 new BiggestClusterPolicyTest(),
@@ -35,19 +34,19 @@ public class NXTTest
                 new PolicyFactoryTest()
         };
 
-        try
+
+        for (Test testSuite : testSuites)
         {
-            for (Test testSuite : testSuites)
+            try
             {
                 testSuite.runAllTests();
             }
-        }
-        catch (AssertException e)
-        {
-            numErrors++;
-            LCD.drawString("Tests failed: " + numErrors, 0, 0);
-            LCD.drawString(e.methodName, 0, 1);
-            LCD.drawString(e.message, 0, 2);
+            catch (AssertException e)
+            {
+                LCD.drawString("Tests failed: " + numErrors, 0, 0);
+                LCD.drawString(e.methodName, 0, 1);
+                LCD.drawString(e.message, 0, 2);
+            }
         }
 
         if (numErrors == 0)
@@ -58,7 +57,6 @@ public class NXTTest
     {
         TargetContainer toReturn = new TargetContainer((byte) 1);
 
-                                                 /* x_pos, width_pixel, height_pixel */
         /* For distance and direction */
         toReturn.setTarget((byte)0, new TargetBox((short) 60, (short) 44, (short) 278));
 

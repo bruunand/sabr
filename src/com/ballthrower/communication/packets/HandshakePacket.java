@@ -4,7 +4,6 @@ import com.ballthrower.Robot;
 import com.ballthrower.communication.Connection;
 
 import java.io.IOException;
-import java.util.Random;
 
 public class HandshakePacket extends Packet
 {

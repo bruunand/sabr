@@ -8,12 +8,10 @@ import com.test.NXTAssert;
 import com.test.NXTTest;
 import com.test.Test;
 
-/**
- * Created by Anders Brams on 12/12/2017.
- */
-public class RandomPolicyTest extends Test {
-    TargetContainer testContainer;
-    RandomPolicy policy;
+public class RandomPolicyTest extends Test
+{
+    private TargetContainer testContainer;
+    private RandomPolicy policy;
 
     private void setUp()
     {

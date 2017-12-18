@@ -8,19 +8,18 @@ import com.test.NXTAssert;
 import com.test.NXTTest;
 import com.test.Test;
 
-/**
- * Created by Anders Brams on 12/12/2017.
- */
-public class BiggestClusterPolicyTest extends Test {
-    TargetContainer testContainer;
-    BiggestClusterPolicy policy;
-    TargetBox[] biggestCluster;
+public class BiggestClusterPolicyTest extends Test
+{
+    private TargetContainer testContainer;
+    private BiggestClusterPolicy policy;
+    private TargetBox[] biggestCluster;
 
     private void setUp()
     {
         policy = new BiggestClusterPolicy();
         testContainer = NXTTest.getTestTargetBox();
-        biggestCluster = new TargetBox[] {
+        biggestCluster = new TargetBox[]
+        {
                 testContainer.getTarget((byte)0),
                 testContainer.getTarget((byte)1),
                 testContainer.getTarget((byte)2)

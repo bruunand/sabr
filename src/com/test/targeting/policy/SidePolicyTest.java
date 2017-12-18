@@ -10,9 +10,9 @@ import com.test.Test;
 
 public class SidePolicyTest extends Test
 {
-    SideFirstPolicy policyLeft;
-    SideFirstPolicy policyRight;
-    TargetContainer testContainer;
+    private SideFirstPolicy policyLeft;
+    private SideFirstPolicy policyRight;
+    private TargetContainer testContainer;
 
     private void setUp()
     {
@@ -20,6 +20,7 @@ public class SidePolicyTest extends Test
         policyRight = new SideFirstPolicy(SideFirstPolicy.Side.Right);
         testContainer = NXTTest.getTestTargetBox();
     }
+
     private void zeroSampleTest() throws AssertException
     {
         TargetContainer zeroSample = new TargetContainer((byte)0);
@@ -56,7 +57,8 @@ public class SidePolicyTest extends Test
     }
 
     @Override
-    public void runAllTests() throws AssertException {
+    public void runAllTests() throws AssertException
+    {
         setUp();
         zeroSampleTest();
         singleTargetTest();

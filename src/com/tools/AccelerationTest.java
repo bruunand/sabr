@@ -11,7 +11,6 @@ public class AccelerationTest
     static long lastResetTime = 0;
     static double lastAverage = 0;
 
-    // Finals
     static final byte numRounds = 5;
     static final short minDegrees = 160;
 

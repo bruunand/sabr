@@ -7,18 +7,9 @@ import com.ballthrower.exceptions.OutOfRangeException;
 import com.ballthrower.movement.MotorController;
 import lejos.nxt.*;
 import lejos.robotics.RegulatedMotor;
-import com.ballthrower.Robot;
 
-/**
- * Created by Thomas Buhl on 17/10/2017.
- */
 public class Shooter extends MotorController implements IShooter
 {
-    private static final int GRAVITY = 980;
-    private static final int DEPARTURE_ANGLE = 51;
-    private static final float FACTOR = 9.7095f;
-    private static final int OFFSET = -415;
-    private static final float cameraHeight = 52.7f;
     private RegulatedMotor regMotor;
 
     /* DEBUGGING */
@@ -41,7 +32,7 @@ public class Shooter extends MotorController implements IShooter
          * power = (distance - 78.102) / 0.802
          * */
 
-        float correctedDistance = distance + 3.5f;
+        float correctedDistance = distance + 4.5f;
         float rawPower = (correctedDistance - 78.102f) / 0.802f;
 
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */

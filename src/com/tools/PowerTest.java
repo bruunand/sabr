@@ -4,10 +4,6 @@ import com.ballthrower.exceptions.OutOfRangeException;
 import com.ballthrower.movement.shooting.Shooter;
 import lejos.nxt.*;
 
-/**
- * Created by Thomas Buhl on 17/10/2017.
- */
-
 public class PowerTest
 {
     private static int power = 100;

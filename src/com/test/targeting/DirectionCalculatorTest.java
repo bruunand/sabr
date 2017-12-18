@@ -21,7 +21,6 @@ public class DirectionCalculatorTest extends Test
 
     private void calculateDirectionTest() throws AssertException
     {
-        /* Calculate correct values beforehand. */
         float maxAngle = 26.725F;
         float frameMiddle = testContainer.getFrameWidth() / 2;
         float degreesPerPixel = maxAngle / frameMiddle;

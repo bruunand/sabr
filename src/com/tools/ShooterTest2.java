@@ -2,10 +2,6 @@ import java.lang.Math;
 import lejos.nxt.*;
 import lejos.robotics.RegulatedMotor;
 
-/**
- * Created by Thomas Buhl on 17/10/2017.
- */
-
 public class ShooterTest2
 {
     static NXTMotor motorA2 = new NXTMotor(MotorPort.A);
