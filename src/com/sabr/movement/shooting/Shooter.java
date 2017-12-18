@@ -32,7 +32,7 @@ public class Shooter extends MotorController implements IShooter
          * power = (distance - 78.102) / 0.802
          * */
 
-        float correctedDistance = distance + 4.5f;
+        float correctedDistance = distance + 11.5f;
         float rawPower = (correctedDistance - 78.102f) / 0.802f;
 
         int theoreticalMaxSpeed = 900; /* 9V * approx. 100 */
@@ -48,7 +48,7 @@ public class Shooter extends MotorController implements IShooter
         // Check if target is out of range
         if (power > 100)
             throw new OutOfRangeException("Target too far.");
-        else if (power < 35)
+        else if (power < 45)
             throw new OutOfRangeException("Target too close.");
 
         // Run motors

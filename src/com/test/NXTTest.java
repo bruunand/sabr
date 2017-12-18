@@ -3,8 +3,6 @@ package com.test;
 import com.sabr.exceptions.AssertException;
 import com.sabr.targeting.TargetBox;
 import com.sabr.targeting.TargetContainer;
-import com.test.communication.BluetoothConnectionTest;
-import com.test.communication.TargetInfoRequestPacketTest;
 import com.test.movement.shooting.ShooterTest;
 import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
