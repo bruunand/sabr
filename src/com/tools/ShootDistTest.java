@@ -1,15 +1,11 @@
 package com.tools;
 
-import java.lang.Math;
-
 import com.ballthrower.exceptions.OutOfRangeException;
 import com.ballthrower.movement.shooting.Shooter;
-import lejos.nxt.*;
-import lejos.robotics.RegulatedMotor;
-
-/**
- * Created by Thomas Buhl on 17/10/2017.
- */
+import lejos.nxt.Button;
+import lejos.nxt.ButtonListener;
+import lejos.nxt.LCD;
+import lejos.nxt.MotorPort;
 
 public class ShootDistTest
 {
