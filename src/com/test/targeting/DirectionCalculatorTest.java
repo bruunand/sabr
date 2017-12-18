@@ -1,9 +1,9 @@
 package com.test.targeting;
 
-import com.ballthrower.targeting.DirectionCalculator;
-import com.ballthrower.targeting.ITargetContainer;
-import com.ballthrower.targeting.TargetContainer;
-import com.ballthrower.exceptions.AssertException;
+import com.sabr.targeting.DirectionCalculator;
+import com.sabr.targeting.ITargetContainer;
+import com.sabr.targeting.TargetContainer;
+import com.sabr.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 import com.test.Test;

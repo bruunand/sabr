@@ -1,9 +1,9 @@
 package com.test.targeting.policy;
 
-import com.ballthrower.exceptions.AssertException;
-import com.ballthrower.targeting.TargetBox;
-import com.ballthrower.targeting.TargetContainer;
-import com.ballthrower.targeting.policies.SideFirstPolicy;
+import com.sabr.exceptions.AssertException;
+import com.sabr.targeting.TargetBox;
+import com.sabr.targeting.TargetContainer;
+import com.sabr.targeting.policies.SideFirstPolicy;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 import com.test.Test;

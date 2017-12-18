@@ -1,8 +1,8 @@
 package com.test;
 
-import com.ballthrower.exceptions.AssertException;
-import com.ballthrower.targeting.TargetBox;
-import com.ballthrower.targeting.TargetContainer;
+import com.sabr.exceptions.AssertException;
+import com.sabr.targeting.TargetBox;
+import com.sabr.targeting.TargetContainer;
 import com.test.communication.BluetoothConnectionTest;
 import com.test.communication.TargetInfoRequestPacketTest;
 import com.test.movement.shooting.ShooterTest;
@@ -10,8 +10,6 @@ import com.test.targeting.DirectionCalculatorTest;
 import com.test.targeting.DistanceCalculatorTest;
 import com.test.targeting.policy.*;
 import lejos.nxt.*;
-
-import java.util.ArrayList;
 
 /**
  * Assertions used for unit testing on the NXT

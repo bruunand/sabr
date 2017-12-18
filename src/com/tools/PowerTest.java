@@ -1,7 +1,7 @@
 package com.tools;
 
-import com.ballthrower.exceptions.OutOfRangeException;
-import com.ballthrower.movement.shooting.Shooter;
+import com.sabr.exceptions.OutOfRangeException;
+import com.sabr.movement.shooting.Shooter;
 import lejos.nxt.*;
 
 public class PowerTest

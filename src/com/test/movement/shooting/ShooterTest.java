@@ -1,8 +1,8 @@
 package com.test.movement.shooting;
 
-import com.ballthrower.exceptions.AssertException;
-import com.ballthrower.exceptions.OutOfRangeException;
-import com.ballthrower.movement.shooting.Shooter;
+import com.sabr.exceptions.AssertException;
+import com.sabr.exceptions.OutOfRangeException;
+import com.sabr.movement.shooting.Shooter;
 import com.test.NXTAssert;
 import com.test.Test;
 import lejos.nxt.MotorPort;

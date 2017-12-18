@@ -1,8 +1,8 @@
 package com.test.targeting;
 
-import com.ballthrower.targeting.DistanceCalculator;
-import com.ballthrower.targeting.TargetContainer;
-import com.ballthrower.exceptions.AssertException;
+import com.sabr.targeting.DistanceCalculator;
+import com.sabr.targeting.TargetContainer;
+import com.sabr.exceptions.AssertException;
 import com.test.NXTAssert;
 import com.test.NXTTest;
 import com.test.Test;

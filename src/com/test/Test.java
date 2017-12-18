@@ -1,6 +1,6 @@
 package com.test;
 
-import com.ballthrower.exceptions.AssertException;
+import com.sabr.exceptions.AssertException;
 
 public abstract class Test
 {
