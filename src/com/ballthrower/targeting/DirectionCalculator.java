@@ -8,7 +8,7 @@ public class DirectionCalculator
      * Is the angle from the center point of the camera,
      * to the egde of the cameras field of view.
      */
-    private static final float _maxAngle = 26.725F;
+    private static final float _maxAngle = 33.0F;
 
     /** Returns the number of degrees that should be turned
      * in order to face the target. Return value can be both
