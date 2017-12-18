@@ -22,8 +22,6 @@ public class TargetInfoRequestPacket extends Packet
 
         // Read the number of samples and create target box info object
         byte numBoxSamples = stream.readByte();
-        if (numBoxSamples > (byte) 256 )
-            throw new IOException("Too many targets.");
 
         this._boxInfo = new TargetContainer(numBoxSamples);
         this._boxInfo.setFrameWidth(frameWidth);
