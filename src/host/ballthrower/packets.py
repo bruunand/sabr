@@ -71,6 +71,10 @@ class TargetInfoRequestPacket(Packet):
         connection.send_short(self.frame_width)
 
         # Write length of box instances
+        # 127 = MAX_BYTE
+        if len(self.x_values) > 127:
+            raise IOError("Too many targets")
+               
         connection.send_byte(len(self.x_values))
 
         # Write box instances

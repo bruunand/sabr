@@ -26,7 +26,6 @@ public class NXTTest
         Test[] testSuites = new Test[] {
                 new DirectionCalculatorTest(),
                 new DistanceCalculatorTest(),
-                new BluetoothConnectionTest(),
                 new TargetInfoRequestPacketTest(),
                 new ShooterTest(),
                 new SidePolicyTest(),
@@ -35,7 +34,6 @@ public class NXTTest
                 new RandomPolicyTest(),
                 new PolicyFactoryTest()
         };
-
 
         try
         {
